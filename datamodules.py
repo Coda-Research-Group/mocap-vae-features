@@ -119,11 +119,11 @@ class MoCapDataModule(pl.LightningDataModule):
 
         # split train/val/test by sequence_id
         samples = pd.DataFrame({'id': sample_ids})
-        samples = samples.id.str.rsplit('_', 1, expand=True)
+        samples = samples.id.str.rsplit('_', n=1, expand=True)
         samples.columns = ['sequence_id', 'subsequence_id']
 
         grouped = samples.groupby('sequence_id')
-
+        # print(self.train)
         if self.train is None:
             groups = np.array([x for x in grouped.groups])
             self.rng.shuffle(groups)
@@ -132,8 +132,11 @@ class MoCapDataModule(pl.LightningDataModule):
             n_train = round(n_sequences * 0.70)
             n_valid = round(n_sequences * 0.15)
             n_test  = n_sequences - n_train - n_valid
+
+            # print(n_)
             
             train_groups = groups[:n_train]
+
             valid_groups = groups[n_train:n_train + n_valid]
             test_groups  = groups[-n_test:]
         else:
@@ -150,6 +153,8 @@ class MoCapDataModule(pl.LightningDataModule):
                 with open(self.test , 'r') as  test_file:
                     test_groups  = list(map(str.rstrip,  test_file))
 
+        print(test_groups)
+        # print(grouped.groups)
         train_idx = list(chain.from_iterable(grouped.get_group(x).index for x in train_groups))
         valid_idx = list(chain.from_iterable(grouped.get_group(x).index for x in valid_groups))
         test_idx  = list(chain.from_iterable(grouped.get_group(x).index for x in  test_groups))
@@ -188,15 +193,16 @@ class MoCapDataModule(pl.LightningDataModule):
 
 if __name__ == "__main__":
     # data_path = 'data/class130-actions-segment120_shift16-coords_normPOS-fps12.data'
-    data_path = 'data/class130-actions-segment40_shift20-coords_normPOS-fps12.data'
-    train_split = 'data/2foldsBal_2-class122.txt' 
-    test_split = 'data/2foldsBal_1-class122.txt'
+    data_path = '/home/drking/Documents/bakalarka/mocap/mocap-vae-features/data/hdm05/class130-sequences-coords_normPOS-fps12.data'
+    train_split = None
+    test_split = None
     dm = MoCapDataModule(
         data_path,
         train=train_split,
         valid=test_split,
         test=test_split
     )
+
     dm.prepare_data()
     dm.setup()
 

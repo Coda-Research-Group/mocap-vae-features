@@ -112,7 +112,7 @@ def main(args):
     ckpt = (args.run_dir / 'checkpoints').glob('epoch*.ckpt')
     ckpt = next(iter(ckpt))
 
-    model = LitVAE.load_from_checkpoint(ckpt)
+    model = LitVAE.load_from_checkpoint(ckpt, strict=False)
 
     dm = MoCapDataModule(
         args.data_path,

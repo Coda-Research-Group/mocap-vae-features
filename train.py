@@ -361,21 +361,33 @@ def main(args):
         batch_size=args.batch_size
     )
 
-    extra_dms = [
-        MoCapDataModule(
-            path,
-            train=train,
-            valid=valid,
-            test=test,
-            batch_size=args.batch_size,
-            shuffle_train=False,
-        ) for path, train, valid, test in zip(
-            args.additional_data_path,
-            args.additional_train_split,
-            args.additional_valid_split,
-            args.additional_test_split,
-        )
-    ]
+    # print(dm.train)
+    # for path, train, valid, test in zip(
+    #         args.additional_data_path,
+    #         args.train_split,
+    #         args.valid_split,
+    #         args.test_split,
+    #     ):
+    #     print(path, train, valid, test)
+
+#extra DMs, I dont have additional splits
+    # extra_dms = [
+    #     MoCapDataModule(
+    #         path,
+    #         train=train,
+    #         valid=valid,
+    #         test=test,
+    #         batch_size=args.batch_size,
+    #         shuffle_train=False,
+    #     ) for path, train, valid, test in zip(
+    #         args.additional_data_path,
+    #         args.train_split,
+    #         args.valid_split,
+    #         args.test_split,
+    #     )
+    # ]
+    
+    extra_dms = [] # I dont have additional splits
 
     for edm in extra_dms:
         edm.prepare_data()
@@ -439,7 +451,9 @@ def main(args):
         prefix = Path(additional_data_path).stem
         predict(trainer, model, ckpt_path, dm, prefix=prefix)
 
-
+# Sets args, args.data_path, args.train_split, args.valid_split, args.test_split
+# Dunno --additional-data-path, args.additional_train_split, args.additional_valid_split, args.additional_test_split
+# -- last 3 of them are not in any Hydra config
 def argparse_cli():
     parser = argparse.ArgumentParser(description='Train MoCap VAE')
     parser.add_argument('data_path', type=Path, help='data path')
