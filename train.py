@@ -15,6 +15,7 @@ import seaborn as sns
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.optim.lr_scheduler import CosineAnnealingLR
 from tqdm import tqdm
 
 import body_models
@@ -106,7 +107,7 @@ class LitVAE(pl.LightningModule):
         return {
             "optimizer": optimizer,
             "lr_scheduler": {
-                "scheduler": lr_scheduler,
+                "scheduler": CosineAnnealingLR(optimizer, T_max=10), # Dunno what it is supposed to be. TODO: find out
                 "monitor": "val/1nn_accuracy/dm0",
                 "interval": "epoch",
                 "frequency": 1,
@@ -178,7 +179,7 @@ class LitVAE(pl.LightningModule):
 
         return metrics
 
-    def on_validation_batch_start(self, batch, batch_idx, dataloader_idx):
+    def on_validation_batch_start(self, batch, batch_idx, dataloader_idx=0):
         every_n_batches = 7
         num_samples = 4
 
@@ -336,7 +337,7 @@ def predict(trainer, model, ckpt_path, dm, prefix='', force=False):
     predictions.to_csv(predictions_csv)
 
     # predictions in .data format
-    predictions.index = predictions.index.str.rsplit('_', 1, expand=True).rename(['seq_id', 'frame'])
+    predictions.index = predictions.index.str.rsplit('_', n=1, expand=True).rename(['seq_id', 'frame'])
     with gzip.open(predictions_data_file, 'wt', encoding='utf8') as f:
         for seq_id, group in predictions.groupby(level='seq_id'):
             print(f'#objectKey messif.objects.keys.AbstractObjectKey {seq_id}', file=f)
@@ -414,8 +415,8 @@ def main(args):
         num_sanity_val_steps=0,
         log_every_n_steps=5,
         callbacks=[
-            EarlyStopping(monitor='val/1nn_accuracy/dm0', mode='max', patience=75),
-            ModelCheckpoint(monitor='val/1nn_accuracy/dm0', mode='max', save_last=True),
+            EarlyStopping(monitor='val/recon_loss', mode='max', patience=75),
+            ModelCheckpoint(monitor='val/recon_loss', mode='max', save_last=True),
             LearningRateMonitor(logging_interval='step'),
         ]
     )

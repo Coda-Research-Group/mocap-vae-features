@@ -1,9 +1,9 @@
 #!/bin/bash
 
 set -e
-
-LATENT_DIMS="256,128,64,32,16,8"
-# BETAS="0.1,1,0,0.01,10"
+LATENT_DIMS="64"
+# LATENT_DIMS="256,128,64,32,16,8"
+BETAS="1"
 
 # HDM05 experiments
 python3 /home/drking/Documents/bakalarka/mocap/mocap-vae-features/train.py --multirun exp=hdm05/fold1 latent_dim=${LATENT_DIMS} beta=${BETAS}

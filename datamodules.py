@@ -117,13 +117,19 @@ class MoCapDataModule(pl.LightningDataModule):
         data = np.load(self.cache_path)
         sample_ids, subsequences = data['sample_ids'], data['subsequences']
 
+        # print(sample_ids, subsequences)
+
         # split train/val/test by sequence_id
         samples = pd.DataFrame({'id': sample_ids})
+
+        # print(samples.id)   
+
         samples = samples.id.str.rsplit('_', n=1, expand=True)
         samples.columns = ['sequence_id', 'subsequence_id']
 
         grouped = samples.groupby('sequence_id')
-        # print(self.train)
+        # print(grouped.groups)
+        self.train = None  # Added to shuffle train/split data
         if self.train is None:
             groups = np.array([x for x in grouped.groups])
             self.rng.shuffle(groups)
@@ -132,8 +138,6 @@ class MoCapDataModule(pl.LightningDataModule):
             n_train = round(n_sequences * 0.70)
             n_valid = round(n_sequences * 0.15)
             n_test  = n_sequences - n_train - n_valid
-
-            # print(n_)
             
             train_groups = groups[:n_train]
 
@@ -153,7 +157,6 @@ class MoCapDataModule(pl.LightningDataModule):
                 with open(self.test , 'r') as  test_file:
                     test_groups  = list(map(str.rstrip,  test_file))
 
-        print(test_groups)
         # print(grouped.groups)
         train_idx = list(chain.from_iterable(grouped.get_group(x).index for x in train_groups))
         valid_idx = list(chain.from_iterable(grouped.get_group(x).index for x in valid_groups))
