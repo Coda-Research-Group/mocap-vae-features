@@ -188,7 +188,7 @@ class MoCapDataModule(pl.LightningDataModule):
 
 if __name__ == "__main__":
     # data_path = 'data/class130-actions-segment120_shift16-coords_normPOS-fps12.data'
-    data_path = 'data/class130-actions-segment40_shift20-coords_normPOS-fps12.data'
+    data_path = '/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/class130-sequences-coords_normPOS-fps12.data'
     train_split = 'data/2foldsBal_2-class122.txt' 
     test_split = 'data/2foldsBal_1-class122.txt'
     dm = MoCapDataModule(
