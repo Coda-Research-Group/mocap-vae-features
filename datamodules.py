@@ -1,5 +1,6 @@
 from collections import Counter
 import re
+import os
 from itertools import groupby, chain
 from pathlib import Path
 
@@ -9,6 +10,7 @@ import pandas as pd
 import torch
 from torch.utils.data import TensorDataset, DataLoader
 from tqdm import tqdm
+
 
 
 def split_subsequences_from_data_file(data_path):
@@ -119,12 +121,12 @@ class MoCapDataModule(pl.LightningDataModule):
 
         # split train/val/test by sequence_id
         samples = pd.DataFrame({'id': sample_ids})
-        samples = samples.id.str.rsplit('_', 1, expand=True)
-        samples.columns = ['sequence_id', 'subsequence_id']
+        samples = samples.id.str.rsplit('_', expand=True)
+        samples.columns = ['sequence_id']
 
         grouped = samples.groupby('sequence_id')
 
-        if self.train is None:
+        if os.path.getsize(train_split) == 0 or os.path.getsize(test_split) == 0 or os.path.getsize(valid_split) == 0:
             groups = np.array([x for x in grouped.groups])
             self.rng.shuffle(groups)
 
@@ -136,6 +138,23 @@ class MoCapDataModule(pl.LightningDataModule):
             train_groups = groups[:n_train]
             valid_groups = groups[n_train:n_train + n_valid]
             test_groups  = groups[-n_test:]
+
+            np.savetxt(
+                train_split, 
+                train_groups, 
+                fmt='%s'
+            )
+            np.savetxt(
+                test_split, 
+                test_groups, 
+                fmt='%s'
+            )
+            np.savetxt(
+                valid_split,
+                valid_groups,
+                fmt='%s'
+            )
+
         else:
             with open(self.train, 'r') as train_file:
                 train_groups = list(map(str.rstrip, train_file))
@@ -189,12 +208,15 @@ class MoCapDataModule(pl.LightningDataModule):
 if __name__ == "__main__":
     # data_path = 'data/class130-actions-segment120_shift16-coords_normPOS-fps12.data'
     data_path = '/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/class130-sequences-coords_normPOS-fps12.data'
-    train_split = 'data/2foldsBal_2-class122.txt' 
-    test_split = 'data/2foldsBal_1-class122.txt'
+
+    train_split = '/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/splits/train_split.txt' 
+    test_split = '/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/splits/test_split.txt'
+    valid_split = '/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/splits/valid_split.txt'
+
     dm = MoCapDataModule(
         data_path,
         train=train_split,
-        valid=test_split,
+        valid=valid_split,
         test=test_split
     )
     dm.prepare_data()
