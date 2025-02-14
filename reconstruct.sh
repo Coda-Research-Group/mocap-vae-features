@@ -25,18 +25,18 @@ for RUN in ${HDM05_RUNS[@]}; do
         --every-n 100
 done
 
-for RUN in ${PKUMMD_RUNS[@]}; do
-    DATA=$(basename $(dirname $(dirname "${RUN}")))
-    DATA="data/pku-mmd/${DATA}"
+# for RUN in ${PKUMMD_RUNS[@]}; do
+#     DATA=$(basename $(dirname $(dirname "${RUN}")))
+#     DATA="data/pku-mmd/${DATA}"
 
-    python reconstruct.py \
-        $RUN \
-        $DATA \
-        --train-split "data/pku-mmd/CS_train_objects_messif-lines.txt" \
-        --valid-split "data/pku-mmd/CS_test_objects_messif-lines.txt" \
-        --test-split "data/pku-mmd/CS_test_objects_messif-lines.txt" \
-        --body-model pku-mmd \
-        --fps 30 \
-        --limit 5 \
-        --every-n 100
-done
+#     python reconstruct.py \
+#         $RUN \
+#         $DATA \
+#         --train-split "data/pku-mmd/CS_train_objects_messif-lines.txt" \
+#         --valid-split "data/pku-mmd/CS_test_objects_messif-lines.txt" \
+#         --test-split "data/pku-mmd/CS_test_objects_messif-lines.txt" \
+#         --body-model pku-mmd \
+#         --fps 30 \
+#         --limit 5 \
+#         --every-n 100
+# done
