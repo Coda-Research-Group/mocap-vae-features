@@ -213,9 +213,12 @@ class MoCapDataModule(pl.LightningDataModule):
 
 if __name__ == "__main__":
     # data_path = 'data/class130-actions-segment120_shift16-coords_normPOS-fps12.data'
+
+    # File paths:
+
     data_path = '/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/class130-sequences-coords_normPOS-fps12.data'
 
-    train_split = '/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/splits/train_split.txt' 
+    train_split = '/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/splits/train_split.txt'
     test_split = '/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/splits/test_split.txt'
     valid_split = '/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/splits/valid_split.txt'
 
