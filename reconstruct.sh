@@ -16,9 +16,9 @@ for RUN in ${HDM05_RUNS[@]}; do
     python3 reconstruct.py \
         $RUN \
         $DATA \
-        --train-split "/home/drking/Documents/bakalarka/mocap/mocap-vae-features/data/hdm05/2foldsBal_2-class122.txt" \
-        --valid-split "/home/drking/Documents/bakalarka/mocap/mocap-vae-features/data/hdm05/2foldsBal_1-class122.txt" \
-        --test-split "/home/drking/Documents/bakalarka/mocap/mocap-vae-features/data/hdm05/2foldsBal_1-class122.txt" \
+        --train-split "/home/drking/Documents/bakalarka/mocap/mocap-vae-features/data/class130-actions_segment80_shift16-coords_normPOS-fps12/lightning_logs/version_0/train_ids.txt" \
+        --valid-split "/home/drking/Documents/bakalarka/mocap/mocap-vae-features/data/class130-actions_segment80_shift16-coords_normPOS-fps12/lightning_logs/version_0/valid_ids.txt" \
+        --test-split "/home/drking/Documents/bakalarka/mocap/mocap-vae-features/data/class130-actions_segment80_shift16-coords_normPOS-fps12/lightning_logs/version_0/test_ids.txt" \
         --body-model hdm05 \
         --fps 12 \
         --limit 5 \

@@ -382,9 +382,9 @@ def main(args):
     #         shuffle_train=False,
     #     ) for path, train, valid, test in zip(
     #         args.additional_data_path,
-    #         args.train_split,
-    #         args.valid_split,
-    #         args.test_split,
+    #         args.additional_train_split,
+    #         args.additional_valid_split,
+    #         args.additional_test_split,
     #     )
     # ]
     

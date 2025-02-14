@@ -51,6 +51,20 @@ def create_gif(
     zlim=None,
     fps=30,
 ):
+    """
+    Creates a GIF from two sequences of 3D poses.
+
+    Args:
+        output_path (str or Path): The file path to save the generated GIF.
+        x (np.ndarray): The original sequence of 3D poses, of shape (seq_len, joints, 3).
+        x_hat (np.ndarray): The reconstructed sequence of 3D poses, of shape (seq_len, joints, 3).
+        body_edges (list of tuples): A list of tuples defining the edges between joints.
+        xlim (tuple, optional): The x-axis limits for the 3D plot. Defaults to None.
+        ylim (tuple, optional): The y-axis limits for the 3D plot. Defaults to None.
+        zlim (tuple, optional): The z-axis limits for the 3D plot. Defaults to None.
+        fps (int, optional): The frames per second for the generated GIF. Defaults to 30.
+
+    """
     seq_len = len(x)
 
     fig = plt.figure()
@@ -62,6 +76,15 @@ def create_gif(
 
 
 def _figure_to_numpy(figure):
+    """
+    Convert a Matplotlib figure to a NumPy array in CHW format.
+
+    Args:
+        figure (matplotlib.figure.Figure): The Matplotlib figure to convert.
+
+    Returns:
+        np.ndarray: A NumPy array of shape (3, height, width) representing the RGB image.
+    """
     canvas = plt_backend_agg.FigureCanvasAgg(figure)
     canvas.draw()
     data = np.frombuffer(canvas.buffer_rgba(), dtype=np.uint8)
@@ -114,6 +137,10 @@ def main(args):
 
     model = LitVAE.load_from_checkpoint(ckpt, strict=False)
 
+    print(model.device)
+
+    model = model.to('cpu')
+
     dm = MoCapDataModule(
         args.data_path,
         train=args.train_split,
@@ -129,11 +156,12 @@ def main(args):
     maxX, maxY, maxZ = dm.predict_dataset.tensors[0].numpy().max(axis=(0, 1, 2))
 
     gif_kws = dict(
+        body_edges=body_models.body_models[args.body_model].edges,
         xlim=(minX, maxX),
         ylim=(minY, maxY),
         zlim=(minZ, maxZ),
         fps=args.fps,
-        body_model=args.body_model,
+        # body_model=args.body_model,
     )
 
     gif_dir = args.run_dir / 'reconstructions'
@@ -146,12 +174,13 @@ def main(args):
     ids_and_samples = itertools.islice(ids_and_samples, 0, args.limit)
 
     with torch.no_grad():
+
         for seq_id, (x,) in tqdm(ids_and_samples):
             mu, std = model.encode(x)
             x_mu, _ = model.decode(mu)
-
             gif_path = gif_dir / f'{seq_id}.gif'
-            create_gif(gif_path, x[0], x_hat[0], **gif_kws)
+            # what is x_hat[0]?
+            create_gif(gif_path, x[0], x_mu[0], **gif_kws)
 
 
 if __name__ == "__main__":
