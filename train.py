@@ -15,6 +15,8 @@ import seaborn as sns
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import torch.optim.lr_scheduler as lr_sched
+from torch.optim.lr_scheduler import CosineAnnealingLR
 from tqdm import tqdm
 
 import body_models
@@ -81,9 +83,13 @@ class LitVAE(pl.LightningModule):
         up_factor = lambda i: 2 if 2**(i+1) <= input_length else 1
         last_factor = input_length / min(8, 2**math.floor(math.log2(input_length)))
 
+        print("please help me")
+        print(encoder_output_dim, " + ", latent_dim)
+
         # distribution parameters
         self.fc_mu  = nn.Linear(encoder_output_dim, latent_dim)
         self.fc_var = nn.Linear(encoder_output_dim, latent_dim)
+        # self.encoder_fc = nn.Linear(85248, 512)
 
         self.decoder = nn.Sequential(  # input: latent_dim x 1
             nn.Upsample(scale_factor=up_factor(0)),  # output: latent_dim x 2
@@ -106,7 +112,7 @@ class LitVAE(pl.LightningModule):
         return {
             "optimizer": optimizer,
             "lr_scheduler": {
-                "scheduler": lr_scheduler,
+                "scheduler": CosineAnnealingLR(optimizer, T_max=10),
                 "monitor": "val/1nn_accuracy/dm0",
                 "interval": "epoch",
                 "frequency": 1,
@@ -142,10 +148,18 @@ class LitVAE(pl.LightningModule):
         x, = batch  # B x T x J x D
         x = x.flatten(start_dim=2)  # B x T x (J*D)
         x = x.swapaxes(1, 2)  # B x (J*D) x T
+        print("okokkokoook")
+        print(len(x))
 
         # encode x to get the mu and variance parameters
         x_encoded = self.encoder(x).flatten(start_dim=1)
+        # x_encoded = self.encoder_fc(x_encoded)
+        # print(args.latent_dim)
+
+        print("\n", len(x_encoded[0]), "kookokokokkokok")
         mu, log_var = self.fc_mu(x_encoded), self.fc_var(x_encoded)
+        print(mu)
+        print(log_var)
 
         # sample z from q
         std = torch.exp(log_var / 2)
@@ -361,25 +375,27 @@ def main(args):
         batch_size=args.batch_size
     )
 
-    extra_dms = [
-        MoCapDataModule(
-            path,
-            train=train,
-            valid=valid,
-            test=test,
-            batch_size=args.batch_size,
-            shuffle_train=False,
-        ) for path, train, valid, test in zip(
-            args.additional_data_path,
-            args.additional_train_split,
-            args.additional_valid_split,
-            args.additional_test_split,
-        )
-    ]
+    # extra_dms = [
+    #     MoCapDataModule(
+    #         path,
+    #         train=train,
+    #         valid=valid,
+    #         test=test,
+    #         batch_size=args.batch_size,
+    #         shuffle_train=False,
+    #     ) for path, train, valid, test in zip(
+    #         args.additional_data_path,
+    #         args.additional_train_split,
+    #         args.additional_valid_split,
+    #         args.additional_test_split,
+    #     )
+    # ]
 
-    for edm in extra_dms:
-        edm.prepare_data()
-        edm.setup()
+    # for edm in extra_dms:
+    #     edm.prepare_data()
+    #     edm.setup()
+
+    extra_dms = []
 
     model = LitVAE(
         body_model=args.body_model,
