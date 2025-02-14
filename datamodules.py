@@ -122,11 +122,14 @@ class MoCapDataModule(pl.LightningDataModule):
         # split train/val/test by sequence_id
         samples = pd.DataFrame({'id': sample_ids})
         samples = samples.id.str.rsplit('_', expand=True)
+
+        # Setting a columns (might be some subsequences -> add more columns) 
+
         samples.columns = ['sequence_id']
 
         grouped = samples.groupby('sequence_id')
 
-        if os.path.getsize(train_split) == 0 or os.path.getsize(test_split) == 0 or os.path.getsize(valid_split) == 0:
+        if os.path.getsize(self.train) == 0 or os.path.getsize(self.test) == 0 or os.path.getsize(self.valid) == 0:
             groups = np.array([x for x in grouped.groups])
             self.rng.shuffle(groups)
 
@@ -139,21 +142,24 @@ class MoCapDataModule(pl.LightningDataModule):
             valid_groups = groups[n_train:n_train + n_valid]
             test_groups  = groups[-n_test:]
 
-            np.savetxt(
-                train_split, 
-                train_groups, 
-                fmt='%s'
-            )
-            np.savetxt(
-                test_split, 
-                test_groups, 
-                fmt='%s'
-            )
-            np.savetxt(
-                valid_split,
-                valid_groups,
-                fmt='%s'
-            )
+            if self.train is not None:
+                np.savetxt(
+                    train_split, 
+                    train_groups, 
+                    fmt='%s'
+                )
+            if self.test is not None:
+                np.savetxt(
+                    test_split, 
+                    test_groups, 
+                    fmt='%s'
+                )
+            if self.valid is not None:
+                np.savetxt(
+                    valid_split,
+                    valid_groups,
+                    fmt='%s'
+                )
 
         else:
             with open(self.train, 'r') as train_file:
