@@ -11,6 +11,9 @@ import torch
 from torch.utils.data import TensorDataset, DataLoader
 from tqdm import tqdm
 
+TRAIN_SPLIT_DATA='/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/splits/train_ids.txt'
+TEST_SPLIT_DATA='/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/splits/test_ids.txt'
+VALID_SPLIT_DATA=TEST_SPLIT_DATA
 
 
 def split_subsequences_from_data_file(data_path):
@@ -121,15 +124,12 @@ class MoCapDataModule(pl.LightningDataModule):
 
         # split train/val/test by sequence_id
         samples = pd.DataFrame({'id': sample_ids})
-        samples = samples.id.str.rsplit('_', expand=True)
-
-        # Setting a columns (might be some subsequences -> add more columns) 
-
-        samples.columns = ['sequence_id']
+        samples = samples.id.str.rsplit('_', n=1, expand=True)
+        samples.columns = ['sequence_id', 'subsequence_id']
 
         grouped = samples.groupby('sequence_id')
 
-        if os.path.getsize(self.train) == 0 or os.path.getsize(self.test) == 0 or os.path.getsize(self.valid) == 0:
+        if self.train is None:
             groups = np.array([x for x in grouped.groups])
             self.rng.shuffle(groups)
 
@@ -142,25 +142,6 @@ class MoCapDataModule(pl.LightningDataModule):
             valid_groups = groups[n_train:n_train + n_valid]
             test_groups  = groups[-n_test:]
 
-            if self.train is not None:
-                np.savetxt(
-                    train_split, 
-                    train_groups, 
-                    fmt='%s'
-                )
-            if self.test is not None:
-                np.savetxt(
-                    test_split, 
-                    test_groups, 
-                    fmt='%s'
-                )
-            if self.valid is not None:
-                np.savetxt(
-                    valid_split,
-                    valid_groups,
-                    fmt='%s'
-                )
-
         else:
             with open(self.train, 'r') as train_file:
                 train_groups = list(map(str.rstrip, train_file))
@@ -172,8 +153,8 @@ class MoCapDataModule(pl.LightningDataModule):
 
             test_groups = []
             if self.test is not None:
-                with open(self.test , 'r') as  test_file:
-                    test_groups  = list(map(str.rstrip,  test_file))
+                with open(self.test , 'r') as test_file:
+                    test_groups  = list(map(str.rstrip, test_file))
 
         train_idx = list(chain.from_iterable(grouped.get_group(x).index for x in train_groups))
         valid_idx = list(chain.from_iterable(grouped.get_group(x).index for x in valid_groups))
@@ -218,14 +199,13 @@ if __name__ == "__main__":
 
     data_path = '/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/class130-actions-segment80_shift16-coords_normPOS-fps12.data'
 
-    train_split = '/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/splits/train_split.txt'
-    test_split = '/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/splits/test_split.txt'
-    valid_split = '/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/splits/valid_split.txt'
+    train_split = 'data/hdm05/2version/splits/2folds20_80split_2-class122.txt' 
+    test_split = 'data/hdm05/2version/splits/2folds20_80split_1-class122.txt'
 
     dm = MoCapDataModule(
         data_path,
         train=train_split,
-        valid=valid_split,
+        valid=test_split,
         test=test_split
     )
     dm.prepare_data()
