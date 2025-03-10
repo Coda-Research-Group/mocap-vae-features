@@ -11,6 +11,7 @@ import pytorch_lightning as pl
 from pytorch_lightning import Trainer, seed_everything
 from pytorch_lightning.callbacks import ModelCheckpoint, LearningRateMonitor, EarlyStopping
 from pytorch_lightning.loggers import TensorBoardLogger
+from torch.optim.lr_scheduler import ReduceLROnPlateau
 import seaborn as sns
 import torch
 import torch.nn as nn
@@ -83,9 +84,6 @@ class LitVAE(pl.LightningModule):
         up_factor = lambda i: 2 if 2**(i+1) <= input_length else 1
         last_factor = input_length / min(8, 2**math.floor(math.log2(input_length)))
 
-        print("please help me")
-        print(encoder_output_dim, " + ", latent_dim)
-
         # distribution parameters
         self.fc_mu  = nn.Linear(encoder_output_dim, latent_dim)
         self.fc_var = nn.Linear(encoder_output_dim, latent_dim)
@@ -109,10 +107,11 @@ class LitVAE(pl.LightningModule):
 
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(self.parameters(), lr=self.learning_rate)
+        scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=10)
         return {
             "optimizer": optimizer,
             "lr_scheduler": {
-                "scheduler": CosineAnnealingLR(optimizer, T_max=10),
+                "scheduler": scheduler,
                 "monitor": "val/1nn_accuracy/dm0",
                 "interval": "epoch",
                 "frequency": 1,
@@ -148,18 +147,14 @@ class LitVAE(pl.LightningModule):
         x, = batch  # B x T x J x D
         x = x.flatten(start_dim=2)  # B x T x (J*D)
         x = x.swapaxes(1, 2)  # B x (J*D) x T
-        print("okokkokoook")
-        print(len(x))
 
         # encode x to get the mu and variance parameters
         x_encoded = self.encoder(x).flatten(start_dim=1)
         # x_encoded = self.encoder_fc(x_encoded)
         # print(args.latent_dim)
 
-        print("\n", len(x_encoded[0]), "kookokokokkokok")
         mu, log_var = self.fc_mu(x_encoded), self.fc_var(x_encoded)
-        print(mu)
-        print(log_var)
+   
 
         # sample z from q
         std = torch.exp(log_var / 2)
@@ -181,6 +176,8 @@ class LitVAE(pl.LightningModule):
         elbo = (self.beta * kl - recon_loss)
         elbo = elbo.mean()
 
+        # 1nn accuracy???
+
         metrics = {
             f'{stage}/elbo': elbo,
             f'{stage}/kl': kl.mean(),
@@ -192,7 +189,7 @@ class LitVAE(pl.LightningModule):
 
         return metrics
 
-    def on_validation_batch_start(self, batch, batch_idx, dataloader_idx):
+    def on_validation_batch_start(self, batch, batch_idx, dataloader_idx=0):
         every_n_batches = 7
         num_samples = 4
 
@@ -255,14 +252,24 @@ class LitVAE(pl.LightningModule):
         return accuracies
 
     def on_validation_epoch_end(self):
-        if self._do_retrieval_eval:
-            mean_1nn_accuracies = self._retrieval_validation()
+        # print(f"self._do_retrieval_eval: {self._do_retrieval_eval}")  # Check if retrieval is enabled
 
-            # Cannot use self.log_dict() here..
+        if self._do_retrieval_eval:
+            # print("Retrieval evaluation is being performed.") #confirm that this code block is running.
+            mean_1nn_accuracies = self._retrieval_validation()
+            # print(f"mean_1nn_accuracies: {mean_1nn_accuracies}") #check that the 1nn accuracies are being calculated.
+            print("--------------------")
+            print(mean_1nn_accuracies)
+            print("--------------------")
             acc_dict = {f'val/1nn_accuracy/dm{i}': v for i, v in enumerate(mean_1nn_accuracies)}
-            self.log_dict(acc_dict, on_step=False, on_epoch=True)
-            # for i, v in enumerate(mean_1nn_accuracies):
-            #     self.logger.experiment.add_scalar(f'val/1nn_accuracy/dm{i}', v)
+            # print(f"acc_dict before logging: {acc_dict}") #check the dictionary before logging.
+            # self.log_dict(acc_dict, on_step=False, on_epoch=True)
+            # print("1nn accuracy metrics logged.") #confirm that the metrics were logged.
+        else:
+            acc_dict = {"val/1nn_accuracy/dm0": 0.0}
+            print("Retrieval evaluation is skipped.") #confirm that retrieval is skipped.
+        self.log_dict(acc_dict, on_step=False, on_epoch=True)
+
 
         if self._do_videos:
             batch = torch.cat(self._preview_samples, dim=0)
@@ -350,7 +357,7 @@ def predict(trainer, model, ckpt_path, dm, prefix='', force=False):
     predictions.to_csv(predictions_csv)
 
     # predictions in .data format
-    predictions.index = predictions.index.str.rsplit('_', 1, expand=True).rename(['seq_id', 'frame'])
+    predictions.index = predictions.index.str.rsplit('_', n=1, expand=True).rename(['seq_id', 'frame'])
     with gzip.open(predictions_data_file, 'wt', encoding='utf8') as f:
         for seq_id, group in predictions.groupby(level='seq_id'):
             print(f'#objectKey messif.objects.keys.AbstractObjectKey {seq_id}', file=f)
@@ -375,27 +382,29 @@ def main(args):
         batch_size=args.batch_size
     )
 
-    # extra_dms = [
-    #     MoCapDataModule(
-    #         path,
-    #         train=train,
-    #         valid=valid,
-    #         test=test,
-    #         batch_size=args.batch_size,
-    #         shuffle_train=False,
-    #     ) for path, train, valid, test in zip(
-    #         args.additional_data_path,
-    #         args.additional_train_split,
-    #         args.additional_valid_split,
-    #         args.additional_test_split,
-    #     )
-    # ]
+    print("djhakjfhdslhakjfdsfhahdsl")
 
-    # for edm in extra_dms:
-    #     edm.prepare_data()
-    #     edm.setup()
+    extra_dms = [
+        MoCapDataModule(
+            path,
+            train=train,
+            valid=valid,
+            test=test,
+            batch_size=args.batch_size,
+            shuffle_train=False,
+        ) for path, train, valid, test in zip(
+            args.additional_data_path,
+            args.additional_train_split,
+            args.additional_valid_split,
+            args.additional_test_split,
+        )
+    ]
+    
+    # extra_dms = []
 
-    extra_dms = []
+    for edm in extra_dms:
+        edm.prepare_data()
+        edm.setup()
 
     model = LitVAE(
         body_model=args.body_model,
@@ -417,7 +426,10 @@ def main(args):
         deterministic=True,
         num_sanity_val_steps=0,
         log_every_n_steps=5,
+
+        # monitor value changed from 'val/1nn_accuracy/dm0' -> 'val/elbo'
         callbacks=[
+            ## Those lines destroy the outcome.
             EarlyStopping(monitor='val/1nn_accuracy/dm0', mode='max', patience=75),
             ModelCheckpoint(monitor='val/1nn_accuracy/dm0', mode='max', save_last=True),
             LearningRateMonitor(logging_interval='step'),
