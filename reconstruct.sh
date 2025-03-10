@@ -3,26 +3,26 @@
 set -e
 
 HDM05_RUNS=(    
-    runs/class130*/lightning_logs/version_*
+    runs/hdm05*/lightning_logs/version_*
 )
 PKUMMD_RUNS=(
     runs/actions*/lightning_logs/version_*
 )
 
 for RUN in ${HDM05_RUNS[@]}; do
-    DATA=$(basename $(dirname $(dirname "${RUN}")))
-    DATA="data/hdm05/${DATA}"
+    # DATA=$(basename $(dirname $(dirname "${RUN}")))
+    DATA="data/hdm05/2version/class130-actions-segment80_shift16-coords_normPOS-fps12.data"
 
     python reconstruct.py \
         $RUN \
         $DATA \
-        --train-split "data/hdm05/2foldsBal_2-class122.txt" \
-        --valid-split "data/hdm05/2foldsBal_1-class122.txt" \
-        --test-split "data/hdm05/2foldsBal_1-class122.txt" \
+        --train-split "data/hdm05/2version/splits/2folds20_80split_2-class122.txt" \
+        --valid-split "data/hdm05/2version/splits/2folds20_80split_1-class122.txt" \
+        --test-split "data/hdm05/2version/splits/2folds20_80split_1-class122.txt" \
         --body-model hdm05 \
         --fps 12 \
-        --limit 5 \
-        --every-n 100
+        --limit 10 \
+        --every-n 10
 done
 
 # for RUN in ${PKUMMD_RUNS[@]}; do
