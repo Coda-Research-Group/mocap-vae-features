@@ -9,7 +9,8 @@ import numpy as np
 import pandas as pd
 import torch
 from torch.utils.data import TensorDataset, DataLoader
-from tqdm import tqdm
+from tqdm import tqdm\
+import splitting_data.py
 
 TRAIN_SPLIT_DATA='/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/splits/train_ids.txt'
 TEST_SPLIT_DATA='/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/splits/test_ids.txt'
@@ -116,10 +117,16 @@ class MoCapDataModule(pl.LightningDataModule):
             # convert .data into .npy/pth
             sample_ids, subsequences = convert_data_file(self.data_path)
             np.savez_compressed(self.cache_path, sample_ids=sample_ids, subsequences=subsequences)
+            np.split_motion_data()
 
     def setup(self, stage=None):
         # load data
         data = np.load(self.cache_path)
+        print("--------------------")
+        print(self.cache_path)
+        print("--------------------")
+        split_motion_data(data)
+        print(completed)
         sample_ids, subsequences = data['sample_ids'], data['subsequences']
 
         # split train/val/test by sequence_id
