@@ -133,7 +133,7 @@ def main(args):
     all_predictions = pd.read_csv(all_predictions)
     all_predictions.loc[:, '0':'7'] = normalize(all_predictions.loc[:, '0':'7'].values)
 
-    action_ids = all_predictions.id.str.rsplit('_', 1, expand=True)[0]
+    action_ids = all_predictions.id.str.rsplit('_', n=1, expand=True)[0]
     all_predictions['action_id'] = action_ids
 
     pred_info = all_predictions.id.str.split('_', expand=True)

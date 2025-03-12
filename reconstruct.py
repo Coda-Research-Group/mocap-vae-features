@@ -45,7 +45,7 @@ def create_gif(
     output_path,
     x,
     x_hat,
-    body_edges,
+    body_model,
     xlim=None,
     ylim=None,
     zlim=None,
@@ -55,7 +55,7 @@ def create_gif(
 
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')
-    ani_func = prepare_animation(ax, x, x_hat, xlim, ylim, zlim, body_edges)
+    ani_func = prepare_animation(ax, x, x_hat, xlim, ylim, zlim, body_models.get_by_name(body_model).edges)
     ani = animation.FuncAnimation(fig, ani_func, seq_len, repeat=False, blit=True)
     ani.save(output_path, fps=fps)
     plt.close()
@@ -109,10 +109,11 @@ def create_tensor(
 def main(args):
     from train import LitVAE
 
-    ckpt = (args.run_dir / 'checkpoints').glob('epoch*.ckpt')
+    ckpt = Path("runs/hdm05/all/beta=1,latent_dim=256/lightning_logs/version_0/checkpoints").glob('epoch*.ckpt')
     ckpt = next(iter(ckpt))
 
     model = LitVAE.load_from_checkpoint(ckpt)
+    model = model.to('cpu')
 
     dm = MoCapDataModule(
         args.data_path,
@@ -136,7 +137,7 @@ def main(args):
         body_model=args.body_model,
     )
 
-    gif_dir = args.run_dir / 'reconstructions'
+    gif_dir = Path("runs/hdm05/all/beta=1,latent_dim=256/lightning_logs/version_0") / 'reconstructions'
     gif_dir.mkdir(exist_ok=True)
 
     print(f'GIF output dir:', gif_dir)
@@ -151,7 +152,7 @@ def main(args):
             x_mu, _ = model.decode(mu)
 
             gif_path = gif_dir / f'{seq_id}.gif'
-            create_gif(gif_path, x[0], x_hat[0], **gif_kws)
+            create_gif(gif_path, x[0], x_mu[0], **gif_kws)
 
 
 if __name__ == "__main__":

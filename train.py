@@ -11,6 +11,7 @@ import pytorch_lightning as pl
 from pytorch_lightning import Trainer, seed_everything
 from pytorch_lightning.callbacks import ModelCheckpoint, LearningRateMonitor, EarlyStopping
 from pytorch_lightning.loggers import TensorBoardLogger
+from torch.optim.lr_scheduler import ReduceLROnPlateau
 import seaborn as sns
 import torch
 import torch.nn as nn
@@ -103,11 +104,12 @@ class LitVAE(pl.LightningModule):
 
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(self.parameters(), lr=self.learning_rate)
+        lr_scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=10)
         return {
             "optimizer": optimizer,
             "lr_scheduler": {
                 "scheduler": lr_scheduler,
-                "monitor": "val/1nn_accuracy/dm0",
+                "monitor": "val/elbo",
                 "interval": "epoch",
                 "frequency": 1,
             },
@@ -178,7 +180,7 @@ class LitVAE(pl.LightningModule):
 
         return metrics
 
-    def on_validation_batch_start(self, batch, batch_idx, dataloader_idx):
+    def on_validation_batch_start(self, batch, batch_idx, dataloader_idx=0):
         every_n_batches = 7
         num_samples = 4
 
@@ -258,7 +260,6 @@ class LitVAE(pl.LightningModule):
             batch = batch.cpu().numpy()
             recon = recon.cpu().numpy()
 
-            # videos = [create_tensor(x, x_hat, body_model=self.body_model) for x, x_hat in zip(batch, recon)]
             func = delayed(create_tensor)
             videos = (func(x, x_hat, body_model=self.body_model) for x, x_hat in zip(batch, recon))
             videos = Parallel(n_jobs=-1)(videos)
@@ -336,7 +337,7 @@ def predict(trainer, model, ckpt_path, dm, prefix='', force=False):
     predictions.to_csv(predictions_csv)
 
     # predictions in .data format
-    predictions.index = predictions.index.str.rsplit('_', 1, expand=True).rename(['seq_id', 'frame'])
+    predictions.index = predictions.index.str.rsplit('_', n=1, expand=True).rename(['seq_id', 'frame'])
     with gzip.open(predictions_data_file, 'wt', encoding='utf8') as f:
         for seq_id, group in predictions.groupby(level='seq_id'):
             print(f'#objectKey messif.objects.keys.AbstractObjectKey {seq_id}', file=f)
@@ -361,25 +362,34 @@ def main(args):
         batch_size=args.batch_size
     )
 
-    extra_dms = [
-        MoCapDataModule(
-            path,
-            train=train,
-            valid=valid,
-            test=test,
-            batch_size=args.batch_size,
-            shuffle_train=False,
-        ) for path, train, valid, test in zip(
-            args.additional_data_path,
-            args.additional_train_split,
-            args.additional_valid_split,
-            args.additional_test_split,
-        )
-    ]
+    # print("-------------------------")
+    # print( args.additional_data_path,
+    #         args.additional_train_split,
+    #         args.additional_valid_split,
+    #         args.additional_valid_split)
+    # print("-------------------------")
 
-    for edm in extra_dms:
-        edm.prepare_data()
-        edm.setup()
+    # extra_dms = [
+    #     MoCapDataModule(
+    #         path,
+    #         train=train,
+    #         valid=valid,
+    #         test=test,
+    #         batch_size=args.batch_size,
+    #         shuffle_train=False,
+    #     ) for path, train, valid, test in zip(
+    #         args.additional_data_path,
+    #         args.additional_train_split,
+    #         args.additional_valid_split,
+    #         args.additional_valid_split,
+    #     )
+    # ]
+
+    # for edm in extra_dms:
+    #     edm.prepare_data()
+    #     edm.setup()
+
+    extra_dms = []
 
     model = LitVAE(
         body_model=args.body_model,
@@ -402,8 +412,8 @@ def main(args):
         num_sanity_val_steps=0,
         log_every_n_steps=5,
         callbacks=[
-            EarlyStopping(monitor='val/1nn_accuracy/dm0', mode='max', patience=75),
-            ModelCheckpoint(monitor='val/1nn_accuracy/dm0', mode='max', save_last=True),
+            EarlyStopping(monitor='val/l2_loss', patience=50),
+            ModelCheckpoint(monitor='val/elbo', save_last=True),
             LearningRateMonitor(logging_interval='step'),
         ]
     )
@@ -434,10 +444,11 @@ def main(args):
         pd.DataFrame( dm.test_ids).to_csv(log_dir /  'test_ids.txt.gz', header=False, index=False)
 
     # predictions on additional datasets
-    for additional_data_path in args.additional_data_path:
-        dm = MoCapDataModule(additional_data_path, batch_size=args.batch_size)
-        prefix = Path(additional_data_path).stem
-        predict(trainer, model, ckpt_path, dm, prefix=prefix)
+    if hasattr(args, 'additional_data_path'):
+        for additional_data_path in args.additional_data_path:
+            dm = MoCapDataModule(additional_data_path, batch_size=args.batch_size)
+            prefix = Path(additional_data_path).stem
+            predict(trainer, model, ckpt_path, dm, prefix=prefix)
 
 
 def argparse_cli():
@@ -458,7 +469,7 @@ def argparse_cli():
     parser.add_argument('-r', '--resume', default=False, action='store_true', help='resume training')
     parser.add_argument('-s', '--skip-train', default=False, action='store_true', help='perform prediction only')
 
-    parser.add_argument('-a', '--additional-data-path', type=Path, nargs='+', help='additional data on which prediction is run after training')
+    parser.add_argument('-a', '--additional-data-path', default=None, type=Path, nargs='+', help='additional data on which prediction is run after training')
     parser.add_argument('--additional-train-split', type=Path, nargs='+', help='additional train sequence ids')
     parser.add_argument('--additional-valid-split', type=Path, nargs='+', help='additional validation sequence ids')
     parser.add_argument('--additional-test-split', type=Path, nargs='+', help='additional test sequence ids')

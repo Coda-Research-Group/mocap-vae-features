@@ -5,8 +5,8 @@ ipympl
 moviepy
 openpyxl
 pandas
-protobuf<=3.20.*
+protobuf
 pytorch-lightning
 seaborn
 SciencePlots
-sklearn
+scikit-learn

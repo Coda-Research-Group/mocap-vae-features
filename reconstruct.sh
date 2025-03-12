@@ -10,33 +10,33 @@ PKUMMD_RUNS=(
 )
 
 for RUN in ${HDM05_RUNS[@]}; do
-    DATA=$(basename $(dirname $(dirname "${RUN}")))
-    DATA="data/hdm05/${DATA}"
+    # DATA=$(basename $(dirname $(dirname "${RUN}")))
+    DATA="data/hdm05/2version/class130-actions-segment80_shift16-coords_normPOS-fps12.data"
 
     python reconstruct.py \
         $RUN \
         $DATA \
-        --train-split "data/hdm05/2foldsBal_2-class122.txt" \
-        --valid-split "data/hdm05/2foldsBal_1-class122.txt" \
-        --test-split "data/hdm05/2foldsBal_1-class122.txt" \
+        --train-split "data/hdm05/2version/splits/2folds20_80split_2-class122.txt" \
+        --valid-split "data/hdm05/2version/splits/2folds20_80split_1-class122.txt" \
+        --test-split "data/hdm05/2version/splits/2folds20_80split_1-class122.txt" \
         --body-model hdm05 \
         --fps 12 \
         --limit 5 \
         --every-n 100
 done
 
-for RUN in ${PKUMMD_RUNS[@]}; do
-    DATA=$(basename $(dirname $(dirname "${RUN}")))
-    DATA="data/pku-mmd/${DATA}"
+# for RUN in ${PKUMMD_RUNS[@]}; do
+#     DATA=$(basename $(dirname $(dirname "${RUN}")))
+#     DATA="data/pku-mmd/${DATA}"
 
-    python reconstruct.py \
-        $RUN \
-        $DATA \
-        --train-split "data/pku-mmd/CS_train_objects_messif-lines.txt" \
-        --valid-split "data/pku-mmd/CS_test_objects_messif-lines.txt" \
-        --test-split "data/pku-mmd/CS_test_objects_messif-lines.txt" \
-        --body-model pku-mmd \
-        --fps 30 \
-        --limit 5 \
-        --every-n 100
-done
+#     python reconstruct.py \
+#         $RUN \
+#         $DATA \
+#         --train-split "data/pku-mmd/CS_train_objects_messif-lines.txt" \
+#         --valid-split "data/pku-mmd/CS_test_objects_messif-lines.txt" \
+#         --test-split "data/pku-mmd/CS_test_objects_messif-lines.txt" \
+#         --body-model pku-mmd \
+#         --fps 30 \
+#         --limit 5 \
+#         --every-n 100
+# done
