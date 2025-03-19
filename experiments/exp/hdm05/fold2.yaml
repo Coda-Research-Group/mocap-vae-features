@@ -2,6 +2,6 @@
 defaults:
  - hdm05/common
  
-train_split: ${hydra:runtime.cwd}/data/sequences/HDM05/meta/sequences-class122-split20_80-fold2.txt
-valid_split: ${hydra:runtime.cwd}/data/sequences/HDM05/meta/sequences-class122-split20_80-fold1.txt
+train_split: ${hydra:runtime.cwd}/data/hdm05/2version/splits/2folds20_80split_2-class122.txt
+valid_split: ${hydra:runtime.cwd}/data/hdm05/2version/splits/2folds20_80split_1-class122.txt
 test_split: ${valid_split}

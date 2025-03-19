@@ -117,7 +117,7 @@ class MoCapDataModule(pl.LightningDataModule):
 
         # split train/val/test by sequence_id
         samples = pd.DataFrame({'id': sample_ids})
-        samples = samples.id.str.rsplit('_', 1, expand=True)
+        samples = samples.id.str.rsplit('_', n=1, expand=True)
         samples.columns = ['sequence_id', 'subsequence_id']
 
         grouped = samples.groupby('sequence_id')
@@ -181,9 +181,9 @@ class MoCapDataModule(pl.LightningDataModule):
 
 if __name__ == "__main__":
     # data_path = 'data/class130-actions-segment120_shift16-coords_normPOS-fps12.data'
-    data_path = 'data/class130-actions-segment40_shift20-coords_normPOS-fps12.data'
-    train_split = 'data/2foldsBal_2-class122.txt' 
-    test_split = 'data/2foldsBal_1-class122.txt'
+    data_path = 'data/hdm05/2version/class130-actions-segment80_shift16-coords_normPOS-fps12.data'
+    train_split = 'data/hdm05/2version/splits/2folds20_80split_2-class122.txt' 
+    test_split = 'data/hdm05/2version/splits/2folds20_80split_1-class122.txt'
     dm = MoCapDataModule(
         data_path,
         train=train_split,

@@ -170,7 +170,7 @@ class LitVAE(pl.LightningModule):
 
         return metrics
 
-    def on_validation_batch_start(self, batch, batch_idx, dataloader_idx):
+    def on_validation_batch_start(self, batch, batch_idx, dataloader_idx=1):
         every_n_batches = 7
         num_samples = 4
 
@@ -321,7 +321,7 @@ def main(args):
 
     # predictions in .data format
     predictions_data_file = run_dir / 'predictions.data.gz'
-    predictions.index = predictions.index.str.rsplit('_', 1, expand=True).rename(['seq_id', 'frame'])
+    predictions.index = predictions.index.str.rsplit('_', n=1, expand=True).rename(['seq_id', 'frame'])
 
     with gzip.open(predictions_data_file, 'wt', encoding='utf8') as f:
         for seq_id, group in predictions.groupby(level='seq_id'):
