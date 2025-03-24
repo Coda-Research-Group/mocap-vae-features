@@ -1,9 +1,9 @@
 # @package _global_
-data_path: ${hydra:runtime.cwd}/data/hdm05/2version/class130-actions-segment80_shift16-coords_normPOS-fps12.data
+data_path: ${hydra:runtime.cwd}/data/hdm05/2version/parts/motion_torso.npz
 # additional_data_path:
 #   - ${hydra:runtime.cwd}/data/hdm05/2version/class130-actions-segment80_shift16-coords_normPOS-fps12.data
 
-body_model: hdm05
+# body_model: hdm05-torso
 input_length: 8
 input_fps: 12
 
