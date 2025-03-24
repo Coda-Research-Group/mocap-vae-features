@@ -252,21 +252,21 @@ class LitVAE(pl.LightningModule):
             # for i, v in enumerate(mean_1nn_accuracies):
             #     self.logger.experiment.add_scalar(f'val/1nn_accuracy/dm{i}', v)
 
-        if self._do_videos:
-            batch = torch.cat(self._preview_samples, dim=0)
-            mu, std = self.encode(batch)
-            recon, _ = self.decode(mu)
+        # if self._do_videos:
+        #     batch = torch.cat(self._preview_samples, dim=0)
+        #     mu, std = self.encode(batch)
+        #     recon, _ = self.decode(mu)
 
-            batch = batch.cpu().numpy()
-            recon = recon.cpu().numpy()
+        #     batch = batch.cpu().numpy()
+        #     recon = recon.cpu().numpy()
 
-            func = delayed(create_tensor)
-            videos = (func(x, x_hat, body_model=self.body_model) for x, x_hat in zip(batch, recon))
-            videos = Parallel(n_jobs=-1)(videos)
-            videos = [torch.from_numpy(v) for v in videos]
-            videos = torch.stack(videos)  # B x T x 3 x H x W
+        #     func = delayed(create_tensor)
+        #     videos = (func(x, x_hat, body_model=self.body_model) for x, x_hat in zip(batch, recon))
+        #     videos = Parallel(n_jobs=-1)(videos)
+        #     videos = [torch.from_numpy(v) for v in videos]
+        #     videos = torch.stack(videos)  # B x T x 3 x H x W
 
-            self.logger.experiment.add_video(f'val/anim', videos, self.current_epoch, self.input_fps)
+        #     self.logger.experiment.add_video(f'val/anim', videos, self.current_epoch, self.input_fps)
 
     def on_train_start(self):
         self.logger.log_hyperparams(self.hparams, {"val/l2_loss": 0, "val/elbo": 0, 'val/1nn_accuracy/dm0': 0})

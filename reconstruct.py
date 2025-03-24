@@ -15,6 +15,10 @@ from datamodules import MoCapDataModule
 
 def visualize_pose(ax, pose, color, edges):
     artists = []
+    # print("--------------------------")
+    # print()
+    # print("--------------------------")
+
     for start, end in edges:
         x0, y0, z0 = pose[start]
         x1, y1, z1 = pose[end]
@@ -109,7 +113,7 @@ def create_tensor(
 def main(args):
     from train import LitVAE
 
-    ckpt = Path("runs/hdm05/all/beta=1,latent_dim=8/lightning_logs/version_0/checkpoints").glob('epoch*.ckpt')
+    ckpt = Path("runs/hdm05/all/beta=1,body_model=hdm05-torso,latent_dim=64/lightning_logs/version_0/checkpoints").glob('epoch*.ckpt')
     ckpt = next(iter(ckpt))
 
     model = LitVAE.load_from_checkpoint(ckpt)
@@ -137,7 +141,7 @@ def main(args):
         body_model=args.body_model,
     )
 
-    gif_dir = Path("runs/hdm05/all/beta=1,latent_dim=8/lightning_logs/version_0") / 'reconstructions'
+    gif_dir = Path("runs/hdm05/all/beta=1,body_model=hdm05-torso,latent_dim=64/lightning_logs/version_0") / 'reconstructions'
     gif_dir.mkdir(exist_ok=True)
 
     print(f'GIF output dir:', gif_dir)
@@ -163,7 +167,7 @@ if __name__ == "__main__":
     parser.add_argument('--train-split', type=Path, help='train sequence ids')
     parser.add_argument('--valid-split', type=Path, help='validation sequence ids')
     parser.add_argument('--test-split', type=Path, help='test sequence ids')
-    parser.add_argument('-b', '--body-model', choices=('hdm05', 'pku-mmd'), default=None, help='Body model')
+    parser.add_argument('-b', '--body-model', default=None, help='Body model')
     parser.add_argument('-r', '--fps', type=float, default=30, help='animation FPS')
 
     parser.add_argument('-e', '--every-n', type=int, default=100, help='how many samples to skip between reconstructed samples')

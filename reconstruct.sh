@@ -11,7 +11,7 @@ PKUMMD_RUNS=(
 
 for RUN in ${HDM05_RUNS[@]}; do
     # DATA=$(basename $(dirname $(dirname "${RUN}")))
-    DATA="data/hdm05/2version/class130-actions-segment80_shift16-coords_normPOS-fps12.data"
+    DATA="/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/parts/motion_torso.npz"
 
     python reconstruct.py \
         $RUN \
@@ -19,7 +19,7 @@ for RUN in ${HDM05_RUNS[@]}; do
         --train-split "data/hdm05/2version/splits/2folds20_80split_2-class122.txt" \
         --valid-split "data/hdm05/2version/splits/2folds20_80split_1-class122.txt" \
         --test-split "data/hdm05/2version/splits/2folds20_80split_1-class122.txt" \
-        --body-model hdm05 \
+        --body-model hdm05-torso \
         --fps 12 \
         --limit 5 \
         --every-n 100
