@@ -3,7 +3,7 @@
 set -e
 
 LATENT_DIMS="256,128,64,32,16,8"
-BETAS="1"
+BETAS="0,0.01,0.1,1,10"
 
 # HDM05 experiments
 python train.py --multirun exp=hdm05/fold1 latent_dim=${LATENT_DIMS} beta=${BETAS}

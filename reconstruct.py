@@ -109,7 +109,7 @@ def create_tensor(
 def main(args):
     from train import LitVAE
 
-    ckpt = Path("runs/hdm05/all/beta=1,latent_dim=256/lightning_logs/version_0/checkpoints").glob('epoch*.ckpt')
+    ckpt = Path("runs/hdm05/all/beta=1,latent_dim=8/lightning_logs/version_0/checkpoints").glob('epoch*.ckpt')
     ckpt = next(iter(ckpt))
 
     model = LitVAE.load_from_checkpoint(ckpt)
@@ -137,7 +137,7 @@ def main(args):
         body_model=args.body_model,
     )
 
-    gif_dir = Path("runs/hdm05/all/beta=1,latent_dim=256/lightning_logs/version_0") / 'reconstructions'
+    gif_dir = Path("runs/hdm05/all/beta=1,latent_dim=8/lightning_logs/version_0") / 'reconstructions'
     gif_dir.mkdir(exist_ok=True)
 
     print(f'GIF output dir:', gif_dir)
