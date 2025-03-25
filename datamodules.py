@@ -181,8 +181,8 @@ class MoCapDataModule(pl.LightningDataModule):
 
 if __name__ == "__main__":
     # data_path = 'data/class130-actions-segment120_shift16-coords_normPOS-fps12.data'
-    data_path = 'data/hdm05/2version/class130-actions-segment80_shift16-coords_normPOS-fps12.data'
-    train_split = 'data/hdm05/2version/splits/2folds20_80split_2-class122.txt' 
+    data_path = 'THIS_DATA_PAH_SHOULD_NOT_BE_USED!!!'
+    train_split = 'data/hdm05/2version/splits/2folds20_80split_2-class122.txt'
     test_split = 'data/hdm05/2version/splits/2folds20_80split_1-class122.txt'
     dm = MoCapDataModule(
         data_path,

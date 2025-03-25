@@ -259,6 +259,15 @@ def main(args):
     log_dir = root_dir / 'lightning_logs' / 'version_0'
     predictions_file = log_dir / 'predictions.csv'
 
+    DATA_PATHS={
+        "hdm05-torso":"/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/parts/motion_torso.npz",
+        "hdm05-handL":"/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/parts/motion_hands_l.npz",
+        "hdm05-handR":"/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/parts/motion_hands_r.npz",
+        "hdm05-legL":"/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/parts/motion_legs_l.npz",
+        "hdm05-legR":"/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/parts/motion_legs_r.npz",
+        "hdm05":"/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/class130-actions-segment80_shift16-coords_normPOS-fps12.npz",
+    }
+
     if predictions_file.exists():
         print("Skipping existing run.")
         return
@@ -266,7 +275,7 @@ def main(args):
     seed_everything(127, workers=True)
 
     dm = MoCapDataModule(
-        args.data_path,
+        DATA_PATHS[args.body_model],
         train=args.train_split,
         valid=args.valid_split,
         test=args.test_split,
@@ -342,7 +351,7 @@ def argparse_cli():
     parser.add_argument('--valid-split', type=Path, help='validation sequence ids')
     parser.add_argument('--test-split', type=Path, help='test sequence ids')
 
-    parser.add_argument('-m', '--body-model', default='hdm05', choices=('hdm05', 'pku-mmd'), help='body model')
+    parser.add_argument('-m', '--body-model', default='hdm05', help='body model')
     parser.add_argument('-i', '--input-length', type=int, default=512, help='input sequence length')
     parser.add_argument('-f', '--input-fps', type=int, default=12, help='sequence fps')
     parser.add_argument('-d', '--latent-dim', type=int, default=32, help='VAE code size')
