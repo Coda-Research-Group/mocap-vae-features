@@ -260,12 +260,12 @@ def main(args):
     predictions_file = log_dir / 'predictions.csv'
 
     DATA_PATHS={
-        "hdm05-torso":"/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/parts/motion_torso.npz",
-        "hdm05-handL":"/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/parts/motion_hands_l.npz",
-        "hdm05-handR":"/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/parts/motion_hands_r.npz",
-        "hdm05-legL":"/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/parts/motion_legs_l.npz",
-        "hdm05-legR":"/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/parts/motion_legs_r.npz",
-        "hdm05":"/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/class130-actions-segment80_shift16-coords_normPOS-fps12.npz",
+        "hdm05-torso":"/storage/brno12-cerit/home/drking/data/hdm05/motion_torso.npz",
+        "hdm05-handL":"/storage/brno12-cerit/home/drking/data/hdm05/motion_hands_l.npz",
+        "hdm05-handR":"/storage/brno12-cerit/home/drking/data/hdm05/motion_hands_r.npz",
+        "hdm05-legL":"/storage/brno12-cerit/home/drking/data/hdm05/motion_legs_l.npz",
+        "hdm05-legR":"/storage/brno12-cerit/home/drking/data/hdm05/motion_legs_r.npz",
+        "hdm05":"/storage/brno12-cerit/home/drking/data/hdm05/class130-actions-segment80_shift16-coords_normPOS-fps12.data",
     }
 
     if predictions_file.exists():
