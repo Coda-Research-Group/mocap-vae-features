@@ -3,17 +3,17 @@
 # TODO: replace LOGIN with your login
 
 SUPPORTED_SCRIPTS=('single.sh')
-SCRIPT_DIR='/storage/brno12-cerit/home/drking/experiments/scripts/core'
+SCRIPT_DIR='/storage/brno12-cerit/home/drking/experiments/mocap-vae-features'
 PBS_LOGS_DIR='/storage/brno12-cerit/home/drking/experiments/pbs'
 
 # Check that there is only one argument
-if [[ "$#" -ne 1 ]]; then
-    echo >&2 "Illegal number of parameters"
-    echo >&2 "Usage: $0 <script-name>"
-    exit 1
-fi
+#if [[ "$#" -ne 1 ]]; then
+   # echo >&2 "Illegal number of parameters"
+  #  echo >&2 "Usage: $0 single.sh"
+ #   exit 1
+#fi
 
-SCRIPT="$1"                # e.g. search.sh
+SCRIPT="single.sh"                # e.g. search.sh
 SCRIPT_NAME="${SCRIPT%.*}" # e.g. search
 
 # Check that the argument is a valid script name
@@ -28,6 +28,7 @@ cd "${REPO_DIR}" || {
     echo >&2 "Repository directory ${REPO_DIR} does not exist!"
     exit 3
 }
+
 COMMIT=$(git rev-parse --short HEAD)
 
 # Stdout and stderr from PBS after the process finishes are placed into $PBS_LOGS_DIR

@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -l select=1:ncpus=8:mem=64gb:cluster=<PICK_A_CLUSTER>
+#PBS -l select=1:ncpus=8:mem=32gb:cluster=tyra22
 #PBS -l walltime=48:00:00
 
 # TODO: replace LOGIN with your login
