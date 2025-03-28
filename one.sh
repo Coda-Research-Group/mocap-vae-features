@@ -32,6 +32,8 @@ export EXPERIMENT
 python /storage/brno12-cerit/home/drking/experiments/train.py --multirun exp=hdm05/all \
     latent_dim=32 beta=1 body_model=hdm05-torso &  # Run in background
 
+wait
+
 
 # LATENT_DIMS="256,128,64,32,16,8"
 # BETAS="0,0.01,0.1,1,10"

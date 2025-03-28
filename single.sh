@@ -1,6 +1,6 @@
 #!/bin/bash
-#PBS -l select=1:ncpus=8:mem=32gb:cluster=tyra22
-#PBS -l walltime=48:00:00
+#PBS -l select=1:ncpus=4:mem=8gb
+#PBS -l walltime=24:00:00
 
 # TODO: replace LOGIN with your login
 # TODO: select a particular cluster: https://metavo.metacentrum.cz/pbsmon2/nodes/pbs
@@ -34,8 +34,15 @@ BODY_MODELS="hdm05-torso,hdm05-handL,hdm05-handR,hdm05-legL,hdm05-legR,hdm05"
 
 # Run experiments in parallel using background jobs
 for EXP in "fold1" "fold2" "all"; do
-    python /storage/brno12-cerit/home/drking/experiments/train.py --multirun exp=hdm05/${EXP} \
-        latent_dim=${LATENT_DIMS} beta=${BETAS} body_model=${BODY_MODELS} &  # Run in background
+    for DIM in "256" "128" "64" "32" "16" "8"; do
+        for BETA in "0" "0.01" "0.1" "1" "10"; do 
+            for MODEL in "hdm05-torso" "hdm05-handL" "hdm05-handR" "hdm05-legL" "hdm05-legR" "hdm05"; do
+
+                puthon /storage/brno12-cerit/home/drking/experiments/train.py --multirun exp=hdm05/${EXP} \
+                    latent_dim=${DIM} beta=${BETA} body_model=${MODEL} &  # Run in background
+            done
+        done
+    done
 done
 
 wait

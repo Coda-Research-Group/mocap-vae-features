@@ -1,0 +1,8 @@
+build
+nbproject
+test
+/build.xml
+data
+/target/
+/out/
+/.idea/
