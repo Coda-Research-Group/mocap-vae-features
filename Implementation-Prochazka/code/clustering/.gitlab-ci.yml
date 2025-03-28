@@ -1,0 +1,24 @@
+java-build:
+  image: maven:3-openjdk-17
+  tags:
+    - shared-fi
+  script:
+    - mvn --version
+    - mvn --no-transfer-progress clean verify
+
+# https://www.shellcheck.net
+shellcheck:
+  image: koalaman/shellcheck-alpine:stable
+  tags:
+    - shared-fi
+  script:
+    - shellcheck --version
+    - shellcheck scripts/*.sh
+
+# https://black.readthedocs.io/en/stable/
+black:
+  image: pyfound/black:latest_release
+  tags:
+    - shared-fi
+  script:
+    - black --check scripts/*.py

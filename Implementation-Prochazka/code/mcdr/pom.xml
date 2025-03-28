@@ -1,0 +1,55 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>mcda</groupId>
+    <artifactId>mcdr</artifactId>
+    <version>1.0.0-DEVEL</version>
+    <packaging>jar</packaging>
+    <url>https://gitlab.fi.muni.cz/disa/public/motion/mcdr</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>messif</groupId>
+            <artifactId>messif</artifactId>
+<!--            <version>[2.1.9,3)</version>-->
+            <version>2.3.9-DEVEL</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/messif-2.3.9-DEVEL.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>cz.muni.fi.mufin</groupId>
+            <artifactId>smf-core</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/smf-core-1.0.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>cz.muni.fi.mufin</groupId>
+            <artifactId>smf-impl</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/smf-impl-1.0.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>mcda</groupId>
+            <artifactId>mcda-commons</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/mcda-commons-1.0.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
+            <version>3.6.1</version>
+        </dependency>
+    </dependencies>
+    <description>MCDR is a Java implementation of ...</description>
+    <name>mcdr</name>
+</project>
