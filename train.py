@@ -5,23 +5,19 @@ from pathlib import Path
 
 from joblib import delayed, Parallel
 import hydra
-import numpy as np
 import pandas as pd
 import pytorch_lightning as pl
 from pytorch_lightning import Trainer, seed_everything
 from pytorch_lightning.callbacks import ModelCheckpoint, LearningRateMonitor, EarlyStopping
 from pytorch_lightning.loggers import TensorBoardLogger
-from torch.optim.lr_scheduler import ReduceLROnPlateau
 import seaborn as sns
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from tqdm import tqdm
 
 import body_models
 from datamodules import MoCapDataModule
 from reconstruct import create_tensor
-import evaluate
 
 
 class ResBlock(nn.Module):
@@ -56,16 +52,12 @@ class LitVAE(pl.LightningModule):
         input_fps=12,
         latent_dim=256,
         beta=1,
-        learning_rate=1e-4,
-        extra_dms=None,
     ):
         super().__init__()
 
         self.beta = beta
         self.input_fps = input_fps
-        self.learning_rate = learning_rate
         self.save_hyperparameters()
-        self.extra_dms = extra_dms
 
         self.body_model = body_models.get_by_name(body_model)
         input_dim = self.body_model.num_joints * self.body_model.num_dimensions
@@ -98,13 +90,11 @@ class LitVAE(pl.LightningModule):
             nn.Conv1d(64, 2*input_dim, kernel_size=1, stride=1, padding=0),  # output: 2*input_dim (mean and logstd) x T
         )
 
-        self._do_videos = False
-        self._do_retrieval_eval = False
         self._preview_samples = []
 
     def configure_optimizers(self):
-        optimizer = torch.optim.AdamW(self.parameters(), lr=self.learning_rate)
-        lr_scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=10)
+        optimizer = torch.optim.AdamW(self.parameters(), lr=1e-4)
+        lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, patience=25)
         return {
             "optimizer": optimizer,
             "lr_scheduler": {
@@ -176,11 +166,11 @@ class LitVAE(pl.LightningModule):
             f'{stage}/l2_loss': l2_loss.mean(),
         }
 
-        self.log_dict(metrics, prog_bar=(stage != 'train'))
+        self.log_dict(metrics, prog_bar=True)
 
         return metrics
 
-    def on_validation_batch_start(self, batch, batch_idx, dataloader_idx=0):
+    def on_validation_batch_start(self, batch, batch_idx, dataloader_idx=1):
         every_n_batches = 7
         num_samples = 4
 
@@ -193,83 +183,29 @@ class LitVAE(pl.LightningModule):
         sample = batch[0][:1]  # get first sample
         self._preview_samples.append(sample)
 
-    def on_validation_start(self):
-        every_n_epochs = 1
-        self._do_videos = self.current_epoch % every_n_epochs == 0
-        self._do_retrieval_eval = self.current_epoch % every_n_epochs == 0
+    def on_validation_end(self):
+        every_n_epochs = 50
+        if self.current_epoch % every_n_epochs != 0:
+            return
 
-    def _retrieval_validation(self):
-        trainer = self.trainer
+        batch = torch.cat(self._preview_samples, dim=0)
+        mu, std = self.encode(batch)
+        recon, _ = self.decode(mu)
 
-        def _get_info(ids):
-            x_info = pd.DataFrame(ids)[0].str.split('_', expand=True)
-            x_info.columns = ['parentSeqID', 'classID', 'offsetWithinParentSeq', 'actionLength', 'frameID']
-            x_info = x_info.groupby(['parentSeqID', 'classID', 'offsetWithinParentSeq', 'actionLength'])
-            x_info = x_info.groups
-            return x_info
+        batch = batch.cpu().numpy()
+        recon = recon.cpu().numpy()
 
-        def _extract(dl, info):
-            # x = trainer.predict(self, dl)  # this breaks model device placement
-            x = [self.encode(batch[0].cuda())[0] for batch in tqdm(dl, leave=False)]
-            x = torch.vstack(x)
-            x = F.normalize(x)
-            x = x.cpu().numpy()
+        # videos = [create_tensor(x, x_hat, body_model=self.body_model) for x, x_hat in zip(batch, recon)]
+        func = delayed(create_tensor)
+        videos = (func(x, x_hat, body_model=self.body_model) for x, x_hat in zip(batch, recon))
+        videos = Parallel(n_jobs=-1)(videos)
+        videos = [torch.from_numpy(v) for v in videos]
+        videos = torch.stack(videos)  # B x T x 3 x H x W
 
-            x_actions = [x[indices] for group, indices in info.items()]
-            x_labels = np.array([group[1] for group in info.keys()])
-
-            return x_actions, x_labels
-
-        accuracies = []
-
-        for i, dm in enumerate(self.extra_dms):
-            db_dl = dm.train_dataloader()
-            q_dl = dm.val_dataloader()
-
-            db_info = _get_info(dm.train_ids)
-            q_info = _get_info(dm.valid_ids)
-
-            db_actions, db_labels = _extract(db_dl, db_info)
-            q_actions, q_labels = _extract(q_dl, q_info)
-
-            accuracy = evaluate.one_nn_accuracy(
-                q_actions, q_labels,
-                db_actions, db_labels,
-                approx=True,
-                exclude_first_neighbor=False,
-            )
-            accuracies.append(accuracy)
-
-        return accuracies
-
-    def on_validation_epoch_end(self):
-        if self._do_retrieval_eval:
-            mean_1nn_accuracies = self._retrieval_validation()
-
-            # Cannot use self.log_dict() here..
-            acc_dict = {f'val/1nn_accuracy/dm{i}': v for i, v in enumerate(mean_1nn_accuracies)}
-            self.log_dict(acc_dict, on_step=False, on_epoch=True)
-            # for i, v in enumerate(mean_1nn_accuracies):
-            #     self.logger.experiment.add_scalar(f'val/1nn_accuracy/dm{i}', v)
-
-        if self._do_videos:
-            batch = torch.cat(self._preview_samples, dim=0)
-            mu, std = self.encode(batch)
-            recon, _ = self.decode(mu)
-
-            batch = batch.cpu().numpy()
-            recon = recon.cpu().numpy()
-
-            func = delayed(create_tensor)
-            videos = (func(x, x_hat, body_model=self.body_model) for x, x_hat in zip(batch, recon))
-            videos = Parallel(n_jobs=-1)(videos)
-            videos = [torch.from_numpy(v) for v in videos]
-            videos = torch.stack(videos)  # B x T x 3 x H x W
-
-            self.logger.experiment.add_video(f'val/anim', videos, self.current_epoch, self.input_fps)
+        self.logger.experiment.add_video(f'valid/anim', videos, self.current_epoch, self.input_fps)
 
     def on_train_start(self):
-        self.logger.log_hyperparams(self.hparams, {"val/l2_loss": 0, "val/elbo": 0, 'val/1nn_accuracy/dm0': 0})
+        self.logger.log_hyperparams(self.hparams, {"val/l2_loss": 0, "val/elbo": 0})
 
     def training_step(self, *args, **kwargs):
         metrics = self._common_step('train', *args, **kwargs)
@@ -317,79 +253,34 @@ class LitVAE(pl.LightningModule):
         return x_mean, x_logstd
 
 
-def predict(trainer, model, ckpt_path, dm, prefix='', force=False):
-    run_dir = Path(trainer.log_dir)
-
-    predictions_csv = run_dir / f'{prefix}predictions.csv.gz'
-    predictions_data_file = run_dir / f'{prefix}predictions.data.gz'
-
-    if predictions_csv.exists() and not force:
-        print('Skipping prediction. File exists:', predictions_csv.stem)
-        return False
-
-    print(f'Predicting: {prefix}')
-
-    # prediction csv
-    predictions = trainer.predict(model, ckpt_path=ckpt_path, datamodule=dm)
-    predictions = torch.concat(predictions, 0).numpy()
-    predictions = pd.DataFrame(predictions, index=dm.predict_ids)
-    predictions.index.name = 'id'
-    predictions.to_csv(predictions_csv)
-
-    # predictions in .data format
-    predictions.index = predictions.index.str.rsplit('_', n=1, expand=True).rename(['seq_id', 'frame'])
-    with gzip.open(predictions_data_file, 'wt', encoding='utf8') as f:
-        for seq_id, group in predictions.groupby(level='seq_id'):
-            print(f'#objectKey messif.objects.keys.AbstractObjectKey {seq_id}', file=f)
-            print(f'{len(group)};mcdr.objects.ObjectMocapPose', file=f)
-            print(group.to_csv(index=False, header=False), end='', file=f)
-
-    return True
-
-
 @hydra.main(version_base=None, config_path='experiments', config_name='config')
 def main(args):
     root_dir = Path.cwd()
     log_dir = root_dir / 'lightning_logs' / 'version_0'
+    predictions_file = log_dir / 'predictions.csv'
+
+    DATA_PATHS={
+        "hdm05-torso":"/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/parts/motion_torso.npz",
+        "hdm05-handL":"/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/parts/motion_hands_l.npz",
+        "hdm05-handR":"/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/parts/motion_hands_r.npz",
+        "hdm05-legL":"/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/parts/motion_legs_l.npz",
+        "hdm05-legR":"/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/parts/motion_legs_r.npz",
+        "hdm05":"/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/class130-actions-segment80_shift16-coords_normPOS-fps12.npz",
+    }
+
+    if predictions_file.exists():
+        print("Skipping existing run.")
+        return
 
     seed_everything(127, workers=True)
 
     dm = MoCapDataModule(
-        args.data_path,
+        DATA_PATHS[args.body_model],
         train=args.train_split,
         valid=args.valid_split,
         test=args.test_split,
         batch_size=args.batch_size
     )
-
-    # print("-------------------------")
-    # print( args.additional_data_path,
-    #         args.additional_train_split,
-    #         args.additional_valid_split,
-    #         args.additional_valid_split)
-    # print("-------------------------")
-
-    # extra_dms = [
-    #     MoCapDataModule(
-    #         path,
-    #         train=train,
-    #         valid=valid,
-    #         test=test,
-    #         batch_size=args.batch_size,
-    #         shuffle_train=False,
-    #     ) for path, train, valid, test in zip(
-    #         args.additional_data_path,
-    #         args.additional_train_split,
-    #         args.additional_valid_split,
-    #         args.additional_valid_split,
-    #     )
-    # ]
-
-    # for edm in extra_dms:
-    #     edm.prepare_data()
-    #     edm.setup()
-
-    extra_dms = []
 
     model = LitVAE(
         body_model=args.body_model,
@@ -397,8 +288,6 @@ def main(args):
         input_fps=args.input_fps,
         latent_dim=args.latent_dim,
         beta=args.beta,
-        learning_rate=args.learning_rate,
-        extra_dms=extra_dms,
     )
 
     logger = TensorBoardLogger(root_dir, version=0, default_hp_metric=False)
@@ -418,37 +307,41 @@ def main(args):
         ]
     )
 
-    if not args.skip_train:
-        last_ckpt_path = log_dir / 'checkpoints' / 'last.ckpt'
-        resume_ckpt = last_ckpt_path if args.resume and last_ckpt_path.exists() else None
+    last_ckpt_path = log_dir / 'checkpoints' / 'last.ckpt'
+    resume_ckpt = last_ckpt_path if args.resume and last_ckpt_path.exists() else None
+    try:
         trainer.fit(model, dm, ckpt_path=resume_ckpt)
-        try:
-            trainer.fit(model, dm, ckpt_path=resume_ckpt)
-        except ValueError as e:
-            print('Train terminated by error:', e)
-            with open('terminated_by_error.txt', 'w') as f:
-                f.write(str(e))
-        ckpt_path = 'best'
-    else:
-        ckpts = (log_dir / 'checkpoints').glob('epoch=*.ckpt')
-        ckpt_path = max(ckpts, key=lambda x: int(x.stem.split('-')[0].split('=')[1]))
+    except ValueError as e:
+        print('Train terminated by error:', e)
+        with open('terminated_by_error.txt', 'w') as f:
+            f.write(str(e))
 
-    trainer.test(model, ckpt_path=ckpt_path, datamodule=dm)
+    trainer.test(ckpt_path='best', datamodule=dm)
 
-    # predictions in .csv and .data format
-    if predict(trainer, model, ckpt_path, dm):
+    predictions = trainer.predict(ckpt_path='best', datamodule=dm)
+    predictions = torch.concat(predictions, 0).numpy()
+    predictions = pd.DataFrame(predictions, index=dm.predict_ids)
+    predictions.index.name = 'id'
 
-        # save segments ids per split
-        pd.DataFrame(dm.train_ids).to_csv(log_dir / 'train_ids.txt.gz', header=False, index=False)
-        pd.DataFrame(dm.valid_ids).to_csv(log_dir / 'valid_ids.txt.gz', header=False, index=False)
-        pd.DataFrame( dm.test_ids).to_csv(log_dir /  'test_ids.txt.gz', header=False, index=False)
+    # prediction csv
+    run_dir = Path(trainer.log_dir)
+    predictions_csv = run_dir / 'predictions.csv.gz'
+    predictions.to_csv(predictions_csv)
 
-    # predictions on additional datasets
-    if hasattr(args, 'additional_data_path'):
-        for additional_data_path in args.additional_data_path:
-            dm = MoCapDataModule(additional_data_path, batch_size=args.batch_size)
-            prefix = Path(additional_data_path).stem
-            predict(trainer, model, ckpt_path, dm, prefix=prefix)
+    # predictions in .data format
+    predictions_data_file = run_dir / 'predictions.data.gz'
+    predictions.index = predictions.index.str.rsplit('_', n=1, expand=True).rename(['seq_id', 'frame'])
+
+    with gzip.open(predictions_data_file, 'wt', encoding='utf8') as f:
+        for seq_id, group in predictions.groupby(level='seq_id'):
+            print(f'#objectKey messif.objects.keys.AbstractObjectKey {seq_id}', file=f)
+            print(f'{len(group)};mcdr.objects.ObjectMocapPose', file=f)
+            print(group.to_csv(index=False, header=False), end='', file=f)
+
+    # segments ids
+    pd.DataFrame(dm.train_ids).to_csv(run_dir / 'train_ids.txt.gz', header=False, index=False)
+    pd.DataFrame(dm.valid_ids).to_csv(run_dir / 'valid_ids.txt.gz', header=False, index=False)
+    pd.DataFrame( dm.test_ids).to_csv(run_dir /  'test_ids.txt.gz', header=False, index=False)
 
 
 def argparse_cli():
@@ -458,21 +351,15 @@ def argparse_cli():
     parser.add_argument('--valid-split', type=Path, help='validation sequence ids')
     parser.add_argument('--test-split', type=Path, help='test sequence ids')
 
-    parser.add_argument('-m', '--body-model', default='hdm05', choices=('hdm05', 'pku-mmd'), help='body model')
+    parser.add_argument('-m', '--body-model', default='hdm05', help='body model')
     parser.add_argument('-i', '--input-length', type=int, default=512, help='input sequence length')
     parser.add_argument('-f', '--input-fps', type=int, default=12, help='sequence fps')
     parser.add_argument('-d', '--latent-dim', type=int, default=32, help='VAE code size')
-    parser.add_argument('--beta', type=float, default=1, help='KL divergence weight')
+    parser.add_argument('--beta', type=float, default=100, help='KL divergence weight')
 
     parser.add_argument('-b', '--batch-size', type=int, default=512, help='batch size')
     parser.add_argument('-e', '--epochs', type=int, default=250, help='number of training epochs')
     parser.add_argument('-r', '--resume', default=False, action='store_true', help='resume training')
-    parser.add_argument('-s', '--skip-train', default=False, action='store_true', help='perform prediction only')
-
-    parser.add_argument('-a', '--additional-data-path', default=None, type=Path, nargs='+', help='additional data on which prediction is run after training')
-    parser.add_argument('--additional-train-split', type=Path, nargs='+', help='additional train sequence ids')
-    parser.add_argument('--additional-valid-split', type=Path, nargs='+', help='additional validation sequence ids')
-    parser.add_argument('--additional-test-split', type=Path, nargs='+', help='additional test sequence ids')
 
     args = parser.parse_args()
     main(args)

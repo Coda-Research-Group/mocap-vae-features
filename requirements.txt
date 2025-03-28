@@ -3,10 +3,7 @@ jupyter
 hydra-core
 ipympl
 moviepy
-openpyxl
 pandas
-protobuf
+protobuf<=3.20.*
 pytorch-lightning
 seaborn
-SciencePlots
-scikit-learn
