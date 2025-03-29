@@ -31,10 +31,10 @@ def create_clustering_files(
 
 create_clustering_files(
     # "/Users/david/Developer/SDIPR/datasets/folds-data/hdm05/65",
-    "/Users/david/Developer/SDIPR/datasets/folds-data/hdm05/130",
+    "/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/",
     #
     # "/Users/david/Developer/SDIPR/datasets/folds-cluster/hdm05/65",
-    "/Users/david/Developer/SDIPR/datasets/folds-cluster/hdm05/130",
+    "/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/clusters",
     #
     # "class130-actions-segment80_shift16-coords_normPOS-fps12.data-cho2014",
     "class130-actions-segment80_shift16-coords_normPOS-fps12.data",

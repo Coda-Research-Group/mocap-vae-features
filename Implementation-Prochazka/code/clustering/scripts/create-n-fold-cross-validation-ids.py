@@ -76,17 +76,17 @@ if __name__ == "__main__":
     for split in range(number_of_splits):
         # Expects the MESSIF format
         action_ids = extract_actions_ids(
-            # "/Users/david/Developer/SDIPR/datasets/folds-id/hdm05/130/class130-actions-coords_normPOS-fps12.data"
-            "/Users/david/Developer/SDIPR/datasets/folds-id/hdm05/65/class130-actions-coords_normPOS-fps12.data-cho2014"
+            "/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/class130-actions-coords_normPOS-fps12.data"
+#             "/Users/david/Developer/SDIPR/datasets/folds-id/hdm05/65/class130-actions-coords_normPOS-fps12.data-cho2014"
         )
 
         mapping = create_category_to_action_mapping(action_ids)
 
-        # folds = create_folds(mapping, 2)
-        folds = create_folds(mapping, number_of_folds)
+        folds = create_folds(mapping, 2)
+#         folds = create_folds(mapping, number_of_folds)
 
-        # folder = f"/Users/david/Developer/SDIPR/datasets/folds-id/hdm05/130/{split}"
-        folder = f"/Users/david/Developer/SDIPR/datasets/folds-id/hdm05/65/{split}"
+        folder = f"/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/toMWs/{split}"
+#         folder = f"/Users/david/Developer/SDIPR/datasets/folds-id/hdm05/65/{split}"
         os.makedirs(folder)
 
         for i, fold in folds:

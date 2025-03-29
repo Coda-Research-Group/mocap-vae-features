@@ -78,18 +78,18 @@ def create_data_files_pku(actions_file: str, data_file: str) -> None:
     write_output_to_file(f"{data_file}-cv-train", fold_data)
 
 
-# create_data_files(
-#     # "/Users/david/Developer/SDIPR/datasets/folds-id/hdm05/130",
+create_data_files(
+    "/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/toMWs",
 #     "/Users/david/Developer/SDIPR/datasets/folds-id/hdm05/65",
-#     #
-#     # "/Users/david/Developer/SDIPR/datasets/folds-data/hdm05/130/class130-actions-segment80_shift16-coords_normPOS-fps12.data",
+    #
+    "/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/class130-actions-segment80_shift16-coords_normPOS-fps12.data",
 #     "/Users/david/Developer/SDIPR/datasets/folds-data/hdm05/65/class130-actions-segment80_shift16-coords_normPOS-fps12.data-cho2014",
-#     #
-#     # 2,
-#     10,
-# )
 
-create_data_files_pku(
-    "/Users/david/Developer/SDIPR/datasets/folds-id/pku-mmd/cv/CV_train_objects_messif-lines.ids",
-    "/Users/david/Developer/SDIPR/datasets/folds-cluster/pku/actions_singlesubject-segment24_shift4.8_initialshift0-coords_normPOS-fps10.data",
+    2,
+#     10,
 )
+
+# create_data_files_pku(
+#     "/Users/david/Developer/SDIPR/datasets/folds-id/pku-mmd/cv/CV_train_objects_messif-lines.ids",
+#     "/Users/david/Developer/SDIPR/datasets/folds-cluster/pku/actions_singlesubject-segment24_shift4.8_initialshift0-coords_normPOS-fps10.data",
+# )
