@@ -54,14 +54,14 @@ COMPOSITE_MW_BODYPART_SUBFOLDER=''
 
 # Defaults
 
-ROOT_FOLDER_FOR_RESULTS=${ROOT_FOLDER_FOR_RESULTS:-'/home/xprocha6/cybela1-storage/clustering'}
-DATASET_PATH=${DATASET_PATH:-'/home/xprocha6/thesis/datasets/elki-class130-actions-segment80_shift16-coords_normPOS-fps12.data'}
+ROOT_FOLDER_FOR_RESULTS=${ROOT_FOLDER_FOR_RESULTS:-'/home/drking/Documents/bakalarka/mocap-vae-features/data/clustering/results'}
+DATASET_PATH=${DATASET_PATH:-'/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/elki-class130-actions-segment80_shift16-coords_normPOS-fps12.data'}
 DISTANCE_FUNCTION=${DISTANCE_FUNCTION:-'clustering.distance.SequenceMocapPoseCoordsL2DTW'}
 ALGORITHM=${ALGORITHM:-'clustering.kmeans.KMedoidsFastPAM'}
 ALGORITHM_PARAMS=${ALGORITHM_PARAMS:-'-kmeans.k 3'}
-ELKI_JAR_PATH=${ELKI_JAR_PATH:-'/home/xprocha6/thesis/jars/elki-with-distances.jar'}
-CONVERTOR_JAR_PATH=${CONVERTOR_JAR_PATH:-'/home/xprocha6/thesis/jars/convertor.jar'}
-JDK_PATH=${JDK_PATH:-'/home/xprocha6/thesis/jdk-17.0.2/bin/java'}
+ELKI_JAR_PATH=${ELKI_JAR_PATH:-'/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/elki-with-distances.jar'}
+CONVERTOR_JAR_PATH=${CONVERTOR_JAR_PATH:-'/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/convertor.jar'}
+JDK_PATH=${JDK_PATH:-'/usr/bin/java'}
 CLUSTER_SUBFOLDER=${CLUSTER_SUBFOLDER:-'cluster'}
 ELKI_FORMAT_CLUSTER_SUBFOLDER=${ELKI_FORMAT_CLUSTER_SUBFOLDER:-'clusters-elki-format'}
 KMEDOIDS_CLUSTER_SUBFOLDER=${KMEDOIDS_CLUSTER_SUBFOLDER:-'kmedoids-clusters'}
@@ -212,8 +212,8 @@ ${JDK_PATH} \
 
 ## Composite MW clustering using ELKI
 function createCompositeMWClusteringELKI() {
-    DATASET_PATH='/home/xprocha6/cybela1-storage/datasets/hdm05/elki-class130-actions-segment80_shift16-coords_normPOS-fps12.data'
-    ROOT_FOLDER_FOR_RESULTS='/home/xprocha6/cybela1-storage/clustering-results/hdm05'
+    DATASET_PATH='/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/elki-class130-actions-segment80_shift16-coords_normPOS-fps12.data'
+    ROOT_FOLDER_FOR_RESULTS='/home/drking/Documents/bakalarka/mocap-vae-features/data/clustering/results'
 
     for JOINT_IDS in '2,3,4,5,6' '7,8,9,10,11' '12,13,14,15,16,17' '18,19,20,21,22,23,24' '25,26,27,28,29,30,31'; do # HDM05 - body parts
         DISTANCE_FUNCTION_PARAMS="-clustering.distance.SequenceMocapPoseCoordsL2DTW.usedJointIds ${JOINT_IDS}"
@@ -321,5 +321,12 @@ ${JOINT_IDS} \
 #     sleep 10
 # done
 
+ for K in 350 500; do
+     ALGORITHM_PARAMS="-kmeans.k ${K}"
+     createCompositeMWClusteringELKI
+     sleep 10
+ done
+
+
 # MESSIF clustering:
-createCompositeMWClusteringMessif
+#createCompositeMWClusteringMessif
