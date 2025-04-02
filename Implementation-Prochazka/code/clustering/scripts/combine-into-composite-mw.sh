@@ -10,8 +10,8 @@ COMBINER_JAR_PATH=''
 
 ## Defaults
 
-JDK_PATH=${JDK_PATH:-'/home/xprocha6/thesis/jdk-17.0.2/bin/java'}
-COMBINER_JAR_PATH=${COMBINER_JAR_PATH:-'/home/xprocha6/thesis/jars/compositeMWCombiner.jar'}
+JDK_PATH=${JDK_PATH:-'/usr/bin/java'}
+COMBINER_JAR_PATH=${COMBINER_JAR_PATH:-'/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/compositeMWCombiner.jar'}
 
 ## Functions
 
@@ -35,34 +35,34 @@ ${JDK_PATH} \
 }
 
 # HDM05-130
-# for SPLIT in '0' '1' '2' '3' '4'; do
-#     for FOLD in '0' '1'; do
-#         for TYPE in 'test' 'train'; do
-#             for K in '250'; do
+ for SPLIT in '0' '1' '2' '3' '4'; do
+     for FOLD in '0' '1'; do
+         for TYPE in 'test' 'train'; do
+             for K in '10'; do
 
-#                 BODY_PART_MWS_FOLDER="/home/xprocha6/cybela1-storage/folds-mw/hdm05/130/split${SPLIT}-fold${FOLD}/KMeansPivotChooser--kmeans.k_${K}-${TYPE}"
+                 BODY_PART_MWS_FOLDER="/home/drking/Documents/bakalarka/mocap-vae-features/data/clustering/MWs/split${SPLIT}-fold${FOLD}/KMeansPivotChooser--kmeans.k_${K}-${TYPE}"
 
-#                 combineBodyPartsIntoCompositeMW
+                 combineBodyPartsIntoCompositeMW
 
-#             done
-#         done
-#     done
-# done
+             done
+         done
+     done
+ done
 
-# HDM05-65
-for SPLIT in '0' '1' '2' '3' '4'; do
-    for FOLD in '0,1,2,3,4,5,6,7,8' '0,1,2,3,4,5,6,7,9' '0,1,2,3,4,5,6,8,9' '0,1,2,3,4,5,7,8,9' '0,1,2,3,4,6,7,8,9' '0,1,2,3,5,6,7,8,9' '0,1,2,4,5,6,7,8,9' '0,1,3,4,5,6,7,8,9' '0,2,3,4,5,6,7,8,9' '1,2,3,4,5,6,7,8,9'; do
-        for TYPE in 'test' 'train'; do
-            for K in '250' '300'; do
-
-                BODY_PART_MWS_FOLDER="/home/xprocha6/cybela1-storage/folds-mw/hdm05/65/split${SPLIT}-fold${FOLD}/KMeansPivotChooser--kmeans.k_${K}-${TYPE}"
-
-                combineBodyPartsIntoCompositeMW
-
-            done
-        done
-    done
-done
+## HDM05-65
+#for SPLIT in '0' '1' '2' '3' '4'; do
+#    for FOLD in '0,1,2,3,4,5,6,7,8' '0,1,2,3,4,5,6,7,9' '0,1,2,3,4,5,6,8,9' '0,1,2,3,4,5,7,8,9' '0,1,2,3,4,6,7,8,9' '0,1,2,3,5,6,7,8,9' '0,1,2,4,5,6,7,8,9' '0,1,3,4,5,6,7,8,9' '0,2,3,4,5,6,7,8,9' '1,2,3,4,5,6,7,8,9'; do
+#        for TYPE in 'test' 'train'; do
+#            for K in '250' '300'; do
+#
+#                BODY_PART_MWS_FOLDER="/home/xprocha6/cybela1-storage/folds-mw/hdm05/65/split${SPLIT}-fold${FOLD}/KMeansPivotChooser--kmeans.k_${K}-${TYPE}"
+#
+#                combineBodyPartsIntoCompositeMW
+#
+#            done
+#        done
+#    done
+#done
 
 # PKU CS
 # for TYPE in 'test' 'train'; do # 5 body parts

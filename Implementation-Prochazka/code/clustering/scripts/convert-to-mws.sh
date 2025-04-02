@@ -4,18 +4,19 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-cd /home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/code/clustering/jars || exit
-pwd
+cd /home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/code/motionvocabulary/dist/lib || exit
+
 
 # Which clusters to use
-CLUSTERS_ROOT_PATH='/home/drking/Documents/bakalarka/mocap-vae-features/data/clustering/results/KMedoidsFastPAM--kmeans.10'
+CLUSTERS_ROOT_PATH='/home/drking/Documents/bakalarka/mocap-vae-features/data/clustering/results/KMedoidsFastPAM--kmeans.350'
 # Where to store them
 OUTPUT_ROOT_PATH='/home/drking/Documents/bakalarka/mocap-vae-features/data/clustering/MWs'
 JDK_PATH='/usr/bin/java'
 MEMORY='3g'
-CLASSPATH=${CLASSPATH:-'MESSIF.jar:MESSIF-Utility.jar:MotionVocabulary.jar:commons-cli-1.4.jar:smf-core-1.0.jar:smf-impl-1.0.jar:MCDR.jar:m-index.jar:trove4j-3.0.3.jar'}
+#CLASSPATH=''
+CLASSPATH=${CLASSPATH:-'MESSIF.jar:MESSIF-Utility.jar:/home/drking/Documents/bakalarka/Implementation/code/motionvocabulary/MotionVocabulary.jar:commons-cli-1.4.jar:smf-core-1.0.jar:smf-impl-1.0.jar:/home/drking/Documents/bakalarka/Implementation/code/motionvocabulary/MCDR.jar:m-index.jar:trove4j-3.0.3.jar'}
 # Object class to work with in the dataset and pivots (default is messif.objects.impl.ObjectFloatVectorNeuralNetworkL2)
-CLS_OBJ='mcdr.sequence.impl.SequenceMocapPoseCoordsL2DTW'
+CLS_OBJ='mcdr.sequence.impl.SequenceMocapPoseCoordsL2DTWFiltered'
 # Dataset file path - which objects to convert
 DATAFILE='/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/class130-actions-segment80_shift16-coords_normPOS-fps12.data'
 # OPTIONAL - (default is D0K1)
@@ -27,7 +28,7 @@ VOCTYPE='-v'
 # Should contain the same value as ${EXTRACTED_MEDOIDS_FILE} in ./script/cluster.sh
 MEDOIDS_FILENAME='medoids.txt'
 # The folder name in ${CLUSTERS_ROOT_PATH} to be processed
-CLUSTER_FOLDER_NAME='KMedoidsFastPAM--kmeans.k_10'
+CLUSTER_FOLDER_NAME='KMedoidsFastPAM--kmeans.k_350'
 # Which joint IDs should be used, specific to each body part
 FILTER_JOINT_IDS=''
 
@@ -59,7 +60,6 @@ ${JDK_PATH} \
 messif.motionvocabulary.MotionVocabulary \
 -d ${DATAFILE} \
 -c ${CLS_OBJ} \
--filter ${FILTER_JOINT_IDS} \
 --quantize ${TOSEQ} ${VOCTYPE} ${CLUSTER_FOLDER_PATH}/${MEDOIDS_FILENAME} \
 --soft-assign ${SOFTASSIGNPARAM} \
 --output ${OUTPUT_ROOT_PATH}/${CLUSTER_FOLDER_NAME}.${SOFTASSIGNPARAM} \
@@ -73,11 +73,11 @@ messif.motionvocabulary.MotionVocabulary \
 function convertBodyParts() {
     echo 'convertBodyParts'
 
-    for CLUSTER_FOLDER_PATH in "${CLUSTERS_ROOT_PATH}"/*; do # take all body parts and relations inside the folder
-        # for CLUSTER_FOLDER_PATH in "${CLUSTERS_ROOT_PATH}"/{'11,12,24,25,7,8,22,23','3,4,11,12,24,25','3,4,7,8,22,23'}; do # only PKU-MMD relations
-        # for CLUSTER_FOLDER_PATH in "${CLUSTERS_ROOT_PATH}"/{'28,29,30,31,21,22,23,24','16,17,28,29,30,31','16,17,21,22,23,24'}; do # only HDM05 relations
-
+#    for CLUSTER_FOLDER_PATH in "${CLUSTERS_ROOT_PATH}"/*; do # take all body parts and relations inside the folder !!! THIS piece of code does not work
+#         for CLUSTER_FOLDER_PATH in "${CLUSTERS_ROOT_PATH}"/{'11,12,24,25,7,8,22,23','3,4,11,12,24,25','3,4,7,8,22,23'}; do # only PKU-MMD relations
+    for CLUSTER_FOLDER_PATH in "${CLUSTERS_ROOT_PATH}"/{'2,3,4,5,6','7,8,9,10,11','12,13,14,15,16,17','18,19,20,21,22,23,24','25,26,27,28,29,30,31'}; do
         # Parses the folder name (the string after the last "/")
+        echo "${CLUSTER_FOLDER_PATH}"
         CLUSTER_FOLDER_NAME=$(basename "${CLUSTER_FOLDER_PATH}")
         FILTER_JOINT_IDS="${CLUSTER_FOLDER_NAME}"
 
@@ -101,32 +101,32 @@ function convertBodyPartsCli() {
 }
 
 # HDM05-130 - 2-fold cross validation - folds: '0' '1'
- for K in '10'; do
-     for SPLIT in '0' '1' '2' '3' '4'; do
-         # for SPLIT in '4'; do
+ for K in '350'; do
+     for SPLIT in '0' '1' '2' '3'; do
+#          for SPLIT in '4'; do
 
          ## Training data for fold 0:
          DATAFILE="/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/class130-actions-segment80_shift16-coords_normPOS-fps12.data-split${SPLIT}-fold0"
-         CLUSTERS_ROOT_PATH="/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/toMWs/split${SPLIT}-fold0/KMeansPivotChooser--kmeans.k_${K}"
-         OUTPUT_ROOT_PATH="/home/drking/Documents/bakalarka/mocap-vae-features/data/clustering/results/split${SPLIT}-fold0/KMeansPivotChooser--kmeans.k_${K}-train"
+         CLUSTERS_ROOT_PATH="/home/drking/Documents/bakalarka/mocap-vae-features/data/clustering/results/KMedoidsFastPAM--kmeans.k_${K}"
+         OUTPUT_ROOT_PATH="/home/drking/Documents/bakalarka/mocap-vae-features/data/clustering/MWs/split${SPLIT}-fold0/KMeansPivotChooser--kmeans.k_${K}-train"
          convertBodyParts
 
          ## Testing data for fold 0:
          DATAFILE="/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/class130-actions-segment80_shift16-coords_normPOS-fps12.data-split${SPLIT}-fold1"
-         CLUSTERS_ROOT_PATH="/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/toMWs/split${SPLIT}-fold0/KMeansPivotChooser--kmeans.k_${K}"
-         OUTPUT_ROOT_PATH="/home/drking/Documents/bakalarka/mocap-vae-features/data/clustering/results/split${SPLIT}-fold0/KMeansPivotChooser--kmeans.k_${K}-test"
+         CLUSTERS_ROOT_PATH="/home/drking/Documents/bakalarka/mocap-vae-features/data/clustering/results/KMedoidsFastPAM--kmeans.k_${K}"
+         OUTPUT_ROOT_PATH="/home/drking/Documents/bakalarka/mocap-vae-features/data/clustering/MWs/split${SPLIT}-fold0/KMeansPivotChooser--kmeans.k_${K}-test"
          convertBodyParts
 
          ## Training data for fold 1:
          DATAFILE="/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/class130-actions-segment80_shift16-coords_normPOS-fps12.data-split${SPLIT}-fold1"
-         CLUSTERS_ROOT_PATH="/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/toMWs/split${SPLIT}-fold1/KMeansPivotChooser--kmeans.k_${K}"
-         OUTPUT_ROOT_PATH="/home/drking/Documents/bakalarka/mocap-vae-features/data/clustering/results/split${SPLIT}-fold1/KMeansPivotChooser--kmeans.k_${K}-train"
+         CLUSTERS_ROOT_PATH="/home/drking/Documents/bakalarka/mocap-vae-features/data/clustering/results/KMedoidsFastPAM--kmeans.k_${K}"
+         OUTPUT_ROOT_PATH="/home/drking/Documents/bakalarka/mocap-vae-features/data/clustering/MWs/split${SPLIT}-fold1/KMeansPivotChooser--kmeans.k_${K}-train"
          convertBodyParts
 
          ## Testing data for fold 1:
          DATAFILE="/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/class130-actions-segment80_shift16-coords_normPOS-fps12.data-split${SPLIT}-fold0"
-         CLUSTERS_ROOT_PATH="/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/toMWs/split${SPLIT}-fold1/KMeansPivotChooser--kmeans.k_${K}"
-         OUTPUT_ROOT_PATH="/home/drking/Documents/bakalarka/mocap-vae-features/data/clustering/results/split${SPLIT}-fold1/KMeansPivotChooser--kmeans.k_${K}-test"
+         CLUSTERS_ROOT_PATH="/home/drking/Documents/bakalarka/mocap-vae-features/data/clustering/results/KMedoidsFastPAM--kmeans.k_${K}"
+         OUTPUT_ROOT_PATH="/home/drking/Documents/bakalarka/mocap-vae-features/data/clustering/MWs/split${SPLIT}-fold1/KMeansPivotChooser--kmeans.k_${K}-test"
          convertBodyParts
 
      done
