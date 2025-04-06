@@ -44,12 +44,12 @@ public class RunCrossValidation {
 
         // HDM05 configuration
         ObjectMotionWordComposite.bodyPartConfiguration = HDM05;
-        String categoryFile = "/home/xprocha6/cybela1-storage/datasets/hdm05/category_description_short.txt";
+        String categoryFile = "/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/data/cross-validation/hdm05/category_description_short.txt";
         String objectLocatorRegExQueryMgmt = null;
         String objectLocatorRegExDataMgmt = null;
-        int k = 4;
+        int k = 2;
         int split = 4;
-        int numberOfClusters = 250;
+        int numberOfClusters = 350;
         boolean tuneSpecializedClassifiers = true;
         boolean supervised = false;
         boolean verbose = true;
@@ -59,7 +59,7 @@ public class RunCrossValidation {
         // HDM05-130
         var performance = runCrossValidationHdm(
                 categoryFile,
-                "/home/xprocha6/cybela1-storage/folds-mw/hdm05/130",
+                "/home/drking/Documents/bakalarka/data/folds-MWs",
                 split,
                 numberOfClusters,
                 2,
@@ -68,7 +68,7 @@ public class RunCrossValidation {
                 k,
                 objectLocatorRegExQueryMgmt,
                 objectLocatorRegExDataMgmt,
-                "/home/xprocha6/cybela1-storage/datasets/hdm05/class130-actions-coords_normPOS-fps12.data",
+                "/home/drking/Documents/bakalarka/data/hdm05/class130-actions-coords_normPOS-fps12.data",
                 verbose,
                 classifiedCategories,
                 confidenceThreshold

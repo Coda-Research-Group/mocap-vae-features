@@ -17,30 +17,30 @@ IFS=$'\n\t'
 
 # 1. Insert your custom values (see defaults for inspiration)
 
-ROOT_FOLDER_FOR_RESULTS=''
+ROOT_FOLDER_FOR_RESULTS='/home/drking/Documents/bakalarka/data/clustering'
 # Path to a dataset in ELKI format
-DATASET_PATH=''
-DISTANCE_FUNCTION=''
+DATASET_PATH='/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/elki-class130-actions-segment80_shift16-coords_normPOS-fps12.data'
+DISTANCE_FUNCTION='clustering.distance.SequenceMocapPoseCoordsL2DTW'
 # OPTIONAL - Specifies which joint indices should be used for clustering.
 # '' ~ use all joints
 # '-clustering.distance.SequenceMocapPoseCoordsL2DTW.usedJointIds 1,2,3' ~ use only joints with ids 1, 2, and 3,
 #   every id should be in range [1, 31], see clustering.Joint enum
 DISTANCE_FUNCTION_PARAMS=''
-ALGORITHM=''
-ALGORITHM_PARAMS=''
+ALGORITHM='clustering.kmeans.KMedoidsFastPAM'
+ALGORITHM_PARAMS='-kmeans.k 3'
 # JAR of the "clustering" project with "ELKIWithDistances" as the main class
-ELKI_JAR_PATH=''
+ELKI_JAR_PATH='/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/elki-with-distances.jar'
 # JAR of the "clustering" project with "Convertor" as the main class
-CONVERTOR_JAR_PATH=''
-JDK_PATH=''
+CONVERTOR_JAR_PATH='/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/convertor.jar'
+JDK_PATH='/usr/bin/java'
 # Subfolder name for the result of createClusters function
-CLUSTER_SUBFOLDER=''
+CLUSTER_SUBFOLDER='cluster'
 # Subfolder name for the result of convertElkiClusteringFormatToElkiFormat function
-ELKI_FORMAT_CLUSTER_SUBFOLDER=''
+ELKI_FORMAT_CLUSTER_SUBFOLDER='clusters-elki-format'
 # Subfolder name for the result of runKMedoidsClusteringOnEveryCluster function
-KMEDOIDS_CLUSTER_SUBFOLDER=''
+KMEDOIDS_CLUSTER_SUBFOLDER='kmedoids-clusters'
 # File name for the result of extractClusterMedoids function
-EXTRACTED_MEDOIDS_FILE=''
+EXTRACTED_MEDOIDS_FILE='medoids.txt'
 # OPTIONAL - Used during the composite MW clustering.
 # Specifies the name of subfolder to which the output of a single body part is placed.
 COMPOSITE_MW_BODYPART_SUBFOLDER=''
@@ -212,8 +212,8 @@ ${JDK_PATH} \
 
 ## Composite MW clustering using ELKI
 function createCompositeMWClusteringELKI() {
-    DATASET_PATH='/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/elki-class130-actions-segment80_shift16-coords_normPOS-fps12.data'
-    ROOT_FOLDER_FOR_RESULTS='/home/drking/Documents/bakalarka/mocap-vae-features/data/clustering/results'
+    DATASET_PATH='/home/drking/Documents/bakalarka/data/hdm05/elki-class130-actions-segment80_shift16-coords_normPOS-fps12.data'
+    ROOT_FOLDER_FOR_RESULTS='/home/drking/Documents/bakalarka/data/clustering-results'
 
     for JOINT_IDS in '2,3,4,5,6' '7,8,9,10,11' '12,13,14,15,16,17' '18,19,20,21,22,23,24' '25,26,27,28,29,30,31'; do # HDM05 - body parts
         DISTANCE_FUNCTION_PARAMS="-clustering.distance.SequenceMocapPoseCoordsL2DTW.usedJointIds ${JOINT_IDS}"
@@ -321,7 +321,7 @@ ${JOINT_IDS} \
 #     sleep 10
 # done
 
- for K in 350 500; do
+ for K in 350; do
      ALGORITHM_PARAMS="-kmeans.k ${K}"
      createCompositeMWClusteringELKI
      sleep 10

@@ -79,10 +79,10 @@ def create_data_files_pku(actions_file: str, data_file: str) -> None:
 
 
 create_data_files(
-    "/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/toMWs",
+    "/home/drking/Documents/bakalarka/data/folds-id/hdm05",
 #     "/Users/david/Developer/SDIPR/datasets/folds-id/hdm05/65",
     #
-    "/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/class130-actions-segment80_shift16-coords_normPOS-fps12.data",
+    "/home/drking/Documents/bakalarka/data/folds-data/hdm05/class130-actions-segment80_shift16-coords_normPOS-fps12.data",
 #     "/Users/david/Developer/SDIPR/datasets/folds-data/hdm05/65/class130-actions-segment80_shift16-coords_normPOS-fps12.data-cho2014",
 
     2,

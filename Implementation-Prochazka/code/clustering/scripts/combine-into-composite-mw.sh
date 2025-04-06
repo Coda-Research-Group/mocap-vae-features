@@ -38,9 +38,9 @@ ${JDK_PATH} \
  for SPLIT in '0' '1' '2' '3' '4'; do
      for FOLD in '0' '1'; do
          for TYPE in 'test' 'train'; do
-             for K in '10'; do
+             for K in '350'; do
 
-                 BODY_PART_MWS_FOLDER="/home/drking/Documents/bakalarka/mocap-vae-features/data/clustering/MWs/split${SPLIT}-fold${FOLD}/KMeansPivotChooser--kmeans.k_${K}-${TYPE}"
+                 BODY_PART_MWS_FOLDER="/home/drking/Documents/bakalarka/data/folds-MWs/split${SPLIT}-fold${FOLD}/KMeansPivotChooser--kmeans.k_${K}-${TYPE}"
 
                  combineBodyPartsIntoCompositeMW
 
