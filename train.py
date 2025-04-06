@@ -296,7 +296,7 @@ def main(args):
         max_epochs=args.epochs,
         logger=logger,
         accelerator='gpu',
-        devices=1,
+        devices=2,
         deterministic=True,
         num_sanity_val_steps=0,
         log_every_n_steps=5,
