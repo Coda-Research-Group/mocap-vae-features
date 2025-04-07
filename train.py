@@ -296,7 +296,7 @@ def main(args):
         max_epochs=args.epochs,
         logger=logger,
         accelerator='gpu',
-        devices=2,
+        devices=1,
         deterministic=True,
         num_sanity_val_steps=0,
         log_every_n_steps=5,
@@ -325,11 +325,24 @@ def main(args):
 
     # prediction csv
     run_dir = Path(trainer.log_dir)
-    predictions_csv = run_dir / 'predictions.csv.gz'
+    predictions_csv = run_dir / f'predictions_dim={args.latent_dim}_beta={args.beta}_model={args.body_model}.csv.gz'
     predictions.to_csv(predictions_csv)
 
     # predictions in .data format
-    predictions_data_file = run_dir / 'predictions.data.gz'
+    segmented_actions_path = Path('/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions')
+    predictions_data_file_segmented = segmented_actions_path / f'predictions_segmented_dim={args.latent_dim}_beta={args.beta}_model={args.body_model}.data.gz'
+
+    float_format = '%.8f'
+
+    with gzip.open(predictions_data_file_segmented, 'wt', encoding='utf8') as f:
+        for segment, vals in predictions.iterrows():
+            print(f'#objectKey messif.objects.keys.AbstractObjectKey {segment}', file=f)
+            print(f'1;mcdr.objects.ObjectMocapPose', file=f)
+            data_row = pd.DataFrame([vals]).to_csv(index=False, header=False, float_format=float_format).strip()
+            print(data_row, file=f)
+
+    actions_path = Path('/storage/brno12-cerit/home/drking/experiments/SCL-actions')
+    predictions_data_file = actions_path / f'predictions_dim={args.latent_dim}_beta={args.beta}_model={args.body_model}.data.gz'
     predictions.index = predictions.index.str.rsplit('_', n=1, expand=True).rename(['seq_id', 'frame'])
 
     with gzip.open(predictions_data_file, 'wt', encoding='utf8') as f:
