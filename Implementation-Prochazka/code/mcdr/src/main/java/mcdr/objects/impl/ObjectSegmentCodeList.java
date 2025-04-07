@@ -32,7 +32,11 @@ public class ObjectSegmentCodeList extends LocalAbstractObject implements Binary
      * @param quantizedDimensions captured floats of quantized data
      */
     public ObjectSegmentCodeList(float[] quantizedDimensions) {
-        this.quantizedDimensions = quantizedDimensions;
+
+        this.quantizedDimensions = new float[quantizedDimensions.length];
+        for (int i = 0; i < quantizedDimensions.length; i++) {
+            this.quantizedDimensions[i] = quantizedDimensions[i];
+        }
     }
 
     /**
@@ -53,19 +57,38 @@ public class ObjectSegmentCodeList extends LocalAbstractObject implements Binary
     }
 
     //************ Overrided class LocalAbstractObject ************//
+    // Returns cosine distance as in SCL. [-1,1]
     @Override
     protected float getDistanceImpl(LocalAbstractObject obj, float distThreshold) {
-        // Get access to the other object's coordinates
         float[] objCoords = ((ObjectSegmentCodeList) obj).getQuantizedDimensions();
         float[] coords = getQuantizedDimensions();
 
-        // L2 distance computation (Euklidian distance)
-        float rtv = 0f;
-        for (int j = 0; j < coords.length; j++) {
-            rtv += (float) Math.pow(coords[j] - objCoords[j], 2f);
-
+        if (coords.length != objCoords.length || coords.length == 0) {
+            return Float.MAX_VALUE;
         }
-        return (float) Math.sqrt(rtv);
+
+        double dotProduct = 0;
+        double normA = 0;
+        double normB = 0;
+
+        for (int i = 0; i < coords.length; i++) {
+            dotProduct += coords[i] * objCoords[i];
+            normA += Math.pow(coords[i], 2);
+            normB += Math.pow(objCoords[i], 2);
+        }
+
+        normA = Math.sqrt(normA);
+        normB = Math.sqrt(normB);
+
+        double cosineSimilarity;
+        if (normA != 0 && normB != 0) {
+            cosineSimilarity = dotProduct / (normA * normB);
+        } else {
+            return Float.MAX_VALUE;
+        }
+
+        // Return cosine distance (1 - cosine similarity) as the distance
+        return (float) (1.0 - cosineSimilarity);
     }
 
     @Override
@@ -76,20 +99,6 @@ public class ObjectSegmentCodeList extends LocalAbstractObject implements Binary
     @Override
     public int getSize() {
         return 0;
-    }
-
-    public float getDistanceNoRootSquare(LocalAbstractObject obj) {
-        // Get access to the other object's coordinates
-        float[] objCoords = ((ObjectSegmentCodeList) obj).getQuantizedDimensions();
-        float[] coords = getQuantizedDimensions();
-
-        // L2 distance computation (Euklidian distance)
-        float rtv = 0f;
-        for (int j = 0; j < coords.length; j++) {
-            rtv += (float) Math.pow(coords[j] - objCoords[j], 2f);
-
-        }
-        return rtv;
     }
 
     @Override
@@ -134,7 +143,7 @@ public class ObjectSegmentCodeList extends LocalAbstractObject implements Binary
         if (line.isEmpty()) {
             return new float[0];
         }
-        String[] arrayStr = line.trim().split("; ");
+        String[] arrayStr = line.trim().split(",");
         float[] floatArray = new float[arrayStr.length];
         for (int i = 0; i < arrayStr.length; i++) {
             floatArray[i] = Float.parseFloat(arrayStr[i]);

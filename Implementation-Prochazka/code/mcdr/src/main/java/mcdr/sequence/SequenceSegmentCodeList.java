@@ -25,7 +25,7 @@ import java.util.stream.IntStream;
  *
  * @param <I> class of the sequence item
  *
- * @author Jan Sedmidubsky, xsedmid@fi.muni.cz, FI MU Brno, Czech Republic
+ * @author Tomas Drkos, FI MU Brno, Czech Republic
  */
 public abstract class SequenceSegmentCodeList<I extends ObjectSegmentCodeList> extends MetaObjectArray implements IndexableSequence<List<I>> {
 
