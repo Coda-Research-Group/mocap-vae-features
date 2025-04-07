@@ -54,18 +54,18 @@ COMPOSITE_MW_BODYPART_SUBFOLDER=''
 
 # Defaults
 
-ROOT_FOLDER_FOR_RESULTS=${ROOT_FOLDER_FOR_RESULTS:-'/home/drking/Documents/bakalarka/mocap-vae-features/data/clustering/results'}
-DATASET_PATH=${DATASET_PATH:-'/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/elki-class130-actions-segment80_shift16-coords_normPOS-fps12.data'}
-DISTANCE_FUNCTION=${DISTANCE_FUNCTION:-'clustering.distance.SequenceMocapPoseCoordsL2DTW'}
-ALGORITHM=${ALGORITHM:-'clustering.kmeans.KMedoidsFastPAM'}
-ALGORITHM_PARAMS=${ALGORITHM_PARAMS:-'-kmeans.k 3'}
-ELKI_JAR_PATH=${ELKI_JAR_PATH:-'/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/elki-with-distances.jar'}
-CONVERTOR_JAR_PATH=${CONVERTOR_JAR_PATH:-'/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/convertor.jar'}
-JDK_PATH=${JDK_PATH:-'/usr/bin/java'}
-CLUSTER_SUBFOLDER=${CLUSTER_SUBFOLDER:-'cluster'}
-ELKI_FORMAT_CLUSTER_SUBFOLDER=${ELKI_FORMAT_CLUSTER_SUBFOLDER:-'clusters-elki-format'}
-KMEDOIDS_CLUSTER_SUBFOLDER=${KMEDOIDS_CLUSTER_SUBFOLDER:-'kmedoids-clusters'}
-EXTRACTED_MEDOIDS_FILE=${EXTRACTED_MEDOIDS_FILE:-'medoids.txt'}
+#ROOT_FOLDER_FOR_RESULTS=${ROOT_FOLDER_FOR_RESULTS:-'/home/drking/Documents/bakalarka/mocap-vae-features/data/clustering/results'}
+#DATASET_PATH=${DATASET_PATH:-'/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/elki-class130-actions-segment80_shift16-coords_normPOS-fps12.data'}
+#DISTANCE_FUNCTION=${DISTANCE_FUNCTION:-'clustering.distance.SequenceMocapPoseCoordsL2DTW'}
+#ALGORITHM=${ALGORITHM:-'clustering.kmeans.KMedoidsFastPAM'}
+#ALGORITHM_PARAMS=${ALGORITHM_PARAMS:-'-kmeans.k 3'}
+#ELKI_JAR_PATH=${ELKI_JAR_PATH:-'/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/elki-with-distances1.jar'}
+#CONVERTOR_JAR_PATH=${CONVERTOR_JAR_PATH:-'/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/convertor.jar'}
+#JDK_PATH=${JDK_PATH:-'/usr/bin/java'}
+#CLUSTER_SUBFOLDER=${CLUSTER_SUBFOLDER:-'cluster'}
+#ELKI_FORMAT_CLUSTER_SUBFOLDER=${ELKI_FORMAT_CLUSTER_SUBFOLDER:-'clusters-elki-format'}
+#KMEDOIDS_CLUSTER_SUBFOLDER=${KMEDOIDS_CLUSTER_SUBFOLDER:-'kmedoids-clusters'}
+#EXTRACTED_MEDOIDS_FILE=${EXTRACTED_MEDOIDS_FILE:-'medoids.txt'}
 
 # The core functionality of this script
 
