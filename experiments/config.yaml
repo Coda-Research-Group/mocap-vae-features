@@ -4,6 +4,7 @@ defaults:
 
 beta: ???
 latent_dim: ???
+body_model: ???
 
 resume: false
 

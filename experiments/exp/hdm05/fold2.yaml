@@ -2,6 +2,6 @@
 defaults:
  - hdm05/common
  
-train_split: ${hydra:runtime.cwd}/data/hdm05/2version/splits/2folds20_80split_2-class122.txt
-valid_split: ${hydra:runtime.cwd}/data/hdm05/2version/splits/2folds20_80split_1-class122.txt
+train_split: /storage/brno12-cerit/home/drking/data/hdm05/2folds20_80split_2-class122.txt
+valid_split: /storage/brno12-cerit/home/drking/data/hdm05/2folds20_80split_1-class122.txt
 test_split: ${valid_split}
