@@ -306,7 +306,7 @@ ${JOINT_IDS} \
 #     sleep 10
 # done
 
- for K in 10; do
+ for K in 350; do
      ALGORITHM_PARAMS="-kmeans.k ${K}"
      createCompositeMWClusteringELKI
      sleep 10

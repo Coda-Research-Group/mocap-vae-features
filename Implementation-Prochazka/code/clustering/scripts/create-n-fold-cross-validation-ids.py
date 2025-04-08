@@ -76,7 +76,7 @@ if __name__ == "__main__":
     for split in range(number_of_splits):
         # Expects the MESSIF format
         action_ids = extract_actions_ids(
-            "/home/drking/Documents/bakalarka/data/hdm05/class130-actions-coords_normPOS-fps12.data"
+            "/home/drking/Documents/bakalarka/data/quantized-vae/predictions_dim=256_beta=1_modelhdm05.data"
 #             "/Users/david/Developer/SDIPR/datasets/folds-id/hdm05/65/class130-actions-coords_normPOS-fps12.data-cho2014"
         )
 
@@ -85,7 +85,7 @@ if __name__ == "__main__":
         folds = create_folds(mapping, 2)
 #         folds = create_folds(mapping, number_of_folds)
 
-        folder = f"/home/drking/Documents/bakalarka/data/folds-id/hdm05/{split}"
+        folder = f"/home/drking/Documents/bakalarka/data/SCL/folds-id/hdm05/{split}"
 #         folder = f"/Users/david/Developer/SDIPR/datasets/folds-id/hdm05/65/{split}"
         os.makedirs(folder)
 
