@@ -31,7 +31,10 @@ ALGORITHM_PARAMS='-kmeans.k 3'
 # JAR of the "clustering" project with "ELKIWithDistances" as the main class
 ELKI_JAR_PATH='/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/elki-with-distances.jar'
 # JAR of the "clustering" project with "Convertor" as the main class
-CONVERTOR_JAR_PATH='/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/convertor.jar'
+#CONVERTOR_JAR_PATH='/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/convertor.jar'
+# My edited convertor.
+CONVERTOR_JAR_PATH='/home/drking/Documents/bakalarka/convertor/convertor.jar'
+
 JDK_PATH='/usr/bin/java'
 # Subfolder name for the result of createClusters function
 CLUSTER_SUBFOLDER='cluster'
@@ -189,6 +192,7 @@ ${JDK_PATH} \
 -jar ${CONVERTOR_JAR_PATH} \
 --parse-medoids-from-elki-clustering-folder \
 --elki-clustering-folder=${CLUSTER_FOLDER_PATH} \
+--vector-dim=256
 "
         echo "${COMMAND}"
 
@@ -306,7 +310,7 @@ ${JOINT_IDS} \
 #     sleep 10
 # done
 
- for K in 350; do
+ for K in 400; do
      ALGORITHM_PARAMS="-kmeans.k ${K}"
      createCompositeMWClusteringELKI
      sleep 10

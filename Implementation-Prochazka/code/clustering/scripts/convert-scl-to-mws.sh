@@ -16,7 +16,7 @@ MEMORY='3g'
 #CLASSPATH=''
 CLASSPATH=${CLASSPATH:-'MESSIF.jar:MESSIF-Utility.jar:/home/drking/Documents/bakalarka/Implementation/code/motionvocabulary/MotionVocabulary.jar:commons-cli-1.4.jar:smf-core-1.0.jar:smf-impl-1.0.jar:/home/drking/Documents/bakalarka/Implementation/code/motionvocabulary/MCDR.jar:m-index.jar:trove4j-3.0.3.jar'}
 # Object class to work with in the dataset and pivots (default is messif.objects.impl.ObjectFloatVectorNeuralNetworkL2)
-CLS_OBJ='mcdr.sequence.impl.SequenceSegmentCodeListDTW'
+CLS_OBJ='messif.objects.impl.ObjectFloatVectorCosine'
 # Dataset file path - which objects to convert
 DATAFILE='/home/drking/Documents/bakalarka/data/quantized-vae/predictions_segmented_dim=256_beta=1_modelhdm05.data'
 # OPTIONAL - (default is D0K1)

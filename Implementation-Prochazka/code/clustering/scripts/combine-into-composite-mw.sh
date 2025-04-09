@@ -40,7 +40,7 @@ ${JDK_PATH} \
          for TYPE in 'test' 'train'; do
              for K in '350'; do
 
-                 BODY_PART_MWS_FOLDER="/home/drking/Documents/bakalarka/data/folds-MWs/split${SPLIT}-fold${FOLD}/KMeansPivotChooser--kmeans.k_${K}-${TYPE}"
+                 BODY_PART_MWS_FOLDER="/home/drking/Documents/bakalarka/data/SCL/folds-MWs/split${SPLIT}-fold${FOLD}/KMeansPivotChooser--kmeans.k_${K}-${TYPE}"
 
                  combineBodyPartsIntoCompositeMW
 
