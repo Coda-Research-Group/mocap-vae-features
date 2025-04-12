@@ -16,7 +16,7 @@ def split_motion_data(input_file, body_model):
         hands_l = [17, 18, 19, 20, 21, 22, 23]
         hands_r = [24, 25, 26, 27, 28, 29, 30]
     
-    if body_model == 'pku-mmd':
+    elif body_model == 'pku-mmd':
         legs_l = [12, 13, 14, 15]
         legs_r = [16, 17, 18, 19]
         torso = [0, 1, 20, 2, 3]
@@ -50,5 +50,5 @@ def split_motion_data(input_file, body_model):
 original_PATH = '/home/drking/Documents/bakalarka/data/hdm05/class130-actions-segment80_shift16-coords_normPOS-fps12.npz'
 split_motion_data(original_PATH, 'hdm05')
 
-original_PATH = '/home/drking/Documents/bakalarka/data/pku-mmd/actions_singlesubject-segment24_shift4.8_initialshift0-coords_normPOS-fps10.data'
+original_PATH = '/home/drking/Documents/bakalarka/data/pku-mmd/actions_singlesubject-segment24_shift4.8_initialshift0-coords_normPOS-fps10.npz'
 split_motion_data(original_PATH, 'pku-mmd')

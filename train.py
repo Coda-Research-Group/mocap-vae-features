@@ -260,12 +260,19 @@ def main(args):
     predictions_file = log_dir / 'predictions.csv'
 
     DATA_PATHS={
-        "hdm05-torso":"/storage/brno12-cerit/home/drking/data/hdm05/motion_torso.npz",
-        "hdm05-handL":"/storage/brno12-cerit/home/drking/data/hdm05/motion_hands_l.npz",
-        "hdm05-handR":"/storage/brno12-cerit/home/drking/data/hdm05/motion_hands_r.npz",
-        "hdm05-legL":"/storage/brno12-cerit/home/drking/data/hdm05/motion_legs_l.npz",
-        "hdm05-legR":"/storage/brno12-cerit/home/drking/data/hdm05/motion_legs_r.npz",
-        "hdm05":"/storage/brno12-cerit/home/drking/data/hdm05/class130-actions-segment80_shift16-coords_normPOS-fps12.data",
+        "hdm05-torso":"/storage/brno12-cerit/home/drking/data/hdm05/parts/motion_torso.npz",
+        "hdm05-handL":"/storage/brno12-cerit/home/drking/data/hdm05/parts/motion_hands_l.npz",
+        "hdm05-handR":"/storage/brno12-cerit/home/drking/data/hdm05/parts/motion_hands_r.npz",
+        "hdm05-legL":"/storage/brno12-cerit/home/drking/data/hdm05/parts/motion_legs_l.npz",
+        "hdm05-legR":"/storage/brno12-cerit/home/drking/data/hdm05/parts/motion_legs_r.npz",
+        "hdm05":"/storage/brno12-cerit/home/drking/data/hdm05/class130-actions-segment80_shift16-coords_normPOS-fps12.npz",
+        "pku-mmd-torso":"/storage/brno12-cerit/home/drking/data/pku-mmd/parts/motion_torso.npz",
+        "pku-mmd-handL":"/storage/brno12-cerit/home/drking/data/pku-mmd/parts/motion_hands_l.npz",
+        "pku-mmd-handR":"/storage/brno12-cerit/home/drking/data/pku-mmd/parts/motion_hands_r.npz",
+        "pku-mmd-legL":"/storage/brno12-cerit/home/drking/data/pku-mmd/parts/motion_legs_l.npz",
+        "pku-mmd-legR":"/storage/brno12-cerit/home/drking/data/pku-mmd/parts/motion_legs_r.npz",
+        "pku-mmd":"/storage/brno12-cerit/home/drking/data/pku-mmd/actions_singlesubject-segment24_shift4.8_initialshift0-coords_normPOS-fps10.npz",
+
     }
 
     if predictions_file.exists():
@@ -330,7 +337,9 @@ def main(args):
 
     # predictions in .data format
     segmented_actions_path = Path('/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions')
-    predictions_data_file_segmented = segmented_actions_path / f'predictions_segmented_dim={args.latent_dim}_beta={args.beta}_model={args.body_model}.data.gz'
+    predictions_data_file_path = segmented_actions_path / f'lat_dim={args.latent_dim}_beta={args.beta}'
+    predictions_data_file_path.mkdir(parents=True, exist_ok=True)
+    predictions_data_file_segmented = predictions_data_file_path / f'predictions_segmented_model={args.body_model}.data.gz'
 
     float_format = '%.8f'
 
@@ -341,7 +350,9 @@ def main(args):
             print(data_row, file=f)
 
     actions_path = Path('/storage/brno12-cerit/home/drking/experiments/SCL-actions')
-    predictions_data_file = actions_path / f'predictions_dim={args.latent_dim}_beta={args.beta}_model={args.body_model}.data.gz'
+    predictions_data_file_path = actions_path / f'lat_dim={args.latent_dim}_beta={args.beta}'
+    predictions_data_file_path.mkdir(parents=True, exist_ok=True)
+    predictions_data_file = predictions_data_file_path / f'predictions_model={args.body_model}.data.gz'
     predictions.index = predictions.index.str.rsplit('_', n=1, expand=True).rename(['seq_id', 'frame'])
 
     with gzip.open(predictions_data_file, 'wt', encoding='utf8') as f:

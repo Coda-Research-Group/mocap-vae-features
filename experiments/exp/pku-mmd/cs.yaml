@@ -2,6 +2,6 @@
 defaults:
  - pku-mmd/common
  
-train_split: ${hydra:runtime.cwd}/data/sequences/PKU-MMD/meta/sequences-CS-train.txt
-valid_split: ${hydra:runtime.cwd}/data/sequences/PKU-MMD/meta/sequences-CS-test.txt
+train_split: /storage/brno12-cerit/home/drking/data/pku-mmd/splits/CS_train_objects_messif-lines.txt
+valid_split: /storage/brno12-cerit/home/drking/data/pku-mmd/splits/CS_test_objects_messif-lines.txt
 test_split: ${valid_split}
