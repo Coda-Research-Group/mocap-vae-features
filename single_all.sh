@@ -17,6 +17,7 @@ echo "GPUs: ${GPUS}"
 SCRIPT_DIR='/storage/brno12-cerit/home/drking/experiments/mocap-vae-features'
 PBS_LOGS_DIR='/storage/brno12-cerit/home/drking/experiments/pbs'
 REPO_DIR='/storage/brno12-cerit/home/drking/experiments'
+LOGS_DIR='/storage/brno12-cerit/home/drking/experiments/logs'
 ENV_NAME='cuda4'
 
 

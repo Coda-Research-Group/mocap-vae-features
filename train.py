@@ -337,7 +337,6 @@ def main(args):
     with gzip.open(predictions_data_file_segmented, 'wt', encoding='utf8') as f:
         for segment, vals in predictions.iterrows():
             print(f'#objectKey messif.objects.keys.AbstractObjectKey {segment}', file=f)
-            print(f'1;mcdr.objects.ObjectMocapPose', file=f)
             data_row = pd.DataFrame([vals]).to_csv(index=False, header=False, float_format=float_format).strip()
             print(data_row, file=f)
 
