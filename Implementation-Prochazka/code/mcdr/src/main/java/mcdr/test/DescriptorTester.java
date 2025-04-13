@@ -34,10 +34,10 @@ public class DescriptorTester {
      */
     public static void main(String[] args) throws Exception {
 
-        Class<? extends SequenceMocap<?>> objectClass = SequenceMocapPoseCoordsL2DTW.class; // coords
+//        Class<? extends SequenceMocap<?>> objectClass = SequenceMocapPoseCoordsL2DTW.class; // coords
 //        Class<? extends SequenceMocap<?>> objectClass = SequenceMocapPoseCoordsL2DTWSegments.class;
 //        Class<? extends LocalAbstractObject> objectClass = SequenceMotionWordsDTW.class;
-//        Class<? extends LocalAbstractObject> objectClass = SequenceMotionWordsNMatchesDTW.class;
+        Class<? extends LocalAbstractObject> objectClass = SequenceMotionWordsNMatchesDTW.class;
 //        Class<? extends LocalAbstractObject> objectClass = SequenceMotionWordsSoftAssignmentDTW.class;
 //        Class<? extends LocalAbstractObject> objectClass = SequenceMotionWordsNGramsJaccard.class;
 //        Class<? extends  LocalAbstractObject> objectClass = SequenceSegmentCodeListDTW.class;
@@ -76,12 +76,12 @@ public class DescriptorTester {
 
 //        final String batchNamePrefix = "e:/datasets/mocap/hdm05/"
         // Actions
-        final String batchNamePrefix = "/home/drking/Documents/bakalarka/data/hdm05/";
+//        final String batchNamePrefix = "/home/drking/Documents/bakalarka/data/hdm05/";
         // SCLs
 //        final String batchNamePrefix = "/home/drking/Documents/bakalarka/data/VAE-actions/";
-        // MWs
+        // MWs from SCL
 //        final String batchNamePrefix = "/home/drking/Documents/bakalarka/data/SCL/folds-MW/split0-fold0/KMeansPivotChooser--kmeans.k_350-train/";
-
+        final String batchNamePrefix = "/home/drking/Documents/bakalarka/data/folds-MWs/split0-fold0/";
 
         for (String batchNameFile : new String[]{
 //            "hdm05-annotations_specific-segment80_shift16-coords_normPOS-fps12-quantized-pivots-kmedoids-350.data"
@@ -97,8 +97,8 @@ public class DescriptorTester {
 //            "kmeans-500-softD2K20.data", "kmeans-500-softD4K20.data",
 //            "kmeans-750-softD2K20.data", "kmeans-750-softD4K20.data"
 //            "hdm05-class130-actions-coords_normPOS-fps12-quantized-gt-hull-optimized-center.data"
-            "class130-actions-coords_normPOS-fps12.data"
-//            "KMeansPivotChooser--kmeans.k_350-train.composite"
+//            "class130-actions-coords_normPOS-fps12.data"
+            "KMeansPivotChooser--kmeans.k_350-train.composite"
 //            "predictions_dim=256_beta=1_modelhdm05.data"
 //            "KMedoidsFastPAM--kmeans.k_350.D0K1"
         }) {
