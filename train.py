@@ -363,7 +363,7 @@ def main(args):
             print(data_row, file=f)
 
     actions_path = Path('/storage/brno12-cerit/home/drking/experiments/SCL-actions')
-    predictions_data_file_path = segmented_actions_path / dataset / folder_path / f'lat_dim={args.latent_dim}_beta={args.beta}'
+    predictions_data_file_path = actions_path / dataset / folder_path / f'lat_dim={args.latent_dim}_beta={args.beta}'
     predictions_data_file_path.mkdir(parents=True, exist_ok=True)
     predictions_data_file = predictions_data_file_path / f'predictions_model={args.body_model}.data.gz'
     predictions.index = predictions.index.str.rsplit('_', n=1, expand=True).rename(['seq_id', 'frame'])
