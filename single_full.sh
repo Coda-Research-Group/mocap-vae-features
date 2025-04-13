@@ -3,6 +3,8 @@
 #PBS -q gpu@pbs-m1.metacentrum.cz
 #PBS -l walltime=48:0:0
 #PBS -l select=1:ncpus=8:ngpus=1:mem=16gb:gpu_mem=4gb:scratch_local=50gb:cuda_version=12.6
+#PBS -o /dev/null
+#PBS -e /dev/null
 
 # TODO: replace LOGIN with your login
 # TODO: select a particular cluster: https://metavo.metacentrum.cz/pbsmon2/nodes/pbs
