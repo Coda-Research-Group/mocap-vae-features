@@ -2,7 +2,7 @@
 
 # --- Configuration ---
 # Define the parameter options
-EXPS=("cs" "cv")
+EXPS=("all" "cs" "cv")
 DIMS=("64" "32" "16" "8" "4")
 BETAS=("0.1" "1" "10")
 
@@ -38,7 +38,7 @@ for EXP in "${EXPS[@]}"; do
                 "${WORKER_SCRIPT_PATH}"
 
             # Optional: Add a small delay if you are submitting many jobs
-            sleep 10
+            sleep 1
 
         done
     done

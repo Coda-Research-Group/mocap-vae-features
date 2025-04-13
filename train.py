@@ -335,9 +335,22 @@ def main(args):
     predictions_csv = run_dir / f'predictions_dim={args.latent_dim}_beta={args.beta}_model={args.body_model}.csv.gz'
     predictions.to_csv(predictions_csv)
 
+    # get fold folder 
+    folder_path = 'all'
+    if args.train_split == '/storage/brno12-cerit/home/drking/data/pku-mmd/splits/CS_train_objects_messif-lines.txt':
+        folder_path = 'cs'
+    if args.train_split == '/storage/brno12-cerit/home/drking/data/pku-mmd/splits/CV_train_objects_messif-lines.txt':
+        folder_path = 'cv'
+    if args.train_split == '/storage/brno12-cerit/home/drking/data/hdm05/splits/2folds20_80split_1-class122.txt':
+        folder_path = 'fold1'
+    if args.train_split == '/storage/brno12-cerit/home/drking/data/hdm05/splits/2folds20_80split_2-class122.txt':
+        folder_path = 'fold2'
+    dataset = 'hdm05' if args.body_model[0] == 'h' else 'pku-mmd'
+
+
     # predictions in .data format
     segmented_actions_path = Path('/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions')
-    predictions_data_file_path = segmented_actions_path / f'lat_dim={args.latent_dim}_beta={args.beta}'
+    predictions_data_file_path = segmented_actions_path / dataset / folder_path / f'lat_dim={args.latent_dim}_beta={args.beta}'
     predictions_data_file_path.mkdir(parents=True, exist_ok=True)
     predictions_data_file_segmented = predictions_data_file_path / f'predictions_segmented_model={args.body_model}.data.gz'
 
@@ -350,7 +363,7 @@ def main(args):
             print(data_row, file=f)
 
     actions_path = Path('/storage/brno12-cerit/home/drking/experiments/SCL-actions')
-    predictions_data_file_path = actions_path / f'lat_dim={args.latent_dim}_beta={args.beta}'
+    predictions_data_file_path = segmented_actions_path / dataset / folder_path / f'lat_dim={args.latent_dim}_beta={args.beta}'
     predictions_data_file_path.mkdir(parents=True, exist_ok=True)
     predictions_data_file = predictions_data_file_path / f'predictions_model={args.body_model}.data.gz'
     predictions.index = predictions.index.str.rsplit('_', n=1, expand=True).rename(['seq_id', 'frame'])
