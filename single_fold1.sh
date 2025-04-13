@@ -3,6 +3,8 @@
 #PBS -q gpu@pbs-m1.metacentrum.cz
 #PBS -l walltime=48:0:0
 #PBS -l select=1:ncpus=8:ngpus=1:mem=16gb:gpu_mem=4gb:scratch_local=50gb:cuda_version=12.6
+#PBS -o /dev/null
+#PBS -e /dev/null
 
 # TODO: replace LOGIN with your login
 # TODO: select a particular cluster: https://metavo.metacentrum.cz/pbsmon2/nodes/pbs
@@ -40,7 +42,7 @@ for EXP in "fold1"; do
         for BETA in "0.1" "1" "10"; do
             for MODEL in "hdm05-torso" "hdm05-handL" "hdm05-handR" "hdm05-legL" "hdm05-legR"; do
                 python /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/train.py --multirun exp=hdm05/${EXP} \
-                    latent_dim=${DIM} beta=${BETA} body_model=${MODEL}
+                    latent_dim=${DIM} beta=${BETA} body_model=${MODEL} > /dev/null 2>&1
             done
         done
     done

@@ -42,8 +42,8 @@ MODELS=("pku-mmd-torso" "pku-mmd-handL" "pku-mmd-handR" "pku-mmd-legL" "pku-mmd-
 for MODEL in "${MODELS[@]}"; do
     echo "Starting run for MODEL: ${MODEL}"
 
-    python "${SCRIPT_DIR}/train.py" --multirun exp=pku-mmd/${CURRENT_EXP} \
-        latent_dim=${CURRENT_DIM} beta=${CURRENT_BETA} body_model=${MODEL}
+    python /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/train.py --multirun exp=pku-mmd/${CURRENT_EXP} \
+        latent_dim=${CURRENT_DIM} beta=${CURRENT_BETA} body_model=${MODEL} > /dev/null 2>&1
 
 done
 

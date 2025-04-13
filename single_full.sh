@@ -42,7 +42,7 @@ for EXP in "fold2" "all" "fold1"; do
         for BETA in "0.1" "1" "10"; do
             for MODEL in "hdm05"; do
                 python /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/train.py --multirun exp=hdm05/${EXP} \
-                    latent_dim=${DIM} beta=${BETA} body_model=${MODEL}
+                    latent_dim=${DIM} beta=${BETA} body_model=${MODEL} > /dev/null 2>&1
             done
         done
     done
