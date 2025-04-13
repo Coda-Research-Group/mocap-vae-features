@@ -9,13 +9,13 @@ SCRIPT_DIR='/storage/brno12-cerit/home/drking/experiments/mocap-vae-features'
 REPO_DIR='/storage/brno12-cerit/home/drking/experiments'
 ENV_NAME='cuda4'
 
-if [ -z "${PASSED_EXP}" ] || [ -z "${PASSED_DIM}" ] || [ -z "${PASSED_BETA}" ]; then
-    echo "Error: One or more required variables (PASSED_EXP, PASSED_DIM, PASSED_BETA) were not provided." >&2
+
+if [ -z "${PASSED_EXP}" ] || [ -z "${PASSED_BETA}" ]; then
+    echo "Error: One or more required variables (PASSED_EXP, PASSED_BETA) were not provided." >&2
     exit 1
 fi
 
 CURRENT_EXP=${PASSED_EXP}
-CURRENT_DIM=${PASSED_DIM}
 CURRENT_BETA=${PASSED_BETA}
 
 module add conda-modules
@@ -31,13 +31,15 @@ conda activate "/storage/brno12-cerit/home/drking/.conda/envs/${ENV_NAME}" || {
     exit 2
 }
 
-MODELS=("pku-mmd-torso" "pku-mmd-handL" "pku-mmd-handR" "pku-mmd-legL" "pku-mmd-legR")
+DIMS=("256" "128" "64" "32" "16" "8")
 
-for MODEL in "${MODELS[@]}"; do
+
+for DIM in "${DIMS[@]}"; do
 
     python /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/train.py --multirun exp=pku-mmd/${CURRENT_EXP} \
-        latent_dim=${CURRENT_DIM} beta=${CURRENT_BETA} body_model=${MODEL} > /dev/null 2>&1
+        latent_dim=${DIM} beta=${CURRENT_BETA} body_model=pku-mmd > /dev/null 2>&1
 
 done
 
 conda deactivate
+
