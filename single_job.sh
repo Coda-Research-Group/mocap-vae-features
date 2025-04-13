@@ -2,7 +2,8 @@
 #PBS -q gpu@pbs-m1.metacentrum.cz
 #PBS -l walltime=48:0:0 
 #PBS -l select=1:ncpus=8:ngpus=1:mem=32gb:gpu_mem=4gb:scratch_local=50gb:cuda_version=12.6
-
+#PBS -o /dev/null
+#PBS -e /dev/null
 
 SCRIPT_DIR='/storage/brno12-cerit/home/drking/experiments/mocap-vae-features'
 REPO_DIR='/storage/brno12-cerit/home/drking/experiments'
@@ -41,7 +42,7 @@ MODELS=("pku-mmd-torso" "pku-mmd-handL" "pku-mmd-handR" "pku-mmd-legL" "pku-mmd-
 for MODEL in "${MODELS[@]}"; do
     echo "Starting run for MODEL: ${MODEL}"
 
-    python "${SCRIPT_DIR}/train.py" --multirun exp=hdm05/${CURRENT_EXP} \
+    python "${SCRIPT_DIR}/train.py" --multirun exp=pku-mmd/${CURRENT_EXP} \
         latent_dim=${CURRENT_DIM} beta=${CURRENT_BETA} body_model=${MODEL}
 
 done

@@ -2,7 +2,7 @@
 
 # --- Configuration ---
 # Define the parameter options
-EXPS=("all" "cs" "cv")
+EXPS=("cs" "cv")
 DIMS=("64" "32" "16" "8" "4")
 BETAS=("0.1" "1" "10")
 
