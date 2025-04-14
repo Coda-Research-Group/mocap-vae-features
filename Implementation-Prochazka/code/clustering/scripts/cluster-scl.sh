@@ -33,7 +33,7 @@ ELKI_JAR_PATH='/home/drking/Documents/bakalarka/mocap-vae-features/Implementatio
 # JAR of the "clustering" project with "Convertor" as the main class
 #CONVERTOR_JAR_PATH='/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/convertor.jar'
 # My edited convertor.
-CONVERTOR_JAR_PATH='/home/drking/Documents/bakalarka/convertor/convertor.jar'
+CONVERTOR_JAR_PATH='/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/convertor.jar'
 
 JDK_PATH='/usr/bin/java'
 # Subfolder name for the result of createClusters function
