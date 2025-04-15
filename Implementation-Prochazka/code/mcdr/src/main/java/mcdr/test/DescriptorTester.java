@@ -37,13 +37,13 @@ public class DescriptorTester {
 //        Class<? extends SequenceMocap<?>> objectClass = SequenceMocapPoseCoordsL2DTW.class; // coords
 //        Class<? extends SequenceMocap<?>> objectClass = SequenceMocapPoseCoordsL2DTWSegments.class;
 //        Class<? extends LocalAbstractObject> objectClass = SequenceMotionWordsDTW.class;
-//        Class<? extends LocalAbstractObject> objectClass = SequenceMotionWordsNMatchesDTW.class;
+        Class<? extends LocalAbstractObject> objectClass = SequenceMotionWordsNMatchesDTW.class;
 //        Class<? extends LocalAbstractObject> objectClass = SequenceMotionWordsSoftAssignmentDTW.class;
 //        Class<? extends LocalAbstractObject> objectClass = SequenceMotionWordsNGramsJaccard.class;
-        Class<? extends  LocalAbstractObject> objectClass = SequenceSegmentCodeListDTW.class;
+//        Class<? extends  LocalAbstractObject> objectClass = SequenceSegmentCodeListDTW.class;
 
-        ObjectMotionWordNMatches.nMatches = 1;
-        ObjectMotionWordNMatches.maxPartsToMatch = 4;
+        ObjectMotionWordNMatches.nMatches = 2;
+        ObjectMotionWordNMatches.maxPartsToMatch = 5;
         ObjectMotionWordSoftAssignment.maxPartsToMatch = 6;
 //        ObjectMotionWordSoftAssignment.maxPartsToMatch = Integer.MAX_VALUE;
         SequenceMotionWordsNGramsJaccard.nGramSize = 1;
@@ -51,10 +51,10 @@ public class DescriptorTester {
         // retrieval params
         final boolean includeExactMatchInResult = false;
         // values of k to be evaluated
-//        int[] fixedKsToEvaluate = new int[]{};
+        int[] fixedKsToEvaluate = new int[]{};
 //        int[] fixedKsToEvaluate = new int[]{4};
 //        int[] fixedKsToEvaluate = IntStream.range(1, 21).toArray();
-        int[] fixedKsToEvaluate = new int[]{1, 2, 3, 4, 5, 10, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100};
+//        int[] fixedKsToEvaluate = new int[]{1, 2, 3, 4, 5, 10, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100};
         final String[] ignoredCategoryIds = null;
 //        final String[] ignoredCategoryIds = new String[]{"56", "57", "58", "59", "60", "61", "138", "139"}; // HDM05-122
         final boolean includeMatchFromTheSameSequenceInResult = true;
@@ -83,7 +83,8 @@ public class DescriptorTester {
 //        final String batchNamePrefix = "/home/drking/Documents/bakalarka/data/SCL/folds-MW/split0-fold0/KMeansPivotChooser--kmeans.k_350-train/";
 //        final String batchNamePrefix = "/home/drking/Documents/bakalarka/data/folds-MWs/split0-fold0/";
         // Mounted hardisk
-        final String batchNamePrefix = "/run/media/drking/Nový svazek/bakalarka/data/";
+//        final String batchNamePrefix = "/run/media/drking/Nový svazek/bakalarka/data/";
+        final String batchNamePrefix = "/home/drking/Documents/bakalarka/data/SCL/composite/clusters/fold-mws/";
 
 
         for (String batchNameFile : new String[]{
@@ -105,8 +106,10 @@ public class DescriptorTester {
 //            "predictions_dim=256_beta=1_modelhdm05.data"
 //            "KMedoidsFastPAM--kmeans.k_350.D0K1"
 //                "predictions_model=hdm05.data.gz"
-                "all/lat_dim=4_beta=1/predictions_model=hdm05.data.gz"
+//                "all/lat_dim=4_beta=1/predictions_model=hdm05.data.gz"
+                "KMeansPivotChooser--kmeans.k_350.composite"
         }) {
+
 
 
             final String batchName = batchNamePrefix + batchNameFile;
