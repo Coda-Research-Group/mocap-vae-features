@@ -17,21 +17,21 @@ IFS=$'\n\t'
 
 # 1. Insert your custom values (see defaults for inspiration)
 
-ROOT_FOLDER_FOR_RESULTS='/run/media/drking/Nový\ svazek/bakalarka/data/segmented_actions/SCL-segmented-actions/hdm05/all/lat_dim=256_beta=1/clusters'
+ROOT_FOLDER_FOR_RESULTS='/home/drking/Documents/bakalarka/data/SCL-clustering'
 # Path to a dataset in ELKI format
-DATASET_PATH='/home/drking/Documents/bakalarka/data/SCL/elki-predictions_segmented_model=hdm05.data.gz'
+DATASET_PATH='/home/drking/Documents/bakalarka/data/quantized-vae/elki-predictions_segmented_dim=256_beta=1_modelhdm05.data'
 DISTANCE_FUNCTION='de.lmu.ifi.dbs.elki.distance.distancefunction.CosineDistanceFunction'
 # OPTIONAL - Specifies which joint indices should be used for clustering.
 # '' ~ use all joints
 # '-clustering.distance.SequenceMocapPoseCoordsL2DTW.usedJointIds 1,2,3' ~ use only joints with ids 1, 2, and 3,
 #   every id should be in range [1, 31], see clustering.Joint enum
-DISTANCE_FUNCTION_PARAMS='64'
+DISTANCE_FUNCTION_PARAMS='256'
 ALGORITHM='clustering.kmeans.KMedoidsFastPAM'
 ALGORITHM_PARAMS='-kmeans.k 3'
 # JAR of the "clustering" project with "ELKIWithDistances" as the main class
 ELKI_JAR_PATH='/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/elki-with-distances.jar'
 # JAR of the "clustering" project with "Convertor" as the main class
-#CONVERTOR_JAR_PATH='/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/convertor_old.jar'
+#CONVERTOR_JAR_PATH='/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/convertor.jar'
 # My edited convertor.
 CONVERTOR_JAR_PATH='/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/convertor.jar'
 
@@ -192,7 +192,7 @@ ${JDK_PATH} \
 -jar ${CONVERTOR_JAR_PATH} \
 --parse-medoids-from-elki-clustering-folder \
 --elki-clustering-folder=${CLUSTER_FOLDER_PATH} \
---vector-dim=${DISTANCE_FUNCTION_PARAMS}
+--vector-dim=256
 "
         echo "${COMMAND}"
 
@@ -205,8 +205,8 @@ ${JDK_PATH} \
 
 ## Composite MW clustering using ELKI
 function createCompositeMWClusteringELKI() {
-    DATASET_PATH='/home/drking/Documents/bakalarka/data/SCL/composite/elki-predictions_segmented_model=hdm05-legL.data'
-    ROOT_FOLDER_FOR_RESULTS='/home/drking/Documents/bakalarka/data/SCL/composite/clusters/legL'
+    DATASET_PATH='/home/drking/Documents/bakalarka/data/quantized-vae/elki-predictions_segmented_dim=256_beta=1_modelhdm05.data'
+    ROOT_FOLDER_FOR_RESULTS='/home/drking/Documents/bakalarka/data/SCL-clustering'
 
       createClusters
       convertElkiClusteringFormatToElkiFormat
@@ -310,7 +310,7 @@ ${JOINT_IDS} \
 #     sleep 10
 # done
 
- for K in 350; do
+ for K in 400; do
      ALGORITHM_PARAMS="-kmeans.k ${K}"
      createCompositeMWClusteringELKI
      sleep 10

@@ -37,10 +37,10 @@ public class DescriptorTester {
 //        Class<? extends SequenceMocap<?>> objectClass = SequenceMocapPoseCoordsL2DTW.class; // coords
 //        Class<? extends SequenceMocap<?>> objectClass = SequenceMocapPoseCoordsL2DTWSegments.class;
 //        Class<? extends LocalAbstractObject> objectClass = SequenceMotionWordsDTW.class;
-        Class<? extends LocalAbstractObject> objectClass = SequenceMotionWordsNMatchesDTW.class;
+//        Class<? extends LocalAbstractObject> objectClass = SequenceMotionWordsNMatchesDTW.class;
 //        Class<? extends LocalAbstractObject> objectClass = SequenceMotionWordsSoftAssignmentDTW.class;
 //        Class<? extends LocalAbstractObject> objectClass = SequenceMotionWordsNGramsJaccard.class;
-//        Class<? extends  LocalAbstractObject> objectClass = SequenceSegmentCodeListDTW.class;
+        Class<? extends  LocalAbstractObject> objectClass = SequenceSegmentCodeListDTW.class;
 
         ObjectMotionWordNMatches.nMatches = 1;
         ObjectMotionWordNMatches.maxPartsToMatch = 4;
@@ -51,10 +51,10 @@ public class DescriptorTester {
         // retrieval params
         final boolean includeExactMatchInResult = false;
         // values of k to be evaluated
-        int[] fixedKsToEvaluate = new int[]{};
+//        int[] fixedKsToEvaluate = new int[]{};
 //        int[] fixedKsToEvaluate = new int[]{4};
 //        int[] fixedKsToEvaluate = IntStream.range(1, 21).toArray();
-//        int[] fixedKsToEvaluate = new int[]{1, 3, 5, 10, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100};
+        int[] fixedKsToEvaluate = new int[]{1, 2, 3, 4, 5, 10, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100};
         final String[] ignoredCategoryIds = null;
 //        final String[] ignoredCategoryIds = new String[]{"56", "57", "58", "59", "60", "61", "138", "139"}; // HDM05-122
         final boolean includeMatchFromTheSameSequenceInResult = true;
@@ -81,7 +81,10 @@ public class DescriptorTester {
 //        final String batchNamePrefix = "/home/drking/Documents/bakalarka/data/VAE-actions/";
         // MWs from SCL
 //        final String batchNamePrefix = "/home/drking/Documents/bakalarka/data/SCL/folds-MW/split0-fold0/KMeansPivotChooser--kmeans.k_350-train/";
-        final String batchNamePrefix = "/home/drking/Documents/bakalarka/data/folds-MWs/split0-fold0/";
+//        final String batchNamePrefix = "/home/drking/Documents/bakalarka/data/folds-MWs/split0-fold0/";
+        // Mounted hardisk
+        final String batchNamePrefix = "/run/media/drking/Nový svazek/bakalarka/data/";
+
 
         for (String batchNameFile : new String[]{
 //            "hdm05-annotations_specific-segment80_shift16-coords_normPOS-fps12-quantized-pivots-kmedoids-350.data"
@@ -98,10 +101,13 @@ public class DescriptorTester {
 //            "kmeans-750-softD2K20.data", "kmeans-750-softD4K20.data"
 //            "hdm05-class130-actions-coords_normPOS-fps12-quantized-gt-hull-optimized-center.data"
 //            "class130-actions-coords_normPOS-fps12.data"
-            "KMeansPivotChooser--kmeans.k_350-train.composite"
+//            "KMeansPivotChooser--kmeans.k_350-train.composite"
 //            "predictions_dim=256_beta=1_modelhdm05.data"
 //            "KMedoidsFastPAM--kmeans.k_350.D0K1"
+//                "predictions_model=hdm05.data.gz"
+                "all/lat_dim=4_beta=1/predictions_model=hdm05.data.gz"
         }) {
+
 
             final String batchName = batchNamePrefix + batchNameFile;
             System.out.println("===== NEW EXPERIMENT: " + batchName + " =====");
@@ -110,7 +116,8 @@ public class DescriptorTester {
             final String dataFile = batchName;
 
             // structures
-            ObjectCategoryMgmt categoryMgmt = new ObjectCategoryMgmt("/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/data/leave-one-out/category_description_short.txt");
+//            ObjectCategoryMgmt categoryMgmt = new ObjectCategoryMgmt("/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/data/leave-one-out/category_description_short.txt");
+            ObjectCategoryMgmt categoryMgmt = new ObjectCategoryMgmt("/home/drking/Documents/bakalarka/data/pku-mmd/category_description.txt");
             ObjectMgmt queryMgmt = new ObjectMgmt(categoryMgmt);
             ObjectMgmt dataMgmt = new ObjectMgmt(categoryMgmt);
 
