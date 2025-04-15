@@ -18,7 +18,9 @@ def replace_mocap_pose(filepath):
         # new_content = content.replace('1;messif.objects.impl.ObjectFloatVectorCosine', 'messif.objects.impl.ObjectFloatVectorCosine')
         # new_content = content.replace('messif.objects.impl.ObjectFloatVectorCosine', '1;mcdr.sequence.impl.SequenceSegmentCodeListDTW')
         # new_content = re.sub(r'(-?\d+(?:\.\d+)?)[ \t]+(?=-?\d)', r'\1,', content)
-        new_content = content.replace('1;messif.objects.impl.ObjectFloatVectorCosine\n', '')
+        # new_content = content.replace('1;messif.objects.impl.ObjectFloatVectorCosine\n', '')
+        new_content = content.replace('#objectKey,messif.objects.keys.AbstractObjectKey,', '#objectKey messif.objects.keys.AbstractObjectKey ')
+        #objectKey,messif.objects.keys.AbstractObjectKey,
 
         with open(filepath, 'w') as f:
             f.write(new_content)
