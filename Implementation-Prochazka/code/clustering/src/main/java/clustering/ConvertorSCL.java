@@ -26,6 +26,8 @@ import static picocli.CommandLine.Option;
  * <p>
  * Modified to output medoids found by ELKI as raw float vectors in a simple MESSIF-like format,
  * with configurable vector dimensionality.
+ *
+ * @Author Tomas Drkos
  */
 @Command(
         name = "convertor",
@@ -88,7 +90,7 @@ public final class ConvertorSCL implements Callable<Integer> {
      * @throws IOException if an I/O error is thrown when accessing the folder
      */
     private void parseMedoidsFromElkiClusteringFolder() throws IOException {
-        // Ensure vector dimension is provided when parsing medoids
+
         if (MedoidParsing.vectorDim <= 0) {
             throw new IllegalArgumentException("Missing or invalid required option: '--vector-dim=<positive_integer>' must be provided when parsing medoids.");
         }
@@ -98,23 +100,19 @@ public final class ConvertorSCL implements Callable<Integer> {
             throw new IOException("Provided ELKI clustering folder path is not a directory: " + MedoidParsing.elkiClusteringFolder);
         }
 
-        // Use try-with-resources for the stream
         try (Stream<Path> paths = Files.walk(startPath)) {
             paths
                     .filter(Files::isRegularFile)
-                    // Find the specific cluster output file within each sub-folder
                     .filter(p -> p.getFileName().toString().equals(ELKI_CLUSTER_FILE_NAME))
-                    .map(this::parseMedoidVector) // Use the new vector parsing method
-                    .forEach(System.out::println); // Print each medoid vector to standard output
+                    .map(this::parseMedoidVector)
+                    .forEach(System.out::println);
         }
     }
 
     /**
      * Converts ELKI clustering file (output from the initial clustering run)
-     * from the ELKI clustering format (with metadata) to a simpler ELKI format
-     * (likely just vectors with labels), suitable for input to the next clustering step (k=1 medoid finding).
-     * This function seems less relevant now if the goal is just the final medoid vectors,
-     * but kept for compatibility with the script's workflow.
+     * from the ELKI clustering format (with metadata) to a MESSIF format accepted by ObjectFloatVectorCosine.
+     *
      */
     private void convertElkiClusteringFileToElkiFormat() {
         List<String> lines = Util.openFileAndReadAllLines(Paths.get(ElkiConversion.elkiClusteringFile));
@@ -122,7 +120,6 @@ public final class ConvertorSCL implements Callable<Integer> {
         System.out.println(elkiFormat);
     }
 
-    // --- Helper Methods for Medoid Vector Parsing ---
 
     /**
      * Parses a single ELKI clustering file (result of k=1 KMedoids)
@@ -134,9 +131,7 @@ public final class ConvertorSCL implements Callable<Integer> {
     private String parseMedoidVector(Path elkiClusteringFile) {
         List<String> lines = Util.openFileAndReadAllLines(elkiClusteringFile);
         String medoidId = parseMedoidId(lines);
-        // Find the line in the file corresponding to the medoid ID
         String medoidLineInELKIFormat = parseObjectLine(lines, medoidId);
-        // Convert that line into the desired float vector output format
         String medoidInVectorFormat = convertElkiObjectLineToVectorMessifFormat(medoidLineInELKIFormat, MedoidParsing.vectorDim);
 
         return medoidInVectorFormat;
@@ -152,10 +147,10 @@ public final class ConvertorSCL implements Callable<Integer> {
     private String parseMedoidId(Collection<String> elkiClusteringFileLines) {
         return elkiClusteringFileLines
                 .stream()
-                .map(ELKI_CLUSTERING_FILE_MEDOID_ID::matcher) // Try to match the medoid ID pattern
-                .filter(Matcher::matches)                    // Keep only successful matches
-                .map(matcher -> matcher.group(1))            // Extract the ID (group 1)
-                .findFirst()                                 // Get the first match
+                .map(ELKI_CLUSTERING_FILE_MEDOID_ID::matcher)
+                .filter(Matcher::matches)
+                .map(matcher -> matcher.group(1))
+                .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Could not find '# Cluster Medoid: <id>' line in the input file."));
     }
 
@@ -169,20 +164,19 @@ public final class ConvertorSCL implements Callable<Integer> {
      * @throws IllegalArgumentException if a line for the specified objectId is not found
      */
     private String parseObjectLine(Collection<String> elkiClusteringFileLines, String objectId) {
-        String prefixToFind = ELKI_CLUSTERING_OBJECT_VALID_OBJECT_LINE_PREFIX + objectId + " "; // Add space for robustness
+        String prefixToFind = ELKI_CLUSTERING_OBJECT_VALID_OBJECT_LINE_PREFIX + objectId + " ";
         return elkiClusteringFileLines
                 .stream()
-                .filter(line -> line.startsWith(prefixToFind)) // Find the line starting with "ID=..."
+                .filter(line -> line.startsWith(prefixToFind))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Could not find object line starting with '" + prefixToFind + "' in the input file."));
     }
 
-    // --- The core conversion logic ---
 
     /**
      * Converts a line representing an object from the ELKI clustering output format
      * into the desired MESSIF-like format containing the raw float vector.
-     * Assumes the input line format is roughly: "ID=<id> <float1> <float2> ... <floatN> label<label_suffix>"
+     * Assumes the input line format is roughly: " #objectMessif... ID=<id> <float1>,<float2>, ... ,<floatN>"
      *
      * @param elkiObjectLine The single line from the ELKI output file representing the medoid object.
      * @param vectorDim      The expected dimensionality of the float vector.
@@ -190,65 +184,52 @@ public final class ConvertorSCL implements Callable<Integer> {
      * @throws IllegalArgumentException if the line format doesn't match expectations or the number of floats is wrong.
      */
     private String convertElkiObjectLineToVectorMessifFormat(String elkiObjectLine, int vectorDim) {
-        // Split the line into parts based on spaces
-        String[] chunks = elkiObjectLine.trim().split("\\s+"); // Use regex \\s+ for any whitespace
+        String[] chunks = elkiObjectLine.trim().split("\\s+");
 
-        // More specific check (can be adapted if format is slightly different, e.g. includes cluster id)
+        // The constant 3 is based on sperated objects, that are not vectors.
         if (chunks.length != vectorDim + 3) {
             System.err.printf(
                     "Warning: Expected exactly %d parts (ID + sequence length + %d vector dimensions + label), but found %d parts. Assuming vector is dimensions [1 to %d] and last part is label. Line: '%s'%n",
                     vectorDim + 3, vectorDim, chunks.length, vectorDim, elkiObjectLine);
-            // Decide how to handle this: proceed cautiously or throw error? Let's proceed for now.
         }
 
 
-        // --- Construct the output string ---
         var builder = new StringBuilder();
 
-        // 1. Extract Label (last chunk, remove "label" prefix)
         String lastChunk = chunks[chunks.length - 1];
         String label = ELKI_LABEL_PREFIX.matcher(lastChunk).replaceFirst("");
 
-        // 2. Build Header
         builder.append("#objectKey messif.objects.keys.AbstractObjectKey ").append(label);
-        builder.append('\n'); // Newline after header
+        builder.append('\n');
 
-        // 3. Extract Vector components
-        // Vector values are expected to be from index 1 up to index vectorDim (inclusive)
         int vectorStartIndex = 2;
-        int vectorEndIndex = vectorStartIndex + vectorDim; // Exclusive index for copyOfRange
+        int vectorEndIndex = vectorStartIndex + vectorDim;
 
-        if (vectorEndIndex > chunks.length -1) { // Check if we overrun before the label
+        if (vectorEndIndex > chunks.length -1) {
             throw new IllegalArgumentException(String.format(
                     "Error parsing object line: Not enough parts for vector dimension %d before the label. Found %d parts total. Line: '%s'",
                     vectorDim, chunks.length, elkiObjectLine));
         }
 
-        // 4. Build sequence counter.
-        builder.append(String.format("%d;messif.objects.impl.ObjectFloatVectorCosine", 1));
-        builder.append('\n');
+         // if object/sequence needed this part of header
+//        builder.append(String.format("%d;messif.objects.impl.ObjectFloatVectorCosine", 1));
+//        builder.append('\n');
 
         String[] vectorComponents = Arrays.copyOfRange(chunks, vectorStartIndex, vectorEndIndex);
 
-        // 5. Append vector components, space-separated
-        builder.append(String.join(" ", vectorComponents));
+        builder.append(String.join(",", vectorComponents));
 
-        // No trailing newline needed usually for the vector data line itself
 
 
         return builder.toString();
     }
 
-    // --- Conversion from ELKI clustering format to plain ELKI format (kept for script compatibility) ---
 
     /**
-     * Converts an ELKI clustering file (potentially with metadata and multiple objects per line based on original format)
-     * to a simpler ELKI format (likely one vector per line with label).
-     * NOTE: The implementation `convertElkiClusteringObjectToElkiFormat` might need review
-     * if the input `elkiClusteringFile` has a complex structure not handled here.
+     * Converts an ELKI clustering file to a MESSIF format.
      *
      * @param elkiClusteringFileLines the ELKI clustering file represented as a collection of file lines
-     * @return the file content in a simpler ELKI format (vectors + labels)
+     * @return the file content in a MESSIF format (vectors + labels)
      */
     private String convertElkiClusteringFileToElkiFormat(Collection<String> elkiClusteringFileLines) {
         return elkiClusteringFileLines
@@ -261,60 +242,24 @@ public final class ConvertorSCL implements Callable<Integer> {
     }
 
     /**
-     * Converts a single object line from ELKI clustering format to a simpler ELKI format.
-     * **WARNING:** This function's logic seems based on the *original* 3Dx31 data assumption (parsing `numberOfPoses`, using commas).
-     * It likely needs to be rewritten if the input to *this* conversion step is already just 256D vectors.
-     * If the input files to `--convert-elki-clustering-file-to-elki-format` are already just
-     * `<value1> <value2> ... <valueN> label<label>` then this function might not be needed or should just pass the line through.
-     * Assuming for now it might still receive the complex format sometimes.
+     * Converts a single object line from ELKI clustering format to a MESSIF format.
      *
      * @param elkiClusteringObject the ELKI clustering object line
-     * @return the object in ELKI format (potentially simplified vector + label)
+     * @return the object in MESSIF format (potentially simplified vector + label)
      */
     private String convertElkiClusteringObjectToElkiFormat(String elkiClusteringObject) {
-        // THIS IMPLEMENTATION IS SUSPECT - Assumes old format based on parseFloat(chunks[1]) etc.
-        // It should likely be simplified if the input here is already vector-based.
-        // For now, returning a placeholder or trying a simplified conversion.
 
         String[] chunks = elkiClusteringObject.trim().split("\\s+");
-        if (chunks.length < 2) return ""; // Need at least ID and label
+        if (chunks.length < 2) return "";
 
-        // Simple assumption: Output all chunks except the ID, keep spaces, keep label
-        // ID=id val1 val2 ... valN labelSuffix -> val1 val2 ... valN labelSuffix
-        // This is a guess - the required output format for the k=1 KMedoids step needs clarification.
         if (chunks[0].startsWith(ELKI_CLUSTERING_OBJECT_VALID_OBJECT_LINE_PREFIX)) {
-            // Copy all chunks starting from index 1 (after ID=...)
             String[] valueAndLabelChunks = Arrays.copyOfRange(chunks, 1, chunks.length);
             return String.join(" ", valueAndLabelChunks);
         } else {
-            // Line doesn't start with ID=, maybe it's already in the right format?
-            // Or maybe it's an unexpected line. Return empty/log warning.
             System.err.println("Warning: Unexpected line format in convertElkiClusteringObjectToElkiFormat: " + elkiClusteringObject);
             return "";
         }
-
-        /* // Original complex logic (likely incorrect for vector input)
-        var builder = new StringBuilder(elkiClusteringObject.length());
-        String[] chunks = elkiClusteringObject.split(" ");
-
-        // This assumes chunks[1] is numberOfPoses - probably wrong for 256D vector input
-        // int numberOfPoses = (int) parseFloat(chunks[1]);
-        // builder.append(numberOfPoses); // This doesn't make sense for a single vector line
-        // builder.append(' ');
-
-        // This assumes data starts at index 2 and uses commas - likely wrong
-        String[] delimitedValues = Arrays.copyOfRange(chunks, 2, chunks.length - 1);
-        builder.append(String.join(", ", delimitedValues)); // Using comma separator? Check ELKI input format needs
-        builder.append(' ');
-
-        String label = chunks[chunks.length - 1];
-        builder.append(label);
-
-        return builder.toString();
-        */
     }
-
-    // --- Picocli Command Execution ---
 
     @Override
     public Integer call() {
@@ -335,32 +280,29 @@ public final class ConvertorSCL implements Callable<Integer> {
         } catch (IOException e) {
             System.err.println("An I/O error occurred: " + e.getMessage());
             e.printStackTrace(System.err);
-            return 1; // Indicate error
+            return 1;
         } catch (IllegalArgumentException e) {
             System.err.println("An input error occurred: " + e.getMessage());
-            // e.printStackTrace(System.err); // Optional: full stack trace
-            return 1; // Indicate error
+            return 1;
         } catch (Exception e) {
             System.err.println("An unexpected error occurred: " + e.getMessage());
             e.printStackTrace(System.err);
-            return 1; // Indicate error
+            return 1;
         }
 
         System.err.println("Operation completed successfully.");
-        return 0; // Indicate success
+        return 0;
     }
 
-    // --- Picocli Option Classes ---
 
     /**
      * Groups the mutually exclusive command options.
      */
     static class CliOptions {
-        // Need to reference the static inner classes directly
-        @ArgGroup(validate = false) // Let individual groups handle validation
+        @ArgGroup(validate = false)
                 ElkiConversion elkiConversion;
 
-        @ArgGroup(validate = false) // Let individual groups handle validation
+        @ArgGroup(validate = false)
         MedoidParsing medoidParsing;
     }
 
@@ -380,7 +322,7 @@ public final class ConvertorSCL implements Callable<Integer> {
         @Option(
                 names = "--elki-clustering-file",
                 description = "Path to the input ELKI clustering file (output from initial clustering).",
-                required = true // Required if the parent ArgGroup is chosen
+                required = true
         )
         static String elkiClusteringFile;
     }
@@ -401,22 +343,18 @@ public final class ConvertorSCL implements Callable<Integer> {
                 names = "--elki-clustering-folder",
                 description = "Path to the parent ELKI clustering folder containing subfolders (e.g., cluster_0, cluster_1) " +
                         "each with a " + ELKI_CLUSTER_FILE_NAME + " from a k=1 KMedoids run.",
-                required = true // Required if the parent ArgGroup is chosen
+                required = true
         )
         static String elkiClusteringFolder;
 
         @Option(
                 names = "--vector-dim",
                 description = "Dimensionality of the float vectors being processed and outputted.",
-                // Make it required only when parsing medoids. Handled explicitly in parseMedoidsFromElkiClusteringFolder.
-                required = false // Cannot be required=true here due to mutual exclusion with the other ArgGroup
-                // We perform manual check within the relevant method instead.
+                required = false
         )
-        // Needs to be static to be accessed from static context or passed around
-        static int vectorDim = -1; // Default to invalid, checked later
+        static int vectorDim = -1;
     }
 
-    // --- Utility Class (Placeholder - assumes it exists and works) ---
     static class Util {
         /**
          * Placeholder for a utility method to read all lines from a file.
@@ -426,7 +364,6 @@ public final class ConvertorSCL implements Callable<Integer> {
             try {
                 return Files.readAllLines(filePath);
             } catch (IOException e) {
-                // Rethrow as a runtime exception or handle more gracefully
                 throw new RuntimeException("Failed to read file: " + filePath, e);
             }
         }

@@ -205,8 +205,8 @@ ${JDK_PATH} \
 
 ## Composite MW clustering using ELKI
 function createCompositeMWClusteringELKI() {
-    DATASET_PATH='/home/drking/Documents/bakalarka/data/SCL/composite/elki-predictions_segmented_model=hdm05-legL.data'
-    ROOT_FOLDER_FOR_RESULTS='/home/drking/Documents/bakalarka/data/SCL/composite/clusters/legL'
+    DATASET_PATH='/home/drking/Documents/bakalarka/data/SCL/composite/elki-predictions_segmented_model=hdm05-torso.data'
+    ROOT_FOLDER_FOR_RESULTS='/home/drking/Documents/bakalarka/data/SCL/composite/clusters/torso'
 
       createClusters
       convertElkiClusteringFormatToElkiFormat

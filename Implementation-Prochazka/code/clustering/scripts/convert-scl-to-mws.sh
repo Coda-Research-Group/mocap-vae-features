@@ -94,6 +94,7 @@ function convertBodyPartsCli() {
     for CLUSTER_FOLDER_PATH in ${INPUT}; do 
         # Parses the folder name (the string after the last "/")
         CLUSTER_FOLDER_NAME=$(basename "${CLUSTER_FOLDER_PATH}")
+        echo "${CLUSTER_FOLDER_PATH}"
 
         convertBodyPart
     done
