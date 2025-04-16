@@ -1,8 +1,18 @@
 #!/bin/bash
+#PBS -l walltime=48:0:0
+#PBS -l select=1:ncpus=2:mem=16gb:scratch_local=50gb
+#PBS -o /dev/null
+#PBS -e /dev/null
 
 # http://redsymbol.net/articles/unofficial-bash-strict-mode/
 set -euo pipefail
 IFS=$'\n\t'
+
+CURRENT_DIM=${PASSED_DIM}
+CURRENT_BETA=${PASSED_BETA}
+
+CURRENT_DIM="64"
+CURRENT_BETA="10"
 
 ##########################################
 
@@ -17,23 +27,19 @@ IFS=$'\n\t'
 
 # 1. Insert your custom values (see defaults for inspiration)
 
-ROOT_FOLDER_FOR_RESULTS='/home/drking/Documents/bakalarka/data/SCL-clustering'
+#ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters"
 # Path to a dataset in ELKI format
-DATASET_PATH='/home/drking/Documents/bakalarka/data/quantized-vae/elki-predictions_segmented_dim=256_beta=1_modelhdm05.data'
+#DATASET_PATH='/home/drking/Documents/bakalarka/data/SCL/elki-predictions_segmented_model=hdm05.data.gz'
 DISTANCE_FUNCTION='de.lmu.ifi.dbs.elki.distance.distancefunction.CosineDistanceFunction'
-# OPTIONAL - Specifies which joint indices should be used for clustering.
-# '' ~ use all joints
-# '-clustering.distance.SequenceMocapPoseCoordsL2DTW.usedJointIds 1,2,3' ~ use only joints with ids 1, 2, and 3,
-#   every id should be in range [1, 31], see clustering.Joint enum
-DISTANCE_FUNCTION_PARAMS='256'
+DISTANCE_FUNCTION_PARAMS="${CURRENT_DIM}"
 ALGORITHM='clustering.kmeans.KMedoidsFastPAM'
-ALGORITHM_PARAMS='-kmeans.k 3'
+#ALGORITHM_PARAMS='-kmeans.k 3'
 # JAR of the "clustering" project with "ELKIWithDistances" as the main class
-ELKI_JAR_PATH='/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/elki-with-distances.jar'
+ELKI_JAR_PATH='/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/elki-with-distances.jar'
 # JAR of the "clustering" project with "Convertor" as the main class
-#CONVERTOR_JAR_PATH='/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/convertor.jar'
+#CONVERTOR_JAR_PATH='/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/convertor_old.jar'
 # My edited convertor.
-CONVERTOR_JAR_PATH='/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/convertor.jar'
+CONVERTOR_JAR_PATH='/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/convertor.jar'
 
 JDK_PATH='/usr/bin/java'
 # Subfolder name for the result of createClusters function
@@ -192,7 +198,7 @@ ${JDK_PATH} \
 -jar ${CONVERTOR_JAR_PATH} \
 --parse-medoids-from-elki-clustering-folder \
 --elki-clustering-folder=${CLUSTER_FOLDER_PATH} \
---vector-dim=256
+--vector-dim=${DISTANCE_FUNCTION_PARAMS}
 "
         echo "${COMMAND}"
 
@@ -205,14 +211,15 @@ ${JDK_PATH} \
 
 ## Composite MW clustering using ELKI
 function createCompositeMWClusteringELKI() {
-    DATASET_PATH='/home/drking/Documents/bakalarka/data/quantized-vae/elki-predictions_segmented_dim=256_beta=1_modelhdm05.data'
-    ROOT_FOLDER_FOR_RESULTS='/home/drking/Documents/bakalarka/data/SCL-clustering'
+  	for MODEL in "hdm05-torso" "hdm05-handL" "hdm05-handR" "hdm05-legL" "hdm05-legR"; do
+    	DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/elki-predictions_segmented_model=${MODEL}.data"
+    	ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${MODEL}"
 
-      createClusters
-      convertElkiClusteringFormatToElkiFormat
-      runKMedoidsClusteringOnEveryCluster
-      extractClusterMedoids
-
+      	createClusters
+      	convertElkiClusteringFormatToElkiFormat
+      	runKMedoidsClusteringOnEveryCluster
+      	extractClusterMedoids
+	done
 }
 
 ## Composite MW clustering using MESSIF
@@ -310,7 +317,7 @@ ${JOINT_IDS} \
 #     sleep 10
 # done
 
- for K in 400; do
+ for K in 10; do
      ALGORITHM_PARAMS="-kmeans.k ${K}"
      createCompositeMWClusteringELKI
      sleep 10
