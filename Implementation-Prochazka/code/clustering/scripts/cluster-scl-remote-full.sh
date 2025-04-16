@@ -41,7 +41,7 @@ ELKI_JAR_PATH='/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/
 # My edited convertor.
 CONVERTOR_JAR_PATH='/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/convertor.jar'
 
-JDK_PATH='/usr/bin/java'
+JDK_PATH='/storage/brno12-cerit/home/drking/jdk-21.0.7/bin/java'
 # Subfolder name for the result of createClusters function
 CLUSTER_SUBFOLDER='cluster'
 # Subfolder name for the result of convertElkiClusteringFormatToElkiFormat function
