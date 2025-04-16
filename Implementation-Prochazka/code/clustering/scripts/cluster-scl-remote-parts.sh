@@ -47,7 +47,7 @@ ELKI_FORMAT_CLUSTER_SUBFOLDER='clusters-elki-format'
 KMEDOIDS_CLUSTER_SUBFOLDER='kmedoids-clusters'
 # File name for the result of extractClusterMedoids function
 EXTRACTED_MEDOIDS_FILE='medoids.txt'
-gz
+
 # 2. Uncomment desired functions at the bottom of the file in the Main section
 
 # 3. Run the script as follows:
