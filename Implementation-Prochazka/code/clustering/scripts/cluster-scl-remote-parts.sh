@@ -47,7 +47,7 @@ ELKI_FORMAT_CLUSTER_SUBFOLDER='clusters-elki-format'
 KMEDOIDS_CLUSTER_SUBFOLDER='kmedoids-clusters'
 # File name for the result of extractClusterMedoids function
 EXTRACTED_MEDOIDS_FILE='medoids.txt'
-
+gz
 # 2. Uncomment desired functions at the bottom of the file in the Main section
 
 # 3. Run the script as follows:
@@ -208,7 +208,7 @@ ${JDK_PATH} \
 
 ## Composite MW clustering using ELKI
 function createCompositeMWClusteringELKI() {
-  	for MODEL in "hdm05"; do
+  	for MODEL in "hdm05-torso" "hdm05-handL" "hdm05-handR" "hdm05-legL" "hdm05-legR"; do
     	DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/elki-predictions_segmented_model=${MODEL}.data"
     	ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${MODEL}"
 
