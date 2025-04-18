@@ -1,4 +1,8 @@
 #!/bin/bash
+#PBS -l walltime=24:0:0
+#PBS -l select=1:ncpus=4:mem=8gb:scratch_local=50gb
+#PBS -o /dev/null
+#PBS -e /dev/null
 
 # http://redsymbol.net/articles/unofficial-bash-strict-mode/
 set -euo pipefail
