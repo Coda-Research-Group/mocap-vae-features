@@ -29,6 +29,7 @@ ${JDK_PATH} \
 -jar ${COMBINER_JAR_PATH} \
 --sequenceFolder='${BODY_PART_MWS_FOLDER}' \
 "
+	rm "/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/composites/Elki_${DIM}_${BETA}_${K}.composite"
 
     echo "${COMMAND}"
 
