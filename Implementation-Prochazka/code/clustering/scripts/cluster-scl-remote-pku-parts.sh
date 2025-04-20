@@ -27,7 +27,7 @@ function formatResultFolderName() {
 function createCompositeMWClusteringMessif() {
 
     ALGORITHM='messif.pivotselection.KMeansPivotChooser'
-    MEDOIDS_JAR_PATH='/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/medoids_new.jar'
+    MEDOIDS_JAR_PATH='/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/medoids_new.jar'
     EXTRACTED_MEDOIDS_FILE='medoids.txt'
 
 
