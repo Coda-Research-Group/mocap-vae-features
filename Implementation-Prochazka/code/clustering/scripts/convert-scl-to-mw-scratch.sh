@@ -61,17 +61,18 @@ function convert() {
 
 ## PKU-MMD CV - training and testing set
 for K in '3000'; do
+    PART="FULL"
 
-	CLUSTER_FOLDER_PATH="/home/drking/Documents/bakalarka/data/SCL/cluster_test/results/pku-mmd/Cosine/KMeansPivotChooser--kmeans.k_${K}"
+	CLUSTER_FOLDER_PATH="/home/drking/Documents/bakalarka/data/SCL/cluster_test/results/Cosine/KMeansPivotChooser--kmeans.k_${K}"
 
      ## Training data:
-	DATAFILE="/home/drking/Documents/bakalarka/data/SCL/cluster_test/predictions_segmented_model=pku-mmd.data-cv-train"
-	OUTPUT_ROOT_PATH="/home/drking/Documents/bakalarka/data/SCL/cluster_test/results/pku-mmd/Cosine/MW/KMeansPivotChooser--kmeans.k_${K}-train"
+	DATAFILE="/home/drking/Documents/bakalarka/data/SCL/cluster_test/predictions_segmented_model=pku-mmd.data"
+	OUTPUT_ROOT_PATH="/home/drking/Documents/bakalarka/data/SCL/cluster_test/results/pku-mmd/Cosine/MW/KMeansPivotChooser--kmeans.k_${K}"
 	convert
 
      ## Testing data:
-	DATAFILE="/home/drking/Documents/bakalarka/data/SCL/cluster_test/predictions_segmented_model=pku-mmd.data-cv-test"
-	OUTPUT_ROOT_PATH="/home/drking/Documents/bakalarka/data/SCL/cluster_test/results/pku-mmd/Cosine/MW/KMeansPivotChooser--kmeans.k_${K}-test"
-	convert
+#	DATAFILE="/home/drking/Documents/bakalarka/data/SCL/cluster_test/predictions_segmented_model=pku-mmd.data-cv-test"
+#	OUTPUT_ROOT_PATH="/home/drking/Documents/bakalarka/data/SCL/cluster_test/results/pku-mmd/Cosine/MW/KMeansPivotChooser--kmeans.k_${K}-test"
+#	convert
 
  done
