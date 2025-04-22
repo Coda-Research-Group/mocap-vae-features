@@ -477,7 +477,252 @@ ${JDK_PATH} \
     eval "${COMMAND}" >"${RESULT_FOLDER_NAME}/${EXTRACTED_MEDOIDS_FILE}" 2>"${RESULT_FOLDER_NAME}/log.txt"
 
 #---------------------------------------------------------------------------------------------------------------------------------------------
+    K="750"
+    CURRENT_BETA="64"
+    CURRENT_DIM="0.1"
+    model="pku-mmd-legL"
+
+    for K in "20" "50" "100" "150" "200" "250" "300" "350" "400" "500" "600" "750"; do
+        ALGORITHM_PARAMS="-kmeans.k ${K}"
+
+        DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/predictions_segmented_model=${model}.data-cv-train"
+        ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${model}"
+
+
+        DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVectorCosine"
+
+        formatResultFolderName
+
+        mkdir -p "${RESULT_FOLDER_NAME}"
+
+        COMMAND="\
+${JDK_PATH} \
+-jar ${MEDOIDS_JAR_PATH} \
+1 \
+-pcuseall \
+-sf ${DATASET_PATH} \
+-cls ${DISTANCE_FUNCTION} \
+-pc ${ALGORITHM} \
+-np ${K} \
+"
+        echo "${COMMAND}"
+
+        eval "${COMMAND}" >"${RESULT_FOLDER_NAME}/${EXTRACTED_MEDOIDS_FILE}" 2>"${RESULT_FOLDER_NAME}/log.txt"
+    done
+
+#---------------------------------------------------------------------------------------------------------------------------------------------
+
+    K="750"
+    CURRENT_BETA="64"
+    CURRENT_DIM="0.1"
+    model="pku-mmd-legR"
+
+    for K in "20" "50" "100" "150" "200" "250" "300" "350" "400" "500" "600" "750"; do
+        ALGORITHM_PARAMS="-kmeans.k ${K}"
+
+        DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/predictions_segmented_model=${model}.data-cv-train"
+        ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${model}"
+
+
+        DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVectorCosine"
+
+        formatResultFolderName
+
+        mkdir -p "${RESULT_FOLDER_NAME}"
+
+        COMMAND="\
+${JDK_PATH} \
+-jar ${MEDOIDS_JAR_PATH} \
+1 \
+-pcuseall \
+-sf ${DATASET_PATH} \
+-cls ${DISTANCE_FUNCTION} \
+-pc ${ALGORITHM} \
+-np ${K} \
+"
+        echo "${COMMAND}"
+
+        eval "${COMMAND}" >"${RESULT_FOLDER_NAME}/${EXTRACTED_MEDOIDS_FILE}" 2>"${RESULT_FOLDER_NAME}/log.txt"
+    done
+
+#---------------------------------------------------------------------------------------------------------------------------------------------
+
+    K="750"
+    CURRENT_BETA="32"
+    CURRENT_DIM="0.1"
+    model="pku-mmd-handR"
+
+    for K in "20" "50" "100" "150" "200" "250" "300" "350" "400" "500" "600" "750"; do
+        ALGORITHM_PARAMS="-kmeans.k ${K}"
+
+        DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/predictions_segmented_model=${model}.data-cv-train"
+        ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${model}"
+
+
+        DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVectorCosine"
+
+        formatResultFolderName
+
+        mkdir -p "${RESULT_FOLDER_NAME}"
+
+        COMMAND="\
+${JDK_PATH} \
+-jar ${MEDOIDS_JAR_PATH} \
+1 \
+-pcuseall \
+-sf ${DATASET_PATH} \
+-cls ${DISTANCE_FUNCTION} \
+-pc ${ALGORITHM} \
+-np ${K} \
+"
+        echo "${COMMAND}"
+
+        eval "${COMMAND}" >"${RESULT_FOLDER_NAME}/${EXTRACTED_MEDOIDS_FILE}" 2>"${RESULT_FOLDER_NAME}/log.txt"
+    done
+
+#---------------------------------------------------------------------------------------------------------------------------------------------
+
+    K="750"
+    CURRENT_BETA="32"
+    CURRENT_DIM="0.1"
+    model="pku-mmd-legR"
+
+    for K in "20" "50" "100" "150" "200" "250" "300" "350" "400" "500" "600" "750"; do
+        ALGORITHM_PARAMS="-kmeans.k ${K}"
+
+        DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/predictions_segmented_model=${model}.data-cv-train"
+        ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${model}"
+
+
+        DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVectorCosine"
+
+        formatResultFolderName
+
+        mkdir -p "${RESULT_FOLDER_NAME}"
+
+        COMMAND="\
+${JDK_PATH} \
+-jar ${MEDOIDS_JAR_PATH} \
+1 \
+-pcuseall \
+-sf ${DATASET_PATH} \
+-cls ${DISTANCE_FUNCTION} \
+-pc ${ALGORITHM} \
+-np ${K} \
+"
+        echo "${COMMAND}"
+
+        eval "${COMMAND}" >"${RESULT_FOLDER_NAME}/${EXTRACTED_MEDOIDS_FILE}" 2>"${RESULT_FOLDER_NAME}/log.txt"
+    done
+
+#---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+    K="750"
+    CURRENT_BETA="32"
+    CURRENT_DIM="0.1"
+    model="pku-mmd-legL"
+
+    for K in "20" "50" "100" "150" "200" "250" "300" "350" "400" "500" "600" "750"; do
+        ALGORITHM_PARAMS="-kmeans.k ${K}"
+
+        DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/predictions_segmented_model=${model}.data-cv-train"
+        ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${model}"
+
+
+        DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVectorCosine"
+
+        formatResultFolderName
+
+        mkdir -p "${RESULT_FOLDER_NAME}"
+
+        COMMAND="\
+${JDK_PATH} \
+-jar ${MEDOIDS_JAR_PATH} \
+1 \
+-pcuseall \
+-sf ${DATASET_PATH} \
+-cls ${DISTANCE_FUNCTION} \
+-pc ${ALGORITHM} \
+-np ${K} \
+"
+        echo "${COMMAND}"
+
+        eval "${COMMAND}" >"${RESULT_FOLDER_NAME}/${EXTRACTED_MEDOIDS_FILE}" 2>"${RESULT_FOLDER_NAME}/log.txt"
+    done
+#---------------------------------------------------------------------------------------------------------------------------------------------
+
+    K="750"
+    CURRENT_BETA="16"
+    CURRENT_DIM="0.1"
+    model="pku-mmd-legR"
+
+    for K in "20" "50" "100" "150" "200" "250" "300" "350" "400" "500" "600" "750"; do
+        ALGORITHM_PARAMS="-kmeans.k ${K}"
+
+        DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/predictions_segmented_model=${model}.data-cv-train"
+        ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${model}"
+
+
+        DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVectorCosine"
+
+        formatResultFolderName
+
+        mkdir -p "${RESULT_FOLDER_NAME}"
+
+        COMMAND="\
+${JDK_PATH} \
+-jar ${MEDOIDS_JAR_PATH} \
+1 \
+-pcuseall \
+-sf ${DATASET_PATH} \
+-cls ${DISTANCE_FUNCTION} \
+-pc ${ALGORITHM} \
+-np ${K} \
+"
+        echo "${COMMAND}"
+
+        eval "${COMMAND}" >"${RESULT_FOLDER_NAME}/${EXTRACTED_MEDOIDS_FILE}" 2>"${RESULT_FOLDER_NAME}/log.txt"
+    done
+
+#---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+    K="750"
+    CURRENT_BETA="16"
+    CURRENT_DIM="0.1"
+    model="pku-mmd-legL"
+
+    for K in "5" "10" "20" "50" "100" "150" "200" "250" "300" "350" "400" "500" "600" "750"; do
+        ALGORITHM_PARAMS="-kmeans.k ${K}"
+
+        DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/predictions_segmented_model=${model}.data-cv-train"
+        ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${model}"
+
+
+        DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVectorCosine"
+
+        formatResultFolderName
+
+        mkdir -p "${RESULT_FOLDER_NAME}"
+
+        COMMAND="\
+${JDK_PATH} \
+-jar ${MEDOIDS_JAR_PATH} \
+1 \
+-pcuseall \
+-sf ${DATASET_PATH} \
+-cls ${DISTANCE_FUNCTION} \
+-pc ${ALGORITHM} \
+-np ${K} \
+"
+        echo "${COMMAND}"
+
+        eval "${COMMAND}" >"${RESULT_FOLDER_NAME}/${EXTRACTED_MEDOIDS_FILE}" 2>"${RESULT_FOLDER_NAME}/log.txt"
+    done
+
 }
+
 
 ##########################################
 
