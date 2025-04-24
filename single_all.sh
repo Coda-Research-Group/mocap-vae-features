@@ -39,7 +39,7 @@ conda activate "/storage/brno12-cerit/home/drking/.conda/envs/${ENV_NAME}" || {
 # 5x3x5 = 75
 for EXP in "all"; do
     for DIM in "64" "32" "16" "8" "4"; do
-        for BETA in "0.1" "1" "10"; do
+        for BETA in "1"; do
             for MODEL in "hdm05-torso" "hdm05-handL" "hdm05-handR" "hdm05-legL" "hdm05-legR"; do
 
                 python /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/train.py --multirun exp=hdm05/${EXP} \

@@ -36,9 +36,22 @@ conda activate "/storage/brno12-cerit/home/drking/.conda/envs/${ENV_NAME}" || {
 }
 
 #75
-for EXP in "fold2"; do
+# for EXP in "fold2"; do
+#     for DIM in "64" "32" "16" "8" "4"; do
+#         for BETA in "0.1" "1" "10"; do
+#             for MODEL in "hdm05-torso" "hdm05-handL" "hdm05-handR" "hdm05-legL" "hdm05-legR"; do
+
+#                 python /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/train.py --multirun exp=hdm05/${EXP} \
+#                     latent_dim=${DIM} beta=${BETA} body_model=${MODEL} > /dev/null 2>&1
+
+#             done
+#         done
+#     done
+# done
+
+for EXP in "all"; do
     for DIM in "64" "32" "16" "8" "4"; do
-        for BETA in "0.1" "1" "10"; do
+        for BETA in "10"; do
             for MODEL in "hdm05-torso" "hdm05-handL" "hdm05-handR" "hdm05-legL" "hdm05-legR"; do
 
                 python /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/train.py --multirun exp=hdm05/${EXP} \
