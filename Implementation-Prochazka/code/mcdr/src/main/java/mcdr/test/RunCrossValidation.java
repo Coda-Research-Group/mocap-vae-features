@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static mcdr.objects.impl.BodyPartConfiguration.HDM05;
+import static mcdr.objects.impl.BodyPartConfiguration.PKU_MMD_EXTENDED;
 
 /**
  * Runs evaluation in cross-validation mode.
@@ -43,36 +44,36 @@ public class RunCrossValidation {
 
 
         // HDM05 configuration
-        ObjectMotionWordComposite.bodyPartConfiguration = HDM05;
-        String categoryFile = "/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/data/cross-validation/hdm05/category_description_short.txt";
-        String objectLocatorRegExQueryMgmt = null;
-        String objectLocatorRegExDataMgmt = null;
-        int k = 2;
-        int split = 4;
-        int numberOfClusters = 350;
-        boolean tuneSpecializedClassifiers = true;
-        boolean supervised = false;
-        boolean verbose = true;
-        long classifiedCategories = Long.MAX_VALUE;
-        float confidenceThreshold = 1.1F;
+//        ObjectMotionWordComposite.bodyPartConfiguration = HDM05;
+//        String categoryFile = "/home/drking/Documents/bakalarka/data/pku-mmd/category_description.txt";
+//        String objectLocatorRegExQueryMgmt = null;
+//        String objectLocatorRegExDataMgmt = null;
+//        int k = 2;
+//        int split = 4;
+//        int numberOfClusters = 350;
+//        boolean tuneSpecializedClassifiers = true;
+//        boolean supervised = false;
+//        boolean verbose = true;
+//        long classifiedCategories = Long.MAX_VALUE;
+//        float confidenceThreshold = 1.1F;
 
         // HDM05-130
-        var performance = runCrossValidationHdm(
-                categoryFile,
-                "/home/drking/Documents/bakalarka/data/folds-MWs",
-                split,
-                numberOfClusters,
-                2,
-                tuneSpecializedClassifiers,
-                supervised,
-                k,
-                objectLocatorRegExQueryMgmt,
-                objectLocatorRegExDataMgmt,
-                "/home/drking/Documents/bakalarka/data/hdm05/class130-actions-coords_normPOS-fps12.data",
-                verbose,
-                classifiedCategories,
-                confidenceThreshold
-        );
+//        var performance = runCrossValidationHdm(
+//                categoryFile,
+//                "/home/drking/Documents/bakalarka/data/folds-MWs",
+//                split,
+//                numberOfClusters,
+//                2,
+//                tuneSpecializedClassifiers,
+//                supervised,
+//                k,
+//                objectLocatorRegExQueryMgmt,
+//                objectLocatorRegExDataMgmt,
+//                "/home/drking/Documents/bakalarka/data/hdm05/class130-actions-coords_normPOS-fps12.data",
+//                verbose,
+//                classifiedCategories,
+//                confidenceThreshold
+//        );
 
         // HDM05-65
         // var performance = runCrossValidationHdm(
@@ -92,17 +93,17 @@ public class RunCrossValidation {
         //         confidenceThreshold
         // );
 
-        // PKU-MMD configuration
-        // ObjectMotionWordComposite.bodyPartConfiguration = PKU_MMD_EXTENDED;
-        // String categoryFile = "/home/xprocha6/cybela1-storage/datasets/pku-mmd/category_description.txt";
-        // String originalActionsFile = "/home/xprocha6/cybela1-storage/datasets/pku-mmd/actions-single-subject-all-POS-fps10.data";
-        // int k = 18;
-        // int numberOfClusters = 300;
-        // boolean tuneSpecializedClassifiers = true;
-        // boolean supervised = false;
-        // boolean verbose = true;
-        // long classifiedCategories = 2L;
-        // float confidenceThreshold = 1.1F;
+//         PKU-MMD configuration
+         ObjectMotionWordComposite.bodyPartConfiguration = PKU_MMD_EXTENDED;
+         String categoryFile = "/home/drking/Documents/bakalarka/data/pku-mmd/category_description.txt";
+         String originalActionsFile = "/home/drking/Documents/bakalarka/data/pku-mmd/actions_singlesubject-segment24_shift4.8_initialshift0-coords_normPOS-fps10.data";
+         int k = 4;
+         int numberOfClusters = 350;
+         boolean tuneSpecializedClassifiers = true;
+         boolean supervised = false;
+         boolean verbose = true;
+         long classifiedCategories = 2L;
+         float confidenceThreshold = 1.1F;
 
         // PKU-MMD CS
         // var performance = runPku(
@@ -120,21 +121,21 @@ public class RunCrossValidation {
         //         confidenceThreshold
         // );
 
-        // PKU-MMD CV
-        // var performance = runPku(
-        //         categoryFile,
-        //         "/home/xprocha6/cybela1-storage/folds-mw/pku/cv",
-        //         numberOfClusters,
-        //         tuneSpecializedClassifiers,
-        //         supervised,
-        //         k,
-        //         ".*-M_.*",
-        //         ".*-(L|R)_.*",
-        //         originalActionsFile,
-        //         verbose,
-        //         classifiedCategories,
-        //         confidenceThreshold
-        // );
+//         PKU-MMD CV
+         var performance = runPku(
+                 categoryFile,
+                 "/home/drking/Documents/bakalarka/data/pku-test/lat_dim=256_beta=1/MWs",
+                 numberOfClusters,
+                 tuneSpecializedClassifiers,
+                 supervised,
+                 k,
+                 ".*-M_.*",
+                 ".*-(L|R)_.*",
+                 originalActionsFile,
+                 verbose,
+                 classifiedCategories,
+                 confidenceThreshold
+         );
 
         logger.info("Result: %s".formatted(performance));
     }

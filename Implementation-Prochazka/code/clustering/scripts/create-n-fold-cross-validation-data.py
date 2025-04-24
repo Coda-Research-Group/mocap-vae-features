@@ -75,21 +75,21 @@ def create_data_files_pku(actions_file: str, data_file: str) -> None:
 
     fold_data = create_category_action_mapping(data_file, actions_to_keep)
 
-    write_output_to_file(f"{data_file}-cv-train", fold_data)
+    write_output_to_file(f"{data_file}-cv-test", fold_data)
 
 
-create_data_files(
-    "/home/drking/Documents/bakalarka/data/SCL/folds-id/hdm05",
-#     "/Users/david/Developer/SDIPR/datasets/folds-id/hdm05/65",
-    #
-    "/home/drking/Documents/bakalarka/data/SCL/folds-data/predictions_segmented_dim=256_beta=1_modelhdm05.data",
-#     "/Users/david/Developer/SDIPR/datasets/folds-data/hdm05/65/class130-actions-segment80_shift16-coords_normPOS-fps12.data-cho2014",
-
-    2,
-#     10,
-)
-
-# create_data_files_pku(
-#     "/Users/david/Developer/SDIPR/datasets/folds-id/pku-mmd/cv/CV_train_objects_messif-lines.ids",
-#     "/Users/david/Developer/SDIPR/datasets/folds-cluster/pku/actions_singlesubject-segment24_shift4.8_initialshift0-coords_normPOS-fps10.data",
+# create_data_files(
+#     "/home/drking/Documents/bakalarka/data/SCL/folds-id/hdm05",
+# #     "/Users/david/Developer/SDIPR/datasets/folds-id/hdm05/65",
+#     #
+#     "/home/drking/Documents/bakalarka/data/SCL/folds-data/predictions_segmented_dim=256_beta=1_modelhdm05.data",
+# #     "/Users/david/Developer/SDIPR/datasets/folds-data/hdm05/65/class130-actions-segment80_shift16-coords_normPOS-fps12.data-cho2014",
+#
+#     2,
+# #     10,
 # )
+
+create_data_files_pku(
+    "/home/drking/Documents/bakalarka/data/pku-mmd/splits/CV_test_objects_messif-lines.txt",
+    "/home/drking/Documents/bakalarka/data/pku-test/lat_dim=256_beta=1/predictions_segmented_model=pku-mmd.data",
+)

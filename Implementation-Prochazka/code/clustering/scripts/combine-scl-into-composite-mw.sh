@@ -34,7 +34,7 @@ ${JDK_PATH} \
     echo "${COMMAND}"
 
     # 5 BPs
-    eval "${COMMAND}" > "/home/drking/Documents/bakalarka/data/SCL/cluster_test/results/pku-mmd/Cosine/MW/full.composite"
+    eval "${COMMAND}" >"${BODY_PART_MWS_FOLDER}/../${FILE_NAME}.composite"
     # 5 BPs + 3 relations
     # eval "${COMMAND}" >"${BODY_PART_MWS_FOLDER}/../${FILE_NAME}.composite-extended"
 }
@@ -80,11 +80,11 @@ ${JDK_PATH} \
 # done
 
 # PKU CV
- for TYPE in 'test' 'train'; do # 5 body parts
+ for TYPE in 'train' 'test'; do # 5 body parts
 # for TYPE in 'test-extended' 'train-extended'; do # 5 body parts + 3 relations
-     for K in '3000'; do
+     for K in "350"; do
 
-         BODY_PART_MWS_FOLDER="/home/drking/Documents/bakalarka/data/SCL/cluster_test/results/pku-mmd/Cosine/MW/KMeansPivotChooser--kmeans.k_${K}-${TYPE}"
+         BODY_PART_MWS_FOLDER="/home/drking/Documents/bakalarka/data/pku-test/lat_dim=256_beta=1/MWs/KMeansPivotChooser--kmeans.k_Cosine-${TYPE}"
 
          combineBodyPartsIntoCompositeMW
 

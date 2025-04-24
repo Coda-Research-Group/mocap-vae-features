@@ -227,7 +227,7 @@ function createCompositeMWClusteringMessif() {
     for FOLD in '0'; do # HDM05-130 folds
         # for FOLD in '0,1,2,3,4,5,6,7,8' '0,1,2,3,4,5,6,7,9' '0,1,2,3,4,5,6,8,9' '0,1,2,3,4,5,7,8,9' '0,1,2,3,4,6,7,8,9' '0,1,2,3,5,6,7,8,9' '0,1,2,4,5,6,7,8,9' '0,1,3,4,5,6,7,8,9' '0,2,3,4,5,6,7,8,9' '1,2,3,4,5,6,7,8,9'; do # HDM05-65 folds
 
-        for K in '3000'; do
+        for K in '10000'; do
 
             for FUNC in 'Cosine'; do
 
@@ -249,8 +249,8 @@ function createCompositeMWClusteringMessif() {
 #                 ROOT_FOLDER_FOR_RESULTS='/home/xprocha6/cybela1-storage/folds-cluster-results/pku/cs'
 
                 # PKU-MMD CV - no folds or splits
-                 DATASET_PATH="/home/drking/Documents/bakalarka/data/SCL/cluster_test/predictions_segmented_model=pku-mmd.data-cv-test"
-                 ROOT_FOLDER_FOR_RESULTS="/home/drking/Documents/bakalarka/data/SCL/cluster_test/results/Cosine/test"
+                 DATASET_PATH="/home/drking/Documents/bakalarka/data/pku-test/lat_dim=256_beta=1/predictions_segmented_model=pku-mmd.data-cv-train"
+                 ROOT_FOLDER_FOR_RESULTS="/home/drking/Documents/bakalarka/data/pku-test/Cosine"
 
 
                 # SELECT JOINTS_IDS:
@@ -278,7 +278,7 @@ function createCompositeMWClusteringMessif() {
                     # for JOINT_IDS in '3,4,7,8,22,23'; do
 
                 DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVector${FUNC}"
-
+#				DISTANCE_FUNCTION="mcdr.sequence.impl.SequenceMocapPoseCoordsL2DTW"
                 formatResultFolderName
 
                 mkdir -p "${RESULT_FOLDER_NAME}"

@@ -4,7 +4,7 @@ import os # To check if the file exists
 
 # --- 1. Configuration: SET THIS VALUE ---
 # Replace with the actual path to your text data file
-text_file_path = '/home/drking/Documents/bakalarka/data/SCL/cluster_test/predictions_segmented_model=hdm05.data' # <--- CHANGE THIS FILE PATH
+text_file_path = '/home/drking/Documents/bakalarka/data/pku-test/lat_dim=256_beta=1/predictions_segmented_model=pku-mmd.data-cv-train' # <--- CHANGE THIS FILE PATH
 
 # --- 2. Load Data from Text File ---
 all_segments_list = [] # Use a standard Python list first to collect vectors
