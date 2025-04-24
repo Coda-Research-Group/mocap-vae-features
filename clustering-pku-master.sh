@@ -20,7 +20,7 @@ for DIM in "${DIMS[@]}"; do
     for BETA in "${BETAS[@]}"; do
       	for MODEL in "${MODELS[@]}"; do
 
-        	FILE_TO_CONVERT="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=${MODEL}.data"
+        	FILE_TO_CONVERT="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=${MODEL}.data"
 			gunzip -k "${FILE_TO_CONVERT}.gz"
 
 		done
@@ -34,7 +34,7 @@ for DIM in "${DIMS[@]}"; do
     for BETA in "${BETAS[@]}"; do
       	for MODEL in "${MODELS[@]}"; do
 
-        	FILE_TO_CONVERT="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=${MODEL}.data"
+        	FILE_TO_CONVERT="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=${MODEL}.data"
 			gunzip -k "${FILE_TO_CONVERT}.gz"
 
 		done

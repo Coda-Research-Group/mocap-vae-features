@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -l walltime=48:0:0
-#PBS -l select=1:ncpus=4:mem=32gb:scratch_local=50gb
+#PBS -l select=1:ncpus=8:mem=8gb:scratch_local=50gb
 #PBS -o /dev/null
 #PBS -e /dev/null
 
@@ -31,17 +31,17 @@ function createCompositeMWClusteringMessif() {
     EXTRACTED_MEDOIDS_FILE='medoids.txt'
 
 
-    for model in "pku-mmd-torso" "pku-mmd-handL" "pku-mmd-handR" "pku-mmd-legL" "pku-mmd-legR"; do 
+	for K in "20" "50" "100" "150" "200" "250" "300" "350" "400" "500" "600" "750"; do
 
-        for K in "5" "10" "20" "50" "100" "150" "200" "250" "300" "350" "400" "500" "600" "750" "1000" "1500" "2000" "3000"; do
+    	for model in "pku-mmd-torso" "pku-mmd-handL" "pku-mmd-handR" "pku-mmd-legL" "pku-mmd-legR"; do
 
             for FUNC in 'Cosine'; do
 
                 ALGORITHM_PARAMS="-kmeans.k ${K}"
 
                 # PKU-MMD CV - no folds or splits
-                DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/predictions_segmented_model=${model}.data-cv-train"
-                ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${model}"
+                DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/predictions_segmented_model=${model}.data-cv-train"
+                ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${model}"
 
 
                 DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVector${FUNC}"
