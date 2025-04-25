@@ -333,7 +333,7 @@ def main(args):
 
     # prediction csv
     run_dir = Path(trainer.log_dir)
-    predictions_csv = run_dir / f'predictions_dim={args.latent_dim}_beta={args.beta}_model={args.body_model}.csv.gz'
+    predictions_csv = run_dir / f'predictions_norm_dim={args.latent_dim}_beta={args.beta}_model={args.body_model}.csv.gz'
     predictions.to_csv(predictions_csv)
 
     # get fold folder 
