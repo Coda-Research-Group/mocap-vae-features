@@ -28,15 +28,303 @@ function createCompositeMWClusteringMessif() {
     EXTRACTED_MEDOIDS_FILE='medoids.txt'
 
 #---------------------------------------------------------------------------------------------------------------------------------------------
+    K="750"
+    CURRENT_DIM="32"
+    CURRENT_BETA="10"
+    model="pku-mmd-torso"
+
+    ALGORITHM_PARAMS="-kmeans.k ${K}"
+
+    DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/predictions_segmented_model=${model}.data-cs-train"
+    ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${model}"
+
+
+    DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVectorCosine"
+
+    formatResultFolderName
+
+    mkdir -p "${RESULT_FOLDER_NAME}"
+
+    COMMAND="\
+${JDK_PATH} \
+-jar ${MEDOIDS_JAR_PATH} \
+1 \
+-pcuseall \
+-sf ${DATASET_PATH} \
+-cls ${DISTANCE_FUNCTION} \
+-pc ${ALGORITHM} \
+-np ${K} \
+"
+    echo "${COMMAND}"
+
+    eval "${COMMAND}" >"${RESULT_FOLDER_NAME}/${EXTRACTED_MEDOIDS_FILE}" 2>"${RESULT_FOLDER_NAME}/log.txt"
+
+#---------------------------------------------------------------------------------------------------------------------------------------------
     K="600"
-    CURRENT_DIM="8"
+    CURRENT_DIM="4"
+    CURRENT_BETA="1"
+    model="pku-mmd-legL"
+
+    ALGORITHM_PARAMS="-kmeans.k ${K}"
+
+    DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/predictions_segmented_model=${model}.data-cs-train"
+    ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${model}"
+
+
+    DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVectorCosine"
+
+    formatResultFolderName
+
+    mkdir -p "${RESULT_FOLDER_NAME}"
+
+    COMMAND="\
+${JDK_PATH} \
+-jar ${MEDOIDS_JAR_PATH} \
+1 \
+-pcuseall \
+-sf ${DATASET_PATH} \
+-cls ${DISTANCE_FUNCTION} \
+-pc ${ALGORITHM} \
+-np ${K} \
+"
+    echo "${COMMAND}"
+
+    eval "${COMMAND}" >"${RESULT_FOLDER_NAME}/${EXTRACTED_MEDOIDS_FILE}" 2>"${RESULT_FOLDER_NAME}/log.txt"
+
+#---------------------------------------------------------------------------------------------------------------------------------------------
+    K="300"
+    CURRENT_DIM="4"
+    CURRENT_BETA="1"
+    model="pku-mmd-legL"
+
+    ALGORITHM_PARAMS="-kmeans.k ${K}"
+
+    DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/predictions_segmented_model=${model}.data-cs-train"
+    ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${model}"
+
+
+    DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVectorCosine"
+
+    formatResultFolderName
+
+    mkdir -p "${RESULT_FOLDER_NAME}"
+
+    COMMAND="\
+${JDK_PATH} \
+-jar ${MEDOIDS_JAR_PATH} \
+1 \
+-pcuseall \
+-sf ${DATASET_PATH} \
+-cls ${DISTANCE_FUNCTION} \
+-pc ${ALGORITHM} \
+-np ${K} \
+"
+    echo "${COMMAND}"
+
+    eval "${COMMAND}" >"${RESULT_FOLDER_NAME}/${EXTRACTED_MEDOIDS_FILE}" 2>"${RESULT_FOLDER_NAME}/log.txt"
+
+#---------------------------------------------------------------------------------------------------------------------------------------------
+    K="500"
+    CURRENT_DIM="64"
+    CURRENT_BETA="10"
+    model="pku-mmd"
+
+    ALGORITHM_PARAMS="-kmeans.k ${K}"
+
+    DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/predictions_segmented_model=${model}.data-cs-train"
+    ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${model}"
+
+
+    DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVectorCosine"
+
+    formatResultFolderName
+
+    mkdir -p "${RESULT_FOLDER_NAME}"
+
+    COMMAND="\
+${JDK_PATH} \
+-jar ${MEDOIDS_JAR_PATH} \
+1 \
+-pcuseall \
+-sf ${DATASET_PATH} \
+-cls ${DISTANCE_FUNCTION} \
+-pc ${ALGORITHM} \
+-np ${K} \
+"
+    echo "${COMMAND}"
+
+    eval "${COMMAND}" >"${RESULT_FOLDER_NAME}/${EXTRACTED_MEDOIDS_FILE}" 2>"${RESULT_FOLDER_NAME}/log.txt"
+
+#---------------------------------------------------------------------------------------------------------------------------------------------
+    K="500"
+    CURRENT_DIM="64"
+    CURRENT_BETA="0.1"
+    model="pku-mmd-torso"
+
+    ALGORITHM_PARAMS="-kmeans.k ${K}"
+
+    DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/predictions_segmented_model=${model}.data-cs-train"
+    ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${model}"
+
+
+    DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVectorCosine"
+
+    formatResultFolderName
+
+    mkdir -p "${RESULT_FOLDER_NAME}"
+
+    COMMAND="\
+${JDK_PATH} \
+-jar ${MEDOIDS_JAR_PATH} \
+1 \
+-pcuseall \
+-sf ${DATASET_PATH} \
+-cls ${DISTANCE_FUNCTION} \
+-pc ${ALGORITHM} \
+-np ${K} \
+"
+    echo "${COMMAND}"
+
+    eval "${COMMAND}" >"${RESULT_FOLDER_NAME}/${EXTRACTED_MEDOIDS_FILE}" 2>"${RESULT_FOLDER_NAME}/log.txt"
+
+#---------------------------------------------------------------------------------------------------------------------------------------------
+    K="500"
+    CURRENT_DIM="16"
+    CURRENT_BETA="1"
+    model="pku-mmd"
+
+    ALGORITHM_PARAMS="-kmeans.k ${K}"
+
+    DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/predictions_segmented_model=${model}.data-cs-train"
+    ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${model}"
+
+
+    DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVectorCosine"
+
+    formatResultFolderName
+
+    mkdir -p "${RESULT_FOLDER_NAME}"
+
+    COMMAND="\
+${JDK_PATH} \
+-jar ${MEDOIDS_JAR_PATH} \
+1 \
+-pcuseall \
+-sf ${DATASET_PATH} \
+-cls ${DISTANCE_FUNCTION} \
+-pc ${ALGORITHM} \
+-np ${K} \
+"
+    echo "${COMMAND}"
+
+    eval "${COMMAND}" >"${RESULT_FOLDER_NAME}/${EXTRACTED_MEDOIDS_FILE}" 2>"${RESULT_FOLDER_NAME}/log.txt"
+
+#---------------------------------------------------------------------------------------------------------------------------------------------
+    K="350"
+    CURRENT_DIM="16"
+    CURRENT_BETA="10"
+    model="pku-mmd-handL"
+
+    ALGORITHM_PARAMS="-kmeans.k ${K}"
+
+    DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/predictions_segmented_model=${model}.data-cs-train"
+    ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${model}"
+
+
+    DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVectorCosine"
+
+    formatResultFolderName
+
+    mkdir -p "${RESULT_FOLDER_NAME}"
+
+    COMMAND="\
+${JDK_PATH} \
+-jar ${MEDOIDS_JAR_PATH} \
+1 \
+-pcuseall \
+-sf ${DATASET_PATH} \
+-cls ${DISTANCE_FUNCTION} \
+-pc ${ALGORITHM} \
+-np ${K} \
+"
+    echo "${COMMAND}"
+
+    eval "${COMMAND}" >"${RESULT_FOLDER_NAME}/${EXTRACTED_MEDOIDS_FILE}" 2>"${RESULT_FOLDER_NAME}/log.txt"
+
+#---------------------------------------------------------------------------------------------------------------------------------------------
+    K="500"
+    CURRENT_DIM="32"
+    CURRENT_BETA="1"
+    model="pku-mmd-torso"
+
+    ALGORITHM_PARAMS="-kmeans.k ${K}"
+
+    DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/predictions_segmented_model=${model}.data-cs-train"
+    ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${model}"
+
+
+    DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVectorCosine"
+
+    formatResultFolderName
+
+    mkdir -p "${RESULT_FOLDER_NAME}"
+
+    COMMAND="\
+${JDK_PATH} \
+-jar ${MEDOIDS_JAR_PATH} \
+1 \
+-pcuseall \
+-sf ${DATASET_PATH} \
+-cls ${DISTANCE_FUNCTION} \
+-pc ${ALGORITHM} \
+-np ${K} \
+"
+    echo "${COMMAND}"
+
+    eval "${COMMAND}" >"${RESULT_FOLDER_NAME}/${EXTRACTED_MEDOIDS_FILE}" 2>"${RESULT_FOLDER_NAME}/log.txt"
+
+#---------------------------------------------------------------------------------------------------------------------------------------------
+    K="500"
+    CURRENT_DIM="128"
+    CURRENT_BETA="1"
+    model="pku-mmd"
+
+    ALGORITHM_PARAMS="-kmeans.k ${K}"
+
+    DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/predictions_segmented_model=${model}.data-cs-train"
+    ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${model}"
+
+
+    DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVectorCosine"
+
+    formatResultFolderName
+
+    mkdir -p "${RESULT_FOLDER_NAME}"
+
+    COMMAND="\
+${JDK_PATH} \
+-jar ${MEDOIDS_JAR_PATH} \
+1 \
+-pcuseall \
+-sf ${DATASET_PATH} \
+-cls ${DISTANCE_FUNCTION} \
+-pc ${ALGORITHM} \
+-np ${K} \
+"
+    echo "${COMMAND}"
+
+    eval "${COMMAND}" >"${RESULT_FOLDER_NAME}/${EXTRACTED_MEDOIDS_FILE}" 2>"${RESULT_FOLDER_NAME}/log.txt"
+
+#---------------------------------------------------------------------------------------------------------------------------------------------
+    K="600"
+    CURRENT_DIM="32"
     CURRENT_BETA="0.1"
     model="pku-mmd"
 
     ALGORITHM_PARAMS="-kmeans.k ${K}"
 
-    DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/predictions_segmented_model=${model}.data-cv-train"
-    ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${model}"
+    DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/predictions_segmented_model=${model}.data-cs-train"
+    ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${model}"
 
 
     DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVectorCosine"
@@ -63,12 +351,12 @@ ${JDK_PATH} \
     K="750"
     CURRENT_DIM="32"
     CURRENT_BETA="0.1"
-    model="pku-mmd-handR"
+    model="pku-mmd-legR"
 
     ALGORITHM_PARAMS="-kmeans.k ${K}"
 
-    DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/predictions_segmented_model=${model}.data-cv-train"
-    ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${model}"
+    DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/predictions_segmented_model=${model}.data-cs-train"
+    ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${model}"
 
 
     DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVectorCosine"
@@ -90,6 +378,8 @@ ${JDK_PATH} \
     echo "${COMMAND}"
 
     eval "${COMMAND}" >"${RESULT_FOLDER_NAME}/${EXTRACTED_MEDOIDS_FILE}" 2>"${RESULT_FOLDER_NAME}/log.txt"
+
+#---------------------------------------------------------------------------------------------------------------------------------------------
 
 
 }
