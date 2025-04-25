@@ -1,7 +1,7 @@
 #!/bin/bash
 
-
-EXPS=("all" "cs" "cv")
+ 
+EXPS=("cs" "cv")
 DIMS=("64" "32" "16" "8" "4")
 BETAS=("0.1" "1" "10")
 
@@ -32,18 +32,18 @@ for EXP in "${EXPS[@]}"; do
 done
 
 
-for EXP in "${EXPS[@]}"; do
-    for BETA in "${BETAS[@]}"; do
+# for EXP in "${EXPS[@]}"; do
+#     for BETA in "${BETAS[@]}"; do
 
-        JOB_NAME="vae_${EXP}_${DIM}_${BETA}"
+#         JOB_NAME="vae_${EXP}_${DIM}_${BETA}"
 
-        echo "Submitting job for EXP=${EXP}, DIM=${DIM}, BETA=${BETA}"
+#         echo "Submitting job for EXP=${EXP}, DIM=${DIM}, BETA=${BETA}"
 
-        qsub \
-            -N "${JOB_NAME}" \
-            -v "PASSED_EXP=${EXP},PASSED_BETA=${BETA}" \
-            "${WHOLE_SCRIPT_PATH}"
+#         qsub \
+#             -N "${JOB_NAME}" \
+#             -v "PASSED_EXP=${EXP},PASSED_BETA=${BETA}" \
+#             "${WHOLE_SCRIPT_PATH}"
 
-    done
-done
+#     done
+# done
 

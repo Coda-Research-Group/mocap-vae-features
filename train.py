@@ -307,7 +307,7 @@ def main(args):
         deterministic=True,
         num_sanity_val_steps=0,
         log_every_n_steps=5,
-        enable_progress_bar=True,
+        enable_progress_bar=False,
         callbacks=[
             EarlyStopping(monitor='val/l2_loss', patience=50),
             ModelCheckpoint(monitor='val/elbo', save_last=True),
