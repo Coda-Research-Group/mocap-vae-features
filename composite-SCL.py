@@ -8,7 +8,7 @@ def parse_object_key(header_line):
     if not header_line or not header_line.startswith("#objectKey"):
         raise ValueError(f"Line is not a valid object key header: {header_line.strip()}")
     parts = header_line.strip().split()
-    if len(parts) < 4:
+    if len(parts) < 3:
         raise ValueError(f"Object key header line format error: {header_line.strip()}")
     return parts[-1] # Assume the last part is the unique ID
 
@@ -62,57 +62,68 @@ def concatenate_multivector_files(input_folder, output_file):
             while True:
                 current_object_key_headers = [None] * num_files
                 current_vec_count_headers = [None] * num_files
+
+                # --- Attempt to read headers for the next object from all files ---
+                for i, infile in enumerate(input_files):
+                    current_object_key_headers[i] = infile.readline()
+                    # Only read count header if key header was present
+                    if current_object_key_headers[i]:
+                        current_vec_count_headers[i] = infile.readline()
+                    else:
+                        # If key_header is empty, count_header should also be empty on clean EOF
+                        current_vec_count_headers[i] = "" # Assign empty string explicitly
+
+                # --- Check for End Of File ---
+                # Check if the *first* file seems to have ended (empty key header)
+                if not current_object_key_headers[0]:
+                    # Now, verify if *all* files ended together
+                    all_ended = all(not h for h in current_object_key_headers)
+                    if all_ended:
+                        print(f"Clean end of all files reached after {object_count} objects.")
+                        break # Exit the main while loop successfully
+                    else:
+                        # Find which files ended and which didn't
+                        ended_indices = [idx for idx, h in enumerate(current_object_key_headers) if not h]
+                        active_indices = [idx for idx, h in enumerate(current_object_key_headers) if h]
+                        ended_files = [os.path.basename(input_filepaths[i]) for i in ended_indices]
+                        active_files = [os.path.basename(input_filepaths[i]) for i in active_indices]
+                        raise EOFError(f"Error: File(s) {ended_files} ended prematurely "
+                                       f"while file(s) {active_files} still have data "
+                                       f"(processing object {object_count+1}). Files have different numbers of objects.")
+
+                # --- If we are here, all files still had headers. Now parse and validate. ---
                 object_keys = [None] * num_files
                 vector_counts = [0] * num_files
                 vector_types = [""] * num_files
-                eof_reached_on_any = False
+                try:
+                    for i in range(num_files):
+                        # Check for partial reads (e.g., key header present but count header missing)
+                        if not current_object_key_headers[i] or not current_vec_count_headers[i]:
+                             raise ValueError(f"Incomplete header read for object {object_count+1} "
+                                              f"in file {os.path.basename(input_filepaths[i])}")
 
-                # --- Read headers for the next object from all files ---
-                for i, infile in enumerate(input_files):
-                    key_header = infile.readline()
-                    count_header = infile.readline()
+                        object_keys[i] = parse_object_key(current_object_key_headers[i])
+                        vector_counts[i], vector_types[i] = parse_vector_count_header(current_vec_count_headers[i])
+                except ValueError as e:
+                    # Add more context to the parsing error
+                    raise ValueError(f"{e} (processing object {object_count+1})")
 
-                    # Check for clean EOF (both lines empty, expected at end)
-                    if not key_header and not count_header:
-                         # If one file ends cleanly, check if all others also ended
-                        if any(f.peek(1) for f_idx, f in enumerate(input_files) if f_idx != i):
-                           raise EOFError(f"Error: File '{os.path.basename(input_filepaths[i])}' ended "
-                                          f"while others still have data (processing object {object_count+1}). "
-                                          "Files might have different numbers of objects.")
-                        eof_reached_on_any = True
-                        break # Exit inner loop, will check eof_reached_on_any later
-                    elif not key_header or not count_header:
-                         # Partial read - indicates error
-                          raise EOFError(f"Error: Unexpected end of file in '{os.path.basename(input_filepaths[i])}' "
-                                         f"while reading headers for object {object_count+1}. Header missing.")
-
-                    current_object_key_headers[i] = key_header
-                    current_vec_count_headers[i] = count_header
-                    try:
-                        object_keys[i] = parse_object_key(key_header)
-                        vector_counts[i], vector_types[i] = parse_vector_count_header(count_header)
-                    except ValueError as e:
-                         raise ValueError(f"{e} in file {os.path.basename(input_filepaths[i])} "
-                                          f"processing object {object_count+1}")
-
-                if eof_reached_on_any:
-                    print(f"Clean end of all files reached after {object_count} objects.")
-                    break # Exit main loop
-
-                # --- Validate headers ---
+                # --- Validate Headers (Object Key and Vector Count) ---
                 first_key = object_keys[0]
                 if not all(key == first_key for key in object_keys):
                     raise ValueError(f"Error: Mismatched object keys for object {object_count+1}: {object_keys}. "
                                      "Files may be corrupted or out of sync.")
                 first_count = vector_counts[0]
                 if not all(count == first_count for count in vector_counts):
-                     # Depending on data, this might be allowable, but often indicates an issue
-                     # Keeping it as an error for now based on typical mocap data structure.
                      print(f"Warning: Mismatched vector counts for object ID {first_key} (object {object_count+1}): {vector_counts}.", file=sys.stderr)
+                     # Consider if this should be a hard error:
+                     # raise ValueError(f"Error: Mismatched vector counts for object ID {first_key} (object {object_count+1}): {vector_counts}.")
 
                 num_vectors_per_object = first_count # Use count from first file
 
                 # --- Read and store data vectors for the current object ---
+                # (The rest of the loop: reading data, writing output - remains the same)
+                # ... (rest of the while loop) ...
                 object_data_lines = [[] for _ in range(num_files)]
                 for vec_idx in range(num_vectors_per_object):
                     for file_idx, infile in enumerate(input_files):
