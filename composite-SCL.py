@@ -8,8 +8,9 @@ def parse_object_key(header_line):
     if not header_line or not header_line.startswith("#objectKey"):
         raise ValueError(f"Line is not a valid object key header: {header_line.strip()}")
     parts = header_line.strip().split()
+    # Corrected check: needs at least 3 parts (#objectKey, type, ID)
     if len(parts) < 3:
-        raise ValueError(f"Object key header line format error: {header_line.strip()}")
+        raise ValueError(f"Object key header line format error (expected at least 3 parts): {header_line.strip()}")
     return parts[-1] # Assume the last part is the unique ID
 
 def parse_vector_count_header(header_line):
@@ -24,17 +25,17 @@ def parse_vector_count_header(header_line):
     except (ValueError, IndexError) as e:
         raise ValueError(f"Vector count header line format error ('{header_line.strip()}'): {e}")
 
-
-def concatenate_multivector_files(input_folder, output_file):
+def concatenate_horizontally(input_folder, output_file):
     """
-    Concatenates multi-vector objects from specific files in a defined order.
+    Concatenates corresponding vectors horizontally from specific files.
 
-    Reads corresponding objects (including all their vectors) from input files,
-    validates keys and vector counts, and writes the concatenated object
-    data (all vectors from file 1, then file 2, etc.) to the output file.
+    For each object, reads the Nth vector from all input files, joins them
+    into a single wider vector, and writes it. The number of vectors per
+    object remains the same, but their dimension increases by 5x.
     """
     body_parts_order = ['legL', 'legR', 'torso', 'handL', 'handR']
     num_files = len(body_parts_order)
+    # Corrected pattern based on previous error
     base_filename_pattern = "predictions_model=hdm05-{}.data"
     input_filenames = [base_filename_pattern.format(part) for part in body_parts_order]
     input_filepaths = [os.path.join(input_folder, fname) for fname in input_filenames]
@@ -66,23 +67,18 @@ def concatenate_multivector_files(input_folder, output_file):
                 # --- Attempt to read headers for the next object from all files ---
                 for i, infile in enumerate(input_files):
                     current_object_key_headers[i] = infile.readline()
-                    # Only read count header if key header was present
                     if current_object_key_headers[i]:
                         current_vec_count_headers[i] = infile.readline()
                     else:
-                        # If key_header is empty, count_header should also be empty on clean EOF
-                        current_vec_count_headers[i] = "" # Assign empty string explicitly
+                        current_vec_count_headers[i] = ""
 
                 # --- Check for End Of File ---
-                # Check if the *first* file seems to have ended (empty key header)
                 if not current_object_key_headers[0]:
-                    # Now, verify if *all* files ended together
                     all_ended = all(not h for h in current_object_key_headers)
                     if all_ended:
                         print(f"Clean end of all files reached after {object_count} objects.")
-                        break # Exit the main while loop successfully
+                        break
                     else:
-                        # Find which files ended and which didn't
                         ended_indices = [idx for idx, h in enumerate(current_object_key_headers) if not h]
                         active_indices = [idx for idx, h in enumerate(current_object_key_headers) if h]
                         ended_files = [os.path.basename(input_filepaths[i]) for i in ended_indices]
@@ -97,54 +93,47 @@ def concatenate_multivector_files(input_folder, output_file):
                 vector_types = [""] * num_files
                 try:
                     for i in range(num_files):
-                        # Check for partial reads (e.g., key header present but count header missing)
                         if not current_object_key_headers[i] or not current_vec_count_headers[i]:
                              raise ValueError(f"Incomplete header read for object {object_count+1} "
                                               f"in file {os.path.basename(input_filepaths[i])}")
-
                         object_keys[i] = parse_object_key(current_object_key_headers[i])
                         vector_counts[i], vector_types[i] = parse_vector_count_header(current_vec_count_headers[i])
                 except ValueError as e:
-                    # Add more context to the parsing error
                     raise ValueError(f"{e} (processing object {object_count+1})")
 
                 # --- Validate Headers (Object Key and Vector Count) ---
                 first_key = object_keys[0]
                 if not all(key == first_key for key in object_keys):
-                    raise ValueError(f"Error: Mismatched object keys for object {object_count+1}: {object_keys}. "
-                                     "Files may be corrupted or out of sync.")
+                    raise ValueError(f"Error: Mismatched object keys for object {object_count+1}: {object_keys}.")
                 first_count = vector_counts[0]
                 if not all(count == first_count for count in vector_counts):
-                     print(f"Warning: Mismatched vector counts for object ID {first_key} (object {object_count+1}): {vector_counts}.", file=sys.stderr)
-                     # Consider if this should be a hard error:
-                     # raise ValueError(f"Error: Mismatched vector counts for object ID {first_key} (object {object_count+1}): {vector_counts}.")
+                     # This check is now very important for horizontal concatenation
+                     raise ValueError(f"Error: Mismatched vector counts for object ID {first_key} "
+                                      f"(object {object_count+1}): {vector_counts}. Cannot combine horizontally.")
 
-                num_vectors_per_object = first_count # Use count from first file
+                num_vectors_per_object = first_count # The number of vectors the final object will have
 
-                # --- Read and store data vectors for the current object ---
-                # (The rest of the loop: reading data, writing output - remains the same)
-                # ... (rest of the while loop) ...
-                object_data_lines = [[] for _ in range(num_files)]
+                # --- Write Output Headers ---
+                outfile.write(current_object_key_headers[0]) # Write key header from first file
+                # Write vector count header - **using the ORIGINAL count**
+                outfile.write(f"{num_vectors_per_object};{vector_types[0]}\n")
+
+                # --- Process Vectors Horizontally ---
                 for vec_idx in range(num_vectors_per_object):
+                    vector_parts = [None] * num_files
+                    # Read the vec_idx-th vector from each file
                     for file_idx, infile in enumerate(input_files):
                         data_line = infile.readline()
                         if not data_line:
                             raise EOFError(f"Error: Unexpected end of file in '{os.path.basename(input_filepaths[file_idx])}' "
                                            f"while reading vector {vec_idx+1}/{num_vectors_per_object} "
-                                           f"for object ID {first_key} (object {object_count+1}).")
-                        object_data_lines[file_idx].append(data_line.strip())
+                                           f"for object ID {first_key} (object {object_count+1}). "
+                                           f"Header count ({num_vectors_per_object}) might be wrong for this file.")
+                        vector_parts[file_idx] = data_line.strip()
 
-                # --- Write combined output for the object ---
-                outfile.write(current_object_key_headers[0]) # Write key header from first file
-
-                total_concatenated_vectors = num_vectors_per_object * num_files
-                # Write vector count header (using total count and type from first file)
-                outfile.write(f"{total_concatenated_vectors};{vector_types[0]}\n")
-
-                # Write data lines file by file
-                for file_idx in range(num_files):
-                    for data_line in object_data_lines[file_idx]:
-                        outfile.write(data_line + "\n")
+                    # Concatenate the parts horizontally
+                    combined_vector_line = ",".join(vector_parts)
+                    outfile.write(combined_vector_line + "\n")
 
                 object_count += 1
                 if object_count % 100 == 0: # Progress indicator
@@ -163,17 +152,19 @@ def concatenate_multivector_files(input_folder, output_file):
     if object_count > 0 :
         print(f"Successfully processed {object_count} objects.")
         print(f"Created concatenated file: {output_file}")
-    elif not eof_reached_on_any:
-         print("Warning: No objects processed. Input files might be empty or headers incorrect.", file=sys.stderr)
+    elif 'all_ended' in locals() and all_ended: # Check if loop finished due to clean EOF
+         print("Input files seem empty or contain no valid objects.")
+    elif not ('all_ended' in locals()): # Error likely occurred before first EOF check
+        print("Processing stopped before finishing.")
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Concatenate multi-vector objects from specific hdm05 data files.")
+    parser = argparse.ArgumentParser(description="Horizontally concatenate corresponding vectors from specific hdm05 data files.")
     parser.add_argument("input_folder",
                         help="Path to the folder containing the input .data files.")
-    parser.add_argument("-o", "--output", default="combined_predictions_hdm05_multivector.data",
-                        help="Name for the output concatenated file (default: combined_predictions_hdm05_multivector.data)")
+    parser.add_argument("-o", "--output", default="combined_hdm05_horizontal.data",
+                        help="Name for the output concatenated file (default: combined_hdm05_horizontal.data)")
 
     args = parser.parse_args()
 
-    concatenate_multivector_files(args.input_folder, args.output)
+    concatenate_horizontally(args.input_folder, args.output) # Renamed function for clarity
