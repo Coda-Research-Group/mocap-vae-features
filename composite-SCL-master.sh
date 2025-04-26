@@ -31,8 +31,8 @@ mkdir -p "${PBS_LOG_BASE_DIR}"
 
 
 # echo "Start clustering parts..."
-# PARTS_SCRIPT_PATH="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/composite-SCL.py"
-# PARTS_SCRIPT_PATH_NORM="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/composite-SCL-norm.py"
+PARTS_SCRIPT_PATH="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/composite-SCL.py"
+PARTS_SCRIPT_PATH_NORM="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/composite-SCL-norm.py"
 
 
 # for DIM in "${DIMS[@]}"; do
