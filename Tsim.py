@@ -1,59 +1,100 @@
+import argparse
 import numpy as np
-from scipy.spatial.distance import pdist # Efficiently computes pairwise distances
-import os # To check if the file exists
+import time
+import sys
+import os
+import random
 
-# --- 1. Configuration: SET THIS VALUE ---
-# Replace with the actual path to your text data file
-text_file_path = '/home/drking/Documents/bakalarka/data/pku-test/lat_dim=256_beta=1/predictions_segmented_model=pku-mmd.data-cv-train' # <--- CHANGE THIS FILE PATH
+# Check for NumPy installation
+try:
+    import numpy as np
+except ImportError:
+    print("Error: NumPy library not found.")
+    print("Please install it using: pip install numpy")
+    sys.exit(1)
 
-# --- 2. Load Data from Text File ---
-all_segments_list = [] # Use a standard Python list first to collect vectors
-flattened_segments = None # Initialize variable for the final NumPy array
-expected_dimensionality = None # To store the dimensionality of the first vector found
+# Check for SciPy installation (optional but preferred for pdist)
+try:
+    from scipy.spatial.distance import pdist
+    use_scipy = True
+except ImportError:
+    print("Warning: SciPy not found. Pairwise distances will be calculated using a slower NumPy loop.")
+    print("         Consider installing SciPy: pip install scipy")
+    use_scipy = False
 
-print(f"Attempting to load data from: '{text_file_path}'")
-if not os.path.exists(text_file_path):
-    print(f"Error: File not found at '{text_file_path}'")
-    print("Please check the file path.")
-else:
+def calculate_distances_numpy_loop(data_subset_np):
+    """Calculates pairwise Euclidean distances using a NumPy loop (if SciPy is unavailable)."""
+    n_subset = data_subset_np.shape[0]
+    distances = []
+    print(f"Calculating pairwise distances for subset ({n_subset} points) using NumPy loop...")
+    start_time = time.time()
+    for i in range(n_subset):
+        for j in range(i + 1, n_subset):
+            dist = np.sqrt(np.sum((data_subset_np[i] - data_subset_np[j])**2))
+            distances.append(dist)
+    end_time = time.time()
+    print(f"NumPy loop distance calculation took {end_time - start_time:.2f} seconds.")
+    return np.array(distances)
+
+def load_and_sample_data(filepath, subset_size=None, required_dim=None, random_seed=None):
+    """
+    Loads numerical data line by line, checks dimensionality, and samples if needed.
+
+    Args:
+        filepath (str): Path to the input data file.
+        subset_size (int, optional): The desired size of the random subset.
+                                     If None or >= total data points, use all data.
+        required_dim (int, optional): If specified, enforce this dimensionality.
+        random_seed (int, optional): Seed for random sampling reproducibility.
+
+    Returns:
+        tuple: (np.ndarray or None, int or None)
+               - NumPy array of the (sampled) data, or None if loading fails.
+               - Detected dimensionality, or None if loading fails.
+    """
+    all_segments_list = []
+    detected_dimensionality = None
+    print(f"Attempting to load data from: '{filepath}'")
+    if not os.path.exists(filepath):
+        print(f"Error: File not found at '{filepath}'")
+        return None, None
+
+    line_count = 0
+    data_lines_processed = 0
+    skipped_lines = 0
+    dimension_mismatch = False
+
     try:
-        line_count = 0
-        data_lines_processed = 0
-        skipped_lines = 0
-        dimension_mismatch = False
-
-        with open(text_file_path, 'r') as f:
+        with open(filepath, 'r') as f:
             for line_num, line in enumerate(f):
                 line_count += 1
-                line = line.strip() # Remove leading/trailing whitespace
+                line = line.strip()
 
-                # Skip empty lines and lines starting with '#' (comments)
                 if not line or line.startswith('#'):
                     skipped_lines += 1
                     continue
 
-                # Assume this is a data line: comma-separated floats
                 try:
-                    # Split by comma and convert each part to float
                     segment_vector = [float(x) for x in line.split(',')]
                     current_dimensionality = len(segment_vector)
 
-                    # Check dimensionality consistency
-                    if expected_dimensionality is None:
-                        # This is the first data vector found, store its dimension
-                        expected_dimensionality = current_dimensionality
-                        print(f"Detected vector dimensionality from first data line: {expected_dimensionality}")
-                    elif current_dimensionality != expected_dimensionality:
-                        print(f"Error: Line {line_num + 1} has {current_dimensionality} dimensions, but expected {expected_dimensionality}.")
+                    if detected_dimensionality is None:
+                        detected_dimensionality = current_dimensionality
+                        print(f"Detected vector dimensionality: {detected_dimensionality}")
+                        if required_dim is not None and detected_dimensionality != required_dim:
+                            print(f"Error: Detected dimension {detected_dimensionality} does not match required dimension {required_dim}.")
+                            dimension_mismatch = True
+                            break
+                    elif current_dimensionality != detected_dimensionality:
+                        print(f"Error: Line {line_num + 1} has {current_dimensionality} dimensions, but expected {detected_dimensionality}.")
                         dimension_mismatch = True
-                        break # Stop processing if dimensions don't match
+                        break
 
                     all_segments_list.append(segment_vector)
                     data_lines_processed += 1
 
                 except ValueError as ve:
-                    print(f"Warning: Skipping line {line_num + 1} due to conversion error (not comma-separated numbers?): {ve}")
-                    print(f"   Content snippet: '{line[:80]}...'") # Print start of problematic line
+                    print(f"Warning: Skipping line {line_num + 1} due to conversion error: {ve}")
                     skipped_lines += 1
 
         print(f"\nFile parsing summary:")
@@ -62,72 +103,147 @@ else:
         print(f"- Comment/empty/skipped lines: {skipped_lines}")
 
         if dimension_mismatch:
-            print("\nError: Inconsistent vector dimensions found. Cannot proceed.")
-            flattened_segments = None
-        elif not all_segments_list:
+            print("\nError: Inconsistent or incorrect vector dimensions found. Cannot proceed.")
+            return None, detected_dimensionality
+        if not all_segments_list:
             print("\nError: No valid data vectors found in the file.")
-            flattened_segments = None
+            return None, detected_dimensionality
+
+        # --- Subsampling Step ---
+        n_total_points = len(all_segments_list)
+        print(f"\nTotal valid data points loaded: {n_total_points}")
+
+        final_data_list = all_segments_list
+        using_subset = False
+
+        if subset_size is not None and subset_size > 0 and subset_size < n_total_points:
+            print(f"Sampling a subset of size {subset_size}...")
+            using_subset = True
+            if random_seed is not None:
+                print(f"Using random seed: {random_seed}")
+                random.seed(random_seed)
+            # Sample *indices* first, then select from the list
+            sampled_indices = random.sample(range(n_total_points), subset_size)
+            final_data_list = [all_segments_list[i] for i in sampled_indices]
+            print(f"Selected {len(final_data_list)} points for the subset.")
+        elif subset_size is not None and subset_size >= n_total_points:
+            print("Subset size requested is >= total points. Using all data.")
+        elif subset_size is None or subset_size <= 0:
+             print("No valid subset size requested. Using all data.")
         else:
-            # --- Convert the list of vectors into a 2D NumPy array ---
-            flattened_segments = np.array(all_segments_list)
-            print(f"\nSuccessfully loaded and converted data into NumPy array.")
-            print(f"Shape of flattened segments array: {flattened_segments.shape}")
-            # Check if the shape matches expectations (e.g., 256 dimensions)
-            if flattened_segments.shape[1] != 256:
-                print(f"Warning: Detected dimensionality is {flattened_segments.shape[1]}, not 256 as potentially expected.")
+             print("Using all data.")
+
+
+        # --- Convert the final list (full or subset) into a 2D NumPy array ---
+        try:
+            data_np = np.array(final_data_list, dtype=np.float64)
+            print(f"\nConverted data {'(subset)' if using_subset else '(full)'} into NumPy array.")
+            print(f"Shape of final data array: {data_np.shape}")
+            return data_np, detected_dimensionality
+        except MemoryError:
+             print("\nError: Not enough memory to convert even the selected data/subset into a NumPy array.", file=sys.stderr)
+             return None, detected_dimensionality
 
 
     except Exception as e:
         print(f"\nAn unexpected error occurred while reading or processing the file: {e}")
-        flattened_segments = None
+        return None, None
 
-# --- 3. Calculate T_sim (only if data was loaded and prepared successfully) ---
-T_sim = None # Initialize T_sim
-if flattened_segments is not None:
-    # Ensure you have at least two segments to compare
-    if flattened_segments.shape[0] < 2:
-        print("\nError: Need at least two segments to calculate pairwise distances.")
+
+def calculate_tsim(data_np, percentile_value=0.5):
+    """
+    Calculates the specified percentile of pairwise Euclidean distances.
+
+    Args:
+        data_np (np.ndarray): The data array (potentially a subset).
+        percentile_value (float): The percentile to calculate (e.g., 0.5 for 0.5th).
+
+    Returns:
+        float or None: The calculated T_sim value, or None if an error occurs.
+    """
+    T_sim = None
+    if data_np is None:
+        print("\nNo data available for T_sim calculation.")
+        return None
+
+    if data_np.shape[0] < 2:
+        print("\nError: Need at least two data points to calculate pairwise distances.")
+        return None
+
+    print(f"\nCalculating pairwise distances for {data_np.shape[0]} points...")
+    try:
+        if use_scipy:
+            # Use SciPy's pdist (faster and more memory efficient for this part)
+            pairwise_distances = pdist(data_np, metric='cosine')
+        else:
+            # Fallback to NumPy loop (slower)
+            pairwise_distances = calculate_distances_numpy_loop(data_np)
+
+        print(f"Successfully calculated {len(pairwise_distances)} pairwise distances.")
+
+        # Calculate the specified percentile of these distances.
+        print(f"Calculating the {percentile_value}th percentile...")
+        T_sim = np.percentile(pairwise_distances, percentile_value)
+
+        print(f"\n---> Similarity Threshold (T_sim) from {'subset' if data_np.shape[0] < 500000 else 'data'}: {T_sim:.6f}") # Adjust threshold for subset size if needed
+
+        # Optional verification
+        num_similar_pairs = np.sum(pairwise_distances <= T_sim)
+        expected_num = len(pairwise_distances) * (percentile_value / 100.0)
+        print(f"      Number of pairs with distance <= T_sim: {num_similar_pairs}")
+        print(f"      Expected number based on percentile: ~{expected_num:.2f}")
+
+    except MemoryError:
+        print("\nError: Ran out of memory trying to calculate pairwise distances (even on the subset?).")
+        print("Consider using a smaller subset size.")
+        T_sim = None
+    except Exception as e:
+        print(f"\nAn unexpected error occurred during distance calculation or percentile: {e}")
+        T_sim = None
+
+    return T_sim
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Calculate the T_sim threshold (percentile of pairwise distances) "
+                    "from a large dataset by using a random subset.",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
+    parser.add_argument("input_file",
+                        help="Path to the input data file (one vector per line, comma separated).")
+    parser.add_argument("-s", "--subset_size", type=int, default=50000,
+                        help="Number of data points to randomly sample for calculation. "
+                             "If 0 or >= total points, use all data.")
+    parser.add_argument("-p", "--percentile", type=float, default=0.5,
+                        help="The percentile of pairwise distances to calculate (e.g., 0.5 for 0.5th).")
+    parser.add_argument("--dim", type=int, default=None,
+                        help="Optional: Enforce a specific vector dimensionality.")
+    parser.add_argument("--seed", type=int, default=None,
+                        help="Optional: Random seed for subset sampling reproducibility.")
+
+    args = parser.parse_args()
+
+    # 1. Load Data and Sample
+    data_subset_np, dimensionality = load_and_sample_data(
+        args.input_file,
+        args.subset_size,
+        args.dim,
+        args.seed
+    )
+
+    # 2. Calculate T_sim on the subset
+    T_sim = calculate_tsim(data_subset_np, args.percentile)
+
+    # 3. Final Output
+    print("\n" + "="*30)
+    if T_sim is not None:
+        print(f"Final Estimated T_sim ({args.percentile}th percentile): {T_sim:.6f}")
+        if data_subset_np is not None and data_subset_np.shape[0] < 500000: # Check if subset was actually used
+             print(f"(Calculated using a subset of size {data_subset_np.shape[0]})")
     else:
-        print(f"\nCalculating pairwise distances for {flattened_segments.shape[0]} segments...")
-        # 'pdist' computes the distance between all unique pairs of points (rows).
-        # Default metric is 'euclidean'.
-        try:
-            pairwise_distances = pdist(flattened_segments, metric='euclidean')
-            print(f"Successfully calculated {len(pairwise_distances)} pairwise distances.")
+        print("Failed to calculate T_sim due to errors.")
+    print("="*30)
 
-            # Calculate the 0.5th percentile of these distances.
-            percentile_value = 0.5
-            print(f"Calculating the {percentile_value}th percentile...")
-            T_sim = np.percentile(pairwise_distances, percentile_value)
-
-            print(f"\n---> Similarity Threshold (T_sim): {T_sim:.6f}")
-
-            # Optional verification
-            num_similar_pairs = np.sum(pairwise_distances <= T_sim)
-            expected_num = len(pairwise_distances) * (percentile_value / 100.0)
-            print(f"      Number of pairs with distance <= T_sim: {num_similar_pairs}")
-            print(f"      Expected number based on percentile: ~{expected_num:.2f}")
-
-        except MemoryError:
-            print("\nError: Ran out of memory trying to calculate pairwise distances.")
-            print("This can happen if you have a very large number of segments.")
-            print("Consider using a subset of your data or exploring approximate methods.")
-            T_sim = None
-        except Exception as e:
-            print(f"\nAn unexpected error occurred during distance calculation or percentile: {e}")
-            T_sim = None
-else:
-    print("\nData loading or preparation failed. Cannot proceed with T_sim calculation.")
-
-
-# --- 4. Final Output and Considerations ---
-if T_sim is not None:
-    print(f"\nThe calculated similarity threshold T_sim is: {T_sim:.6f}")
-else:
-    print("\nCould not calculate T_sim due to errors listed above.")
-
-print("\nImportant Considerations:")
-print("- Input Data Format: Assumes a text file where each line is either a comment (#...), empty, or contains comma-separated floating point numbers representing one segment vector.")
-print("- Segment Length/Dimensionality: Critically assumes all data lines (vectors) have the *same number of comma-separated values* (same dimensionality). The script checks this.")
-print("- Distance Metric: Euclidean distance was used. Change `metric` in `pdist` if needed.")
-print("- Memory: Pairwise distance calculation can be memory-intensive for large numbers of segments.")
+if __name__ == "__main__":
+    main()
