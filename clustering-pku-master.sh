@@ -16,35 +16,36 @@ mkdir -p "${PBS_LOG_BASE_DIR}"
 
 echo "Starting unzip process..."
 
-# for DIM in "${DIMS[@]}"; do
-#     for BETA in "${BETAS[@]}"; do
-#       	for MODEL in "${MODELS[@]}"; do
+for DIM in "${DIMS[@]}"; do
+    for BETA in "${BETAS[@]}"; do
+      	for MODEL in "${MODELS[@]}"; do
 
-#         	FILE_TO_CONVERT="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=${MODEL}.data"
-# 			gunzip -k "${FILE_TO_CONVERT}.gz"
+        	FILE_TO_CONVERT="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions-norm/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model_norm=${MODEL}.data"
+			gunzip -k "${FILE_TO_CONVERT}.gz"
 
-# 		done
-#     done
-# done
+		done
+    done
+done
 
-# DIMS=("256" "128" "64" "32" "16" "8")
-# MODELS=("pku-mmd")
+DIMS=("256" "128" "64" "32" "16" "8")
+MODELS=("pku-mmd")
 
-# for DIM in "${DIMS[@]}"; do
-#     for BETA in "${BETAS[@]}"; do
-#       	for MODEL in "${MODELS[@]}"; do
+for DIM in "${DIMS[@]}"; do
+    for BETA in "${BETAS[@]}"; do
+      	for MODEL in "${MODELS[@]}"; do
 
-#         	FILE_TO_CONVERT="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=${MODEL}.data"
-# 			gunzip -k "${FILE_TO_CONVERT}.gz"
+        	FILE_TO_CONVERT="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions-norm/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model_norm=${MODEL}.data"
+			gunzip "${FILE_TO_CONVERT}.gz"
 
-# 		done
-#     done
-# done
+
+		done
+    done
+done
 
 echo "Start creating train splits..."
 
-# python /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/scripts/create-n-fold-cross-validation-data-pku-full.py
-# python /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/scripts/create-n-fold-cross-validation-data-pku-parts.py
+python /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/scripts/create-n-fold-cross-validation-data-pku-full.py
+python /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/scripts/create-n-fold-cross-validation-data-pku-parts.py
 
 echo "Start clustering parts..."
 PARTS_SCRIPT_PATH="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/scripts/cluster-scl-remote-pku-parts.sh"

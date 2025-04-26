@@ -99,8 +99,8 @@ for dim in DIMS:
     for beta in BETAS:
         for model in MODELS:
             create_data_files_pku(
-                "/storage/brno12-cerit/home/drking/data/pku-mmd/splits/CS_train_objects_messif-lines.txt",
-                f"/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim={dim}_beta={beta}/predictions_segmented_model={model}.data",
-                "cs",
+                "/storage/brno12-cerit/home/drking/data/pku-mmd/splits/CV_train_objects_messif-lines.txt",
+                f"/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions-norm/pku-mmd/cv/lat_dim={dim}_beta={beta}/predictions_segmented_model_norm={model}.data",
+                "cv",
             )
 
