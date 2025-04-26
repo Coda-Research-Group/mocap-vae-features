@@ -36,7 +36,7 @@ def concatenate_horizontally(input_folder, output_file):
     body_parts_order = ['legL', 'legR', 'torso', 'handL', 'handR']
     num_files = len(body_parts_order)
     # Corrected pattern based on previous error
-    base_filename_pattern = "predictions_model_norm=hdm05-{}.data"
+    base_filename_pattern = "predictions_model_norm=pku-mmd-{}.data"
     input_filenames = [base_filename_pattern.format(part) for part in body_parts_order]
     input_filepaths = [os.path.join(input_folder, fname) for fname in input_filenames]
 
