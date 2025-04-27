@@ -19,10 +19,12 @@ cd "${REPO_DIR}" || {
 
 
 for EXP in "all" ; do
-    for DIM in "256" "128" "64" "32" "16" "8" "4" "2" "1"; do
-        for BETA in "0.1" "1" "10"; do
+    # for DIM in "256" "128" "64" "32" "16" "8" "4" "2" "1"; do
+    #     for BETA in "0.1" "1" "10"; do
+    for DIM in "8"; do
+        for BETA in "1"; do
 
-            python /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Tsim.py /storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=hdm05.data > /storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/Tsims.txt
+            python /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Tsim.py /storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=hdm05.data
 
         done
     done
