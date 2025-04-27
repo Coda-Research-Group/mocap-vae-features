@@ -29,10 +29,10 @@ echo "Starting unzip process..."
 echo "Start creating train splits..."
 
 # python /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/scripts/create-n-fold-cross-validation-data-pku-full.py
-# python /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/scripts/create-n-fold-cross-validation-data-pku-parts.py
+python /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/scripts/create-n-fold-cross-validation-data-pku-parts.py
 
 echo "Start clustering parts..."
-PARTS_SCRIPT_PATH="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/scripts/cluster-scl-remote-pku-parts.sh"
+# PARTS_SCRIPT_PATH="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/scripts/cluster-scl-remote-pku-parts.sh"
 PARTS_SCRIPT_PATH2="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/scripts/cluster-scl-remote-pku-full.sh"
 DIMS=("64" "32" "16" "8" "4")
 
@@ -43,10 +43,10 @@ for DIM in "${DIMS[@]}"; do
 
         echo "Submitting job for body part DIM=${DIM}, BETA=${BETA}"
 
-        qsub \
-            -N "${JOB_NAME}-cs" \
-            -v "PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
-            "${PARTS_SCRIPT_PATH}"
+        # qsub \
+        #     -N "${JOB_NAME}-cs" \
+        #     -v "PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
+        #     "${PARTS_SCRIPT_PATH}"
 
         qsub \
             -N "${JOB_NAME}-cv" \
