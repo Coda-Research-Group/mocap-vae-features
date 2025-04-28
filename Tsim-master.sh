@@ -10,12 +10,18 @@
 
 REPO_DIR='/storage/brno12-cerit/home/drking/experiments'
 
+module add conda-modules
+module add mambaforge
 
 cd "${REPO_DIR}" || {
     echo >&2 "Repository directory ${REPO_DIR} does not exist!"
     exit 1
 }
 
+conda activate "/storage/brno12-cerit/home/drking/.conda/envs/cuda4" || {
+    echo >&2 "Conda environment does not exist!"
+    exit 2
+}
 
 
 for EXP in "all" ; do
