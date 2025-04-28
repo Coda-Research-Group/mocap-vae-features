@@ -313,7 +313,7 @@ ${JDK_PATH} \
 #     sleep 10
 # done
 
- for K in 5 10 20 50 100 150 200 250 300 350 400 500 600 750 1000; do
+ for K in 1500 2000 2500 3000; do
      ALGORITHM_PARAMS="-kmeans.k ${K}"
      createCompositeMWClusteringELKI
      sleep 10

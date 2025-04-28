@@ -42,7 +42,7 @@ MODELS=("pku-mmd-torso" "pku-mmd-handL" "pku-mmd-handR" "pku-mmd-legL" "pku-mmd-
 #    done
 #done
 
-EXPS=("all" "fold1" "fold2")
+EXPS=("all")
 MODELS=("hdm05-torso" "hdm05-handL" "hdm05-handR" "hdm05-legL" "hdm05-legR")
 
 for EXP in "${EXPS[@]}"; do
@@ -50,10 +50,10 @@ for EXP in "${EXPS[@]}"; do
         for BETA in "${BETAS[@]}"; do
           	for MODEL in "${MODELS[@]}"; do
 
-            	FILE_TO_CONVERT="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/${EXP}/lat_dim\=${DIM}_beta\=${BETA}/predictions_segmented_model\=${MODEL}.data"
-				ELKI_FILE_TO_CREATE="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/${EXP}/lat_dim\=${DIM}_beta\=${BETA}/elki-predictions_segmented_model\=${MODEL}.data"
+            	FILE_TO_CONVERT="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions-norm/hdm05/${EXP}/lat_dim\=${DIM}_beta\=${BETA}/predictions_segmented_model_norm\=${MODEL}.data"
+				ELKI_FILE_TO_CREATE="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions-norm/hdm05/${EXP}/lat_dim\=${DIM}_beta\=${BETA}/elki-predictions_segmented_model_norm\=${MODEL}.data"
 
-				gunzip -k "${FILE_TO_CONVERT}.gz"
+				gunzip "${FILE_TO_CONVERT}.gz"
 
 				perl ELKI_CONVERT_SCRIPT FILE_TO_CONVERT > ELKI_FILE_TO_CREATE
 
@@ -84,25 +84,25 @@ done
 #    done
 #done
 
-EXPS=("all" "fold1" "fold2")
-DIMS=("256" "128" "64" "32" "16" "8" "4" "2" "1")
-MODELS=("hdm05")
-
-for EXP in "${EXPS[@]}"; do
-    for DIM in "${DIMS[@]}"; do
-        for BETA in "${BETAS[@]}"; do
-          	for MODEL in "${MODELS[@]}"; do
-
-            	FILE_TO_CONVERT="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/${EXP}/lat_dim\=${DIM}_beta\=${BETA}/predictions_segmented_model\=${MODEL}.data"
-				ELKI_FILE_TO_CREATE="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/${EXP}/lat_dim\=${DIM}_beta\=${BETA}/elki-predictions_segmented_model\=${MODEL}.data"
-
-				gunzip -k "${FILE_TO_CONVERT}.gz"
-
-				perl ELKI_CONVERT_SCRIPT FILE_TO_CONVERT > ELKI_FILE_TO_CREATE
-
-			done
-        done
-    done
-done
+#EXPS=("all")
+#DIMS=("256" "128" "64" "32" "16" "8" "4" "2" "1")
+#MODELS=("hdm05")
+#
+#for EXP in "${EXPS[@]}"; do
+#    for DIM in "${DIMS[@]}"; do
+#        for BETA in "${BETAS[@]}"; do
+#          	for MODEL in "${MODELS[@]}"; do
+#
+#            	FILE_TO_CONVERT="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/${EXP}/lat_dim\=${DIM}_beta\=${BETA}/predictions_segmented_model\=${MODEL}.data"
+#				ELKI_FILE_TO_CREATE="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/${EXP}/lat_dim\=${DIM}_beta\=${BETA}/elki-predictions_segmented_model\=${MODEL}.data"
+#
+#				gunzip -k "${FILE_TO_CONVERT}.gz"
+#
+#				perl ELKI_CONVERT_SCRIPT FILE_TO_CONVERT > ELKI_FILE_TO_CREATE
+#
+#			done
+#        done
+#    done
+#done
 
 wait
