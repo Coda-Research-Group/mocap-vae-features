@@ -50,12 +50,12 @@ for EXP in "${EXPS[@]}"; do
         for BETA in "${BETAS[@]}"; do
           	for MODEL in "${MODELS[@]}"; do
 
-            	FILE_TO_CONVERT="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions-norm/hdm05/${EXP}/lat_dim\=${DIM}_beta\=${BETA}/predictions_segmented_model_norm\=${MODEL}.data"
-				ELKI_FILE_TO_CREATE="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions-norm/hdm05/${EXP}/lat_dim\=${DIM}_beta\=${BETA}/elki-predictions_segmented_model_norm\=${MODEL}.data"
+            	FILE_TO_CONVERT="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions-norm/hdm05/${EXP}/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model_norm=${MODEL}.data"
+				ELKI_FILE_TO_CREATE="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions-norm/hdm05/${EXP}/lat_dim=${DIM}_beta=${BETA}/elki-predictions_segmented_model_norm=${MODEL}.data"
 
 				gunzip "${FILE_TO_CONVERT}.gz"
 
-				perl ELKI_CONVERT_SCRIPT FILE_TO_CONVERT > ELKI_FILE_TO_CREATE
+				perl ${ELKI_CONVERT_SCRIPT} ${FILE_TO_CONVERT} > ${ELKI_FILE_TO_CREATE}
 
 			done
         done
