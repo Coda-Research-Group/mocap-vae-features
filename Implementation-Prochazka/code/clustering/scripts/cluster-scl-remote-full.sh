@@ -10,6 +10,7 @@ IFS=$'\n\t'
 
 CURRENT_DIM=${PASSED_DIM}
 CURRENT_BETA=${PASSED_BETA}
+ITER=${PASSED_ITER}
 
 ##########################################
 
@@ -210,7 +211,7 @@ ${JDK_PATH} \
 function createCompositeMWClusteringELKI() {
   	for MODEL in "hdm05"; do
     	DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/elki-predictions_segmented_model=${MODEL}.data"
-    	ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${MODEL}"
+    	ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/SCL-multi-overlay/hdm05/all/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/iter-${ITER}"
 
       	createClusters
       	convertElkiClusteringFormatToElkiFormat
@@ -314,10 +315,10 @@ ${JOINT_IDS} \
 #     sleep 10
 # done
 
- for K in 1500 2000 2500 3000; do
+ for K in 50 100 200 350 500; do
      ALGORITHM_PARAMS="-kmeans.k ${K}"
      createCompositeMWClusteringELKI
-     sleep 10
+     sleep 1
  done
 
 
