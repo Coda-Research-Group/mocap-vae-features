@@ -28,15 +28,15 @@ for DIM in "${DIMS[@]}"; do
 
                     JOB_NAME="clustering_${DIM}_${BETA}_${MODEL}_${DATA}_${K}"
 
-                    if [${DATA}="all"]; then
+                    if [[ "${DATA}" == "all" ]]; then
                         DATA="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/predictions_segmented_model=${MODEL}.data"
                         ROOT="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${MODEL}"
                     fi                    
-                    if [${DATA}="cv"]; then
+                    if [[ "${DATA}" == "cv" ]]; then
                         DATA="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/predictions_segmented_model=${MODEL}.data-cv-train"
                         ROOT="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${MODEL}"
                     fi
-                    if [${DATA}="cs"]; then
+                    if [[ "${DATA}" == "cs" ]]; then
                         DATA="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/predictions_segmented_model=${MODEL}.data-cs-train"
                         ROOT="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${MODEL}"
                     fi
