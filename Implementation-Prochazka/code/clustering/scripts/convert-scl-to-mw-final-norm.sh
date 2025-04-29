@@ -56,11 +56,11 @@ function convert() {
 
 
 for K in "1000" "2000" "3000" "4000" "5000" "6000" "7000" "8000" "9000" "10000"; do
-	echo "${PART}"
 
-	DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/${DATA}/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=${MODEL}.data"
-	OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/${DATA}/lat_dim=${DIM}_beta=${BETA}/MWs-parts/KMeansPivotChooser--kmeans.k_${K}"
-	CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/${DATA}/lat_dim=${DIM}_beta=${BETA}/clusters-${MODEL}/KMedoidsFastPAM--kmeans.k_${K}"
+	DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions-norm/pku-mmd/${DATA}/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model_norm=${MODEL}.data"
+	OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions-norm/pku-mmd/${DATA}/lat_dim=${DIM}_beta=${BETA}/MWs-parts/KMeansPivotChooser--kmeans.k_${K}"
+	CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions-norm/pku-mmd/${DATA}/lat_dim=${DIM}_beta=${BETA}/clusters-${MODEL}/KMedoidsFastPAM--kmeans.k_${K}"
+
 
     [ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
 	convert

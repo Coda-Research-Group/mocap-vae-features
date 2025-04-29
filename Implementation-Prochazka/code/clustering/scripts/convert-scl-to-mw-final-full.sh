@@ -55,11 +55,29 @@ function convert() {
 }
 
 
+# for DIM in "64" "32" "16" "8" "4"; do
+#  	for BETA in "0.1" "1" "10"; do
+# 		for K in "5" "10" "20" "50" "100" "150" "200" "250" "300" "350" "400" "500" "600" "750" "1000"; do
+#			for PART in "hdm05-legR" "hdm05-legL" "hdm05-handR" "hdm05-handL" "hdm05-torso"; do
+#				echo "${PART}"
+#
+#		  	    DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=${PART}.data"
+#				OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/MWs-parts/KMeansPivotChooser--kmeans.k_${K}"
+#				CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/clusters-${PART}/KMedoidsFastPAM--kmeans.k_${K}"
+#                rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
+#
+#				convert
+#
+#			done
+#		done
+#	done
+#done
+
 for K in "1000" "2000" "3000" "4000" "5000" "6000" "7000" "8000" "9000" "10000"; do
 	echo "${PART}"
 
 	DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/${DATA}/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=${MODEL}.data"
-	OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/${DATA}/lat_dim=${DIM}_beta=${BETA}/MWs-parts/KMeansPivotChooser--kmeans.k_${K}"
+	OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/${DATA}/lat_dim=${DIM}_beta=${BETA}/MWs-full/KMeansPivotChooser--kmeans.k_${K}"
 	CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/${DATA}/lat_dim=${DIM}_beta=${BETA}/clusters-${MODEL}/KMedoidsFastPAM--kmeans.k_${K}"
 
     [ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
