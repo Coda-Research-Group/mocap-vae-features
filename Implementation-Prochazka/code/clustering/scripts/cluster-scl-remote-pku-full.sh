@@ -1,6 +1,8 @@
 #!/bin/bash
 #PBS -l walltime=8:0:0
 #PBS -l select=1:ncpus=4:mem=8gb
+#PBS -o /dev/null
+#PBS -e /dev/null
 
 
 # http://redsymbol.net/articles/unofficial-bash-strict-mode/

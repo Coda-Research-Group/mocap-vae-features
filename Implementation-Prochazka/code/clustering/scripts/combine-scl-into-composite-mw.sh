@@ -80,11 +80,11 @@ ${JDK_PATH} \
 # done
 
 # PKU CV
- for TYPE in 'train' 'test'; do # 5 body parts
+ for TYPE in 'train'; do # 5 body parts
 # for TYPE in 'test-extended' 'train-extended'; do # 5 body parts + 3 relations
      for K in "350"; do
 
-         BODY_PART_MWS_FOLDER="/home/drking/Documents/bakalarka/data/pku-test/lat_dim=256_beta=1/MWs/KMeansPivotChooser--kmeans.k_Cosine-${TYPE}"
+         BODY_PART_MWS_FOLDER="/home/drking/Documents/bakalarka/data/SCL/composite/clusters/fold-mws/KMeansPivotChooser--kmeans.k_350"
 
          combineBodyPartsIntoCompositeMW
 
