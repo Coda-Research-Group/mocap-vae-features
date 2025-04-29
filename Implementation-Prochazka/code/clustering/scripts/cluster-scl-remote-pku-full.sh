@@ -1,16 +1,24 @@
 #!/bin/bash
-#PBS -l walltime=4:0:0
+#PBS -l walltime=8:0:0
 #PBS -l select=1:ncpus=4:mem=8gb
-#PBS -o /dev/null
-#PBS -e /dev/null
+
 
 # http://redsymbol.net/articles/unofficial-bash-strict-mode/
 set -euo pipefail
 IFS=$'\n\t'
 
-CURRENT_K=${PASSED_K}
-CURRENT_DATA=${PASSED_DATA}
-CURRENT_MODEL=${PASSED_ROOT}
+DATA="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=256_beta=1/predictions_segmented_model=pku-mmd.data-cv-train"
+ROOT="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=256_beta=1/clusters-pku-mmd"
+
+CURRENT_K="1000"
+CURRENT_DATA=${DATA}
+CURRENT_ROOT=${ROOT}
+
+
+
+# CURRENT_K=${PASSED_K}
+# CURRENT_DATA=${PASSED_DATA}
+# CURRENT_ROOT=${PASSED_ROOT}
 
 
 JDK_PATH='/storage/brno12-cerit/home/drking/jdk-21.0.7/bin/java'
@@ -35,8 +43,8 @@ function createCompositeMWClusteringMessif() {
 
     ALGORITHM_PARAMS="-kmeans.k ${CURRENT_K}"
 
-    DATASET_PATH=${PASSED_DATA}
-    ROOT_FOLDER_FOR_RESULTS=${PASSED_ROOT}
+    DATASET_PATH=${CURRENT_DATA}
+    ROOT_FOLDER_FOR_RESULTS=${CURRENT_ROOT}
 
 
     DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVectorCosine"
@@ -54,7 +62,7 @@ ${JDK_PATH} \
 -sf ${DATASET_PATH} \
 -cls ${DISTANCE_FUNCTION} \
 -pc ${ALGORITHM} \
--np ${K} \
+-np ${CURRENT_K} \
 "
     echo "${COMMAND}"
 
