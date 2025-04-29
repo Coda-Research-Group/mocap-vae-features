@@ -48,41 +48,51 @@ function convert() {
 
       eval "${COMMAND}"
 }
-for DIM in "64" "32" "16" "8" "4"; do
-  	for BETA in "0.1" "1" "10"; do
- 		for K in "5" "10" "20" "50" "100" "150" "200" "250" "300" "350" "400" "500" "600" "750" "1000"; do
-			for PART in "hdm05-legR" "hdm05-legL" "hdm05-handR" "hdm05-handL" "hdm05-torso"; do
-				echo "${PART}"
-
-		  	    DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=${PART}.data"
-				OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/MWs-parts/KMeansPivotChooser--kmeans.k_${K}"
-				CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/clusters-${PART}/KMedoidsFastPAM--kmeans.k_${K}"
-                rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
+ 		for K in "1000" "2000" "3000" "4000" "5000" "6000" "7000" "8000" "9000" "10000"; do
+				PART="pku-mmd"
+		  	    DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=256_beta=1/predictions_segmented_model=pku-mmd.data"
+				OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=256_beta=1/MWs-parts/KMeansPivotChooser--kmeans.k_${K}"
+				CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=256_beta=1/clusters-pku-mmd/KMedoidsFastPAM--kmeans.k_${K}"
+#                rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
 
 				convert
-
-			done
 		done
-	done
-done
 
-for DIM in "256" "128" "64" "32" "16" "8" "4" "2"; do
-  	for BETA in "0.1" "1" "10"; do
- 		for K in "5" "10" "20" "50" "100" "150" "200" "250" "300" "350" "400" "500" "600" "750" "1000"; do
-			for PART in "hdm05"; do
-				echo "${PART}"
+# for DIM in "64" "32" "16" "8" "4"; do
+#  	for BETA in "0.1" "1" "10"; do
+# 		for K in "5" "10" "20" "50" "100" "150" "200" "250" "300" "350" "400" "500" "600" "750" "1000"; do
+#			for PART in "hdm05-legR" "hdm05-legL" "hdm05-handR" "hdm05-handL" "hdm05-torso"; do
+#				echo "${PART}"
+#
+#		  	    DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=${PART}.data"
+#				OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/MWs-parts/KMeansPivotChooser--kmeans.k_${K}"
+#				CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/clusters-${PART}/KMedoidsFastPAM--kmeans.k_${K}"
+#                rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
+#
+#				convert
+#
+#			done
+#		done
+#	done
+#done
 
-		  	    DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=${PART}.data"
-				OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/MWs-full/KMeansPivotChooser--kmeans.k_${K}"
-				CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/clusters-${PART}/KMedoidsFastPAM--kmeans.k_${K}"
-                rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
+# for DIM in "256" "128" "64" "32" "16" "8" "4" "2"; do
+#   	for BETA in "0.1" "1" "10"; do
+#  		for K in "5" "10" "20" "50" "100" "150" "200" "250" "300" "350" "400" "500" "600" "750" "1000"; do
+# 			for PART in "hdm05"; do
+# 				echo "${PART}"
 
-				convert
+# 		  	    DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=${PART}.data"
+# 				OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/MWs-full/KMeansPivotChooser--kmeans.k_${K}"
+# 				CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/clusters-${PART}/KMedoidsFastPAM--kmeans.k_${K}"
+#                 rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
 
-			done
-		done
-	done
-done
+# 				convert
+
+# 			done
+# 		done
+# 	done
+# done
 
 ## Test model
 #for DIM in "64"; do
