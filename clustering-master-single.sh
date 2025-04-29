@@ -1,10 +1,6 @@
 #!/bin/bash
-#PBS -l walltime=24:0:0
-#PBS -l select=1:ncpus=4:mem=32gb:scratch_local=50gb
-
-
-
-
+#PBS -l walltime=4:0:0
+#PBS -l select=1:ncpus=4:mem=4gb
 
 
 PBS_LOG_BASE_DIR="/storage/brno12-cerit/home/drking/experiments/pbs"
@@ -29,21 +25,21 @@ for DIM in "${DIMS[@]}"; do
                     JOB_NAME="clustering_${DIM}_${BETA}_${MODEL}_${DATA}_${K}"
 
                     if [[ "${DATA}" == "all" ]]; then
-                        DATA="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/predictions_segmented_model=${MODEL}.data"
-                        ROOT="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${MODEL}"
+                        DATA_DIR="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/predictions_segmented_model=${MODEL}.data"
+                        ROOT_DIR="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${MODEL}"
                     fi                    
                     if [[ "${DATA}" == "cv" ]]; then
-                        DATA="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/predictions_segmented_model=${MODEL}.data-cv-train"
-                        ROOT="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${MODEL}"
+                        DATA_DIR="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/predictions_segmented_model=${MODEL}.data-cv-train"
+                        ROOT_DIR="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${MODEL}"
                     fi
                     if [[ "${DATA}" == "cs" ]]; then
-                        DATA="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/predictions_segmented_model=${MODEL}.data-cs-train"
-                        ROOT="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${MODEL}"
+                        DATA_DIR="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/predictions_segmented_model=${MODEL}.data-cs-train"
+                        ROOT_DIR="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${MODEL}"
                     fi
 
                     qsub \
                         -N "${JOB_NAME}" \
-                        -v "PASSED_DATA=${DATA},PASSED_ROOT=${ROOT},PASSED_K=${K}" \
+                        -v "PASSED_DATA=${DATA_DIR},PASSED_ROOT=${ROOT_DIR},PASSED_K=${K}" \
                         "${PARTS_SCRIPT_PATH}"
 
                 done

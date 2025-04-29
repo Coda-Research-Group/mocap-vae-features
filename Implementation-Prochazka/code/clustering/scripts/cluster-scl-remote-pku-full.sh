@@ -7,18 +7,11 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-DATA="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=256_beta=1/predictions_segmented_model=pku-mmd.data-cv-train"
-ROOT="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=256_beta=1/clusters-pku-mmd"
-
-CURRENT_K="1000"
-CURRENT_DATA=${DATA}
-CURRENT_ROOT=${ROOT}
 
 
-
-# CURRENT_K=${PASSED_K}
-# CURRENT_DATA=${PASSED_DATA}
-# CURRENT_ROOT=${PASSED_ROOT}
+CURRENT_K=${PASSED_K}
+CURRENT_DATA=${PASSED_DATA}
+CURRENT_ROOT=${PASSED_ROOT}
 
 
 JDK_PATH='/storage/brno12-cerit/home/drking/jdk-21.0.7/bin/java'
