@@ -1,6 +1,6 @@
 #!/bin/bash
-#PBS -l walltime=48:0:0
-#PBS -l select=1:ncpus=8:mem=8gb:scratch_local=50gb
+#PBS -l walltime=4:0:0
+#PBS -l select=1:ncpus=4:mem=8gb
 #PBS -o /dev/null
 #PBS -e /dev/null
 
@@ -8,8 +8,10 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-CURRENT_DIM=${PASSED_DIM}
-CURRENT_BETA=${PASSED_BETA}
+CURRENT_K=${PASSED_K}
+CURRENT_DATA=${PASSED_DATA}
+CURRENT_MODEL=${PASSED_ROOT}
+
 
 JDK_PATH='/storage/brno12-cerit/home/drking/jdk-21.0.7/bin/java'
 
@@ -31,42 +33,33 @@ function createCompositeMWClusteringMessif() {
     EXTRACTED_MEDOIDS_FILE='medoids.txt'
 
 
-	for K in "20" "50" "100" "150" "200" "250" "300" "350" "400" "500" "600" "750"; do
+    ALGORITHM_PARAMS="-kmeans.k ${CURRENT_K}"
 
-    	for model in "pku-mmd-torso" "pku-mmd-handL" "pku-mmd-handR" "pku-mmd-legL" "pku-mmd-legR"; do
-
-            for FUNC in 'Cosine'; do
-
-                ALGORITHM_PARAMS="-kmeans.k ${K}"
-
-                # PKU-MMD CV - no folds or splits
-                DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions-norm/pku-mmd/cv/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/predictions_segmented_model_norm=${model}.data-cv-train"
-                ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions-norm/pku-mmd/cv/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${model}"
+    DATASET_PATH=${PASSED_DATA}
+    ROOT_FOLDER_FOR_RESULTS=${PASSED_ROOT}
 
 
-                DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVector${FUNC}"
+    DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVectorCosine"
 
-                formatResultFolderName
+    formatResultFolderName
 
-                mkdir -p "${RESULT_FOLDER_NAME}"
+    mkdir -p "${RESULT_FOLDER_NAME}"
 
-                COMMAND="\
+    COMMAND="\
 ${JDK_PATH} \
 -jar ${MEDOIDS_JAR_PATH} \
 1 \
 -pcuseall \
+-kmeans-max-iters 8 \
 -sf ${DATASET_PATH} \
 -cls ${DISTANCE_FUNCTION} \
 -pc ${ALGORITHM} \
 -np ${K} \
 "
-                echo "${COMMAND}"
+    echo "${COMMAND}"
 
-                eval "${COMMAND}" >"${RESULT_FOLDER_NAME}/${EXTRACTED_MEDOIDS_FILE}" 2>"${RESULT_FOLDER_NAME}/log.txt"
+    eval "${COMMAND}" >"${RESULT_FOLDER_NAME}/${EXTRACTED_MEDOIDS_FILE}" 2>"${RESULT_FOLDER_NAME}/log.txt"
 
-            done
-        done
-    done
 }
 
 ##########################################
