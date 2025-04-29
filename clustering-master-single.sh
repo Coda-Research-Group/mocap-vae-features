@@ -22,7 +22,7 @@ DATAS=("cs" "cv")
 
 for DIM in "${DIMS[@]}"; do
     for BETA in "${BETAS[@]}"; do
-        for K in "${KS][@]}"; do
+        for K in "${KS[@]}"; do
             for MODEL in "${MODELS[@]}"; do
                 for DATA in "${DATAS[@]}"; do
 
