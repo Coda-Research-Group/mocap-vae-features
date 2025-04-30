@@ -19,7 +19,6 @@ for K in "1000" "2000" "3000" "4000" "5000" "6000" "7000" "8000" "9000" "10000";
 -fp /storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/${EXP}/lat_dim=${DIM}_beta=${BETA}/MWs-full/KMeansPivotChooser--kmeans.k_${K}/pku-mmd.D0K1 \
 -k 4 \
 -cv \
---nmatches 2 \
 -dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
 "
     echo "${COMMAND}"
@@ -34,7 +33,6 @@ for K in "1000" "2000" "3000" "4000" "5000" "6000" "7000" "8000" "9000" "10000";
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
 -fp /storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/${EXP}/lat_dim=${DIM}_beta=${BETA}/MWs-full/KMeansPivotChooser--kmeans.k_${K}/pku-mmd.D0K1 \
 -cv \
---nmatches 2 \
 -dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
 "
     echo "${COMMAND}"
