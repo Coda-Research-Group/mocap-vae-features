@@ -23,7 +23,7 @@ for K in "1000" "2000" "3000" "4000" "5000" "6000" "7000" "8000" "9000" "10000";
 "
     echo "${COMMAND}"
     mkdir -p "/storage/brno12-cerit/home/drking/experiments/results/pku-mmd/${EXP}/lat_dim=${DIM}_beta=${BETA}"
-    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/pku-mmd/${EXP}/lat_dim=${DIM}_beta=${BETA}/results-full.txt"
+    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/pku-mmd/${EXP}/lat_dim=${DIM}_beta=${BETA}/results-full-correct.txt"
 
 done
 
@@ -37,6 +37,6 @@ for K in "1000" "2000" "3000" "4000" "5000" "6000" "7000" "8000" "9000" "10000";
 "
     echo "${COMMAND}"
     mkdir -p "/storage/brno12-cerit/home/drking/experiments/results/pku-mmd/${EXP}/lat_dim=${DIM}_beta=${BETA}"
-    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/pku-mmd/${EXP}/lat_dim=${DIM}_beta=${BETA}/results-full.txt"
+    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/pku-mmd/${EXP}/lat_dim=${DIM}_beta=${BETA}/results-full-correct.txt"
 
 done
