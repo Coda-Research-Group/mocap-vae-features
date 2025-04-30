@@ -1,8 +1,7 @@
 #!/bin/bash
-#PBS -l walltime=24:0:0
-#PBS -l select=1:ncpus=4:mem=8gb:scratch_local=50gb
-#PBS -o /dev/null
-#PBS -e /dev/null
+#PBS -l walltime=12:0:0
+#PBS -l select=1:ncpus=4:mem=16gb:scratch_local=50gb
+
 
 # http://redsymbol.net/articles/unofficial-bash-strict-mode/
 set -euo pipefail
@@ -14,7 +13,7 @@ COMBINER_JAR_PATH=''
 
 ## Defaults
 
-JDK_PATH=${JDK_PATH:-'/usr/bin/java'}
+JDK_PATH="/storage/brno12-cerit/home/drking/jdk-21.0.7/bin/java"
 COMBINER_JAR_PATH=${COMBINER_JAR_PATH:-'/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/compositeMWCombiner.jar'}
 
 ## Functions
@@ -29,64 +28,40 @@ ${JDK_PATH} \
 -jar ${COMBINER_JAR_PATH} \
 --sequenceFolder='${BODY_PART_MWS_FOLDER}' \
 "
-#	rm "/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/composites/Elki_${DIM}_${BETA}_${K}.composite"
+    [ -f "${BODY_PART_MWS_FOLDER}/../${FILE_NAME}.composite" ] && rm "${BODY_PART_MWS_FOLDER}/../${FILE_NAME}.composite"
+
+
 
     echo "${COMMAND}"
 
     # 5 BPs
     eval "${COMMAND}" >"${BODY_PART_MWS_FOLDER}/../${FILE_NAME}.composite"
-    # 5 BPs + 3 relations
-    # eval "${COMMAND}" >"${BODY_PART_MWS_FOLDER}/../${FILE_NAME}.composite-extended"
+
 }
 
-# HDM05-130
-#for DIM in "64" "32" "16" "8" "4"; do
-#  	for BETA in "0.1" "1" "10"; do
-# 		for K in "5" "10" "20" "50" "100" "150" "200" "250" "300" "350" "400" "500" "600" "750"; do
-#
-#            BODY_PART_MWS_FOLDER="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/MWs-parts/KMeansPivotChooser--kmeans.k_${K}"
-#
-#            combineBodyPartsIntoCompositeMW
-#
-#        done
-#    done
-#done
+DIMS=("64" "32" "16" "8" "4")
+BETAS=("0.1" "1" "10")
+MODELS=("pku-mmd")
+KS=("1000" "2000" "3000" "4000" "5000" "6000" "7000" "8000" "9000" "10000")
+DATAS=("cs" "cv")
 
-## HDM05-65
-#for SPLIT in '0' '1' '2' '3' '4'; do
-#    for FOLD in '0,1,2,3,4,5,6,7,8' '0,1,2,3,4,5,6,7,9' '0,1,2,3,4,5,6,8,9' '0,1,2,3,4,5,7,8,9' '0,1,2,3,4,6,7,8,9' '0,1,2,3,5,6,7,8,9' '0,1,2,4,5,6,7,8,9' '0,1,3,4,5,6,7,8,9' '0,2,3,4,5,6,7,8,9' '1,2,3,4,5,6,7,8,9'; do
-#        for TYPE in 'test' 'train'; do
-#            for K in '250' '300'; do
-#
-#                BODY_PART_MWS_FOLDER="/home/xprocha6/cybela1-storage/folds-mw/hdm05/65/split${SPLIT}-fold${FOLD}/KMeansPivotChooser--kmeans.k_${K}-${TYPE}"
-#
-#                combineBodyPartsIntoCompositeMW
-#
-#            done
-#        done
-#    done
-#done
+for DIM in "${DIMS[@]}"; do
+    for BETA in "${BETAS[@]}"; do
+        for K in "${KS[@]}"; do
+            for MODEL in "${MODELS[@]}"; do
+                for DATA in "${DATAS[@]}"; do
 
-# PKU CS
-# for TYPE in 'test' 'train'; do # 5 body parts
-# for TYPE in 'test-extended' 'train-extended'; do # 5 body parts + 3 relations
-#     for K in '300'; do
+                    BODY_PART_MWS_FOLDER="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/${DATA}/lat_dim=${DIM}_beta=${BETA}/MWs-parts/KMeansPivotChooser--kmeans.k_${K}"
 
-#         BODY_PART_MWS_FOLDER="/home/xprocha6/cybela1-storage/folds-mw/pku/cs/KMeansPivotChooser--kmeans.k_${K}-${TYPE}"
+                    combineBodyPartsIntoCompositeMW
 
-#         combineBodyPartsIntoCompositeMW
+                    BODY_PART_MWS_FOLDER="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions-norm/pku-mmd/${DATA}/lat_dim=${DIM}_beta=${BETA}/MWs-parts/KMeansPivotChooser--kmeans.k_${K}"
 
-#     done
-# done
+                    combineBodyPartsIntoCompositeMW
 
-# PKU CV
- for TYPE in 'train'; do # 5 body parts
-# for TYPE in 'test-extended' 'train-extended'; do # 5 body parts + 3 relations
-     for K in "350"; do
-
-         BODY_PART_MWS_FOLDER="/home/drking/Documents/bakalarka/data/SCL/composite/clusters/fold-mws/KMeansPivotChooser--kmeans.k_350"
-
-         combineBodyPartsIntoCompositeMW
-
-     done
- done
+                done
+            done
+        done
+    done
+done
+        
