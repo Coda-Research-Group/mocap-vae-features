@@ -14,7 +14,7 @@ COMBINER_JAR_PATH=''
 ## Defaults
 
 JDK_PATH="/storage/brno12-cerit/home/drking/jdk-21.0.7/bin/java"
-COMBINER_JAR_PATH=${COMBINER_JAR_PATH:-'/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/compositeMWCombiner.jar'}
+COMBINER_JAR_PATH=${COMBINER_JAR_PATH:-'/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/compositeMWCombiner.jar'}
 
 ## Functions
 
