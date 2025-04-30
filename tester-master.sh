@@ -9,26 +9,41 @@ JDK_PATH='/storage/brno12-cerit/home/drking/jdk-21.0.7/bin/java'
 
 WORKER_SCRIPT_PATH="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/tester-single.sh"
 WORKER_SCRIPT_PATH_NORM="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/tester-single-norm.sh"
+WORKER_SCRIPT_PATH_FULL="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/tester-single-full.sh"
+
+# for EXP in "cv" "cs"; do
+#     for DIM in "64" "32" "16" "8" "4"; do
+#         for BETA in "0.1" "1" "10"; do
+
+#             JOB_NAME="evaluation_${EXP}_${DIM}_${BETA}"
+#             echo "Submitting job for EXP=${EXP}, DIM=${DIM}, BETA=${BETA}"
+#             qsub \
+#                 -N "${JOB_NAME}" \
+#                 -v "PASSED_EXP=${EXP},PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
+#                 "${WORKER_SCRIPT_PATH}"
+
+#             JOB_NAME="evaluation_${EXP}_${DIM}_${BETA}_norm"
+#             echo "Submitting job for EXP=${EXP}, DIM=${DIM}, BETA=${BETA}"
+#             qsub \
+#                 -N "${JOB_NAME}" \
+#                 -v "PASSED_EXP=${EXP},PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
+#                 "${WORKER_SCRIPT_PATH_NORM}"
+
+#         done
+#     done
+# done
 
 for EXP in "cv" "cs"; do
-    for DIM in "64" "32" "16" "8" "4"; do
+    for DIM in "256" "128" "64" "32" "16" "8" ; do
         for BETA in "0.1" "1" "10"; do
 
-            JOB_NAME="evaluation_${EXP}_${DIM}_${BETA}"
+            JOB_NAME="evaluation_${EXP}_${DIM}_${BETA}_full"
             echo "Submitting job for EXP=${EXP}, DIM=${DIM}, BETA=${BETA}"
             qsub \
                 -N "${JOB_NAME}" \
                 -v "PASSED_EXP=${EXP},PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
-                "${WORKER_SCRIPT_PATH}"
-
-            JOB_NAME="evaluation_${EXP}_${DIM}_${BETA}_norm"
-            echo "Submitting job for EXP=${EXP}, DIM=${DIM}, BETA=${BETA}"
-            qsub \
-                -N "${JOB_NAME}" \
-                -v "PASSED_EXP=${EXP},PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
-                "${WORKER_SCRIPT_PATH_NORM}"
+                "${WORKER_SCRIPT_PATH_FULL}"
 
         done
     done
 done
-
