@@ -9,7 +9,7 @@ JDK_PATH='/storage/brno12-cerit/home/drking/jdk-21.0.7/bin/java'
 
 DIM=${PASSED_DIM}
 BETA=${PASSED_BETA}
-DATA=${PASSED_DATA}
+EXP=${PASSED_EXP}
 
 
 # avail_classes 
@@ -33,6 +33,7 @@ for K in "1000" "2000" "3000" "4000" "5000" "6000" "7000" "8000" "9000" "10000";
     echo "${COMMAND}"
     mkdir -p "/storage/brno12-cerit/home/drking/experiments/results/pku-mmd/${EXP}/lat_dim=${DIM}_beta=${BETA}"
     eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/pku-mmd/${EXP}/lat_dim=${DIM}_beta=${BETA}/results.txt"
+
 done
 
 
@@ -47,6 +48,7 @@ for K in "1000" "2000" "3000" "4000" "5000" "6000" "7000" "8000" "9000" "10000";
     echo "${COMMAND}"
     mkdir -p "/storage/brno12-cerit/home/drking/experiments/results/pku-mmd/${EXP}/lat_dim=${DIM}_beta=${BETA}"
     eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/pku-mmd/${EXP}/lat_dim=${DIM}_beta=${BETA}/results.txt"
+
 done
 
 

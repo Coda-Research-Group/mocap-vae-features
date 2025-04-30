@@ -26,14 +26,14 @@ for EXP in "cv" "cs"; do
             echo "Submitting job for EXP=${EXP}, DIM=${DIM}, BETA=${BETA}"
             qsub \
                 -N "${JOB_NAME}" \
-                -v "PASSED_DATA=${EXP},PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
+                -v "PASSED_EXP=${EXP},PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
                 "${WORKER_SCRIPT_PATH}"
 
             JOB_NAME="vae_${EXP}_${DIM}_${BETA}_norm"
             echo "Submitting job for EXP=${EXP}, DIM=${DIM}, BETA=${BETA}"
             qsub \
                 -N "${JOB_NAME}" \
-                -v "PASSED_DATA=${EXP},PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
+                -v "PASSED_EXP=${EXP},PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
                 "${WORKER_SCRIPT_PATH_NORM}"
 
         done
