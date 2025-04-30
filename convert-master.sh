@@ -15,23 +15,23 @@ PARTS_SCRIPT_PATH_NORM="/storage/brno12-cerit/home/drking/experiments/mocap-vae-
 DIMS=("256" "128" "64" "32" "16" "8")
 BETAS=("0.1" "1" "10")
 MODELS=("pku-mmd")
-KS=("1000" "2000" "3000" "4000" "5000" "6000" "7000" "8000" "9000" "10000")
+KS=("50" "100" "150" "200" "250" "300" "350" "400" "500" "600" "750")
 DATAS=("cs" "cv")
 
-for DIM in "${DIMS[@]}"; do
-    for BETA in "${BETAS[@]}"; do
-        for MODEL in "${MODELS[@]}"; do
-            for DATA in "${DATAS[@]}"; do
-                JOB_NAME="converting_${DIM}_${BETA}_${MODEL}_${DATA}_full"
+# for DIM in "${DIMS[@]}"; do
+#     for BETA in "${BETAS[@]}"; do
+#         for MODEL in "${MODELS[@]}"; do
+#             for DATA in "${DATAS[@]}"; do
+#                 JOB_NAME="converting_${DIM}_${BETA}_${MODEL}_${DATA}_full"
 
-                qsub \
-                    -N "${JOB_NAME}" \
-                    -v "PASSED_DATA=${DATA},PASSED_DIM=${DIM},PASSED_BETA=${BETA},PASSED_MODEL=${MODEL}" \
-                    "${PARTS_SCRIPT_PATH_FULL}"
-            done
-        done
-    done
-done
+#                 qsub \
+#                     -N "${JOB_NAME}" \
+#                     -v "PASSED_DATA=${DATA},PASSED_DIM=${DIM},PASSED_BETA=${BETA},PASSED_MODEL=${MODEL}" \
+#                     "${PARTS_SCRIPT_PATH_FULL}"
+#             done
+#         done
+#     done
+# done
 
 DIMS=("64" "32" "16" "8" "4")
 MODELS=("pku-mmd-legR" "pku-mmd-legL" "pku-mmd-torso" "pku-mmd-handL" "pku-mmd-handR")
