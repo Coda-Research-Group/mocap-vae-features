@@ -7,29 +7,36 @@
 
 JDK_PATH='/storage/brno12-cerit/home/drking/jdk-21.0.7/bin/java'
 
+# avail_classes 
 
-for EXP in "cv"; do
-    for DIM in "256"; do
-        for BETA in "1"; do
-            for MODEL in "pku-mmd"; do
-                for K in "1000" "2000" "3000" "4000" "5000" "6000" "7000" "8000" "9000" "10000"; do
+# SequenceMotionWordsDTW.class;
+# SequenceMotionWordsNMatchesDTW.class;
+# SequenceMotionWordsSoftAssignmentDTW.class;
+# SequenceMotionWordsNGramsJaccard.class;
+# SequenceSegmentCodeListDTW.class;
 
-                    COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/${EXP}/lat_dim=${DIM}_beta=${BETA}/MWs-parts/KMeansPivotChooser--kmeans.k_${K}/${MODEL}.D0K1 \
--k 4 \
--cv \
--dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
-"
-                    echo "${COMMAND}"
+WORKER_SCRIPT_PATH="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/tester-single.sh"
+WORKER_SCRIPT_PATH_NORM="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/tester-single-norm.sh"
 
-                    mkdir -p "/storage/brno12-cerit/home/drking/experiments/results/pku-mmd/${EXP}/lat_dim=${DIM}_beta=${BETA}"
+for EXP in "cv" "cs"; do
+    for DIM in "64" "32" "16" "8" "4"; do
+        for BETA in "0.1" "1" "10"; do
 
-                    echo "=== Running with K=${K} ===" >> "/storage/brno12-cerit/home/drking/experiments/results/pku-mmd/${EXP}/lat_dim=${DIM}_beta=${BETA}/results.txt"
+            JOB_NAME="vae_${EXP}_${DIM}_${BETA}"
+            echo "Submitting job for EXP=${EXP}, DIM=${DIM}, BETA=${BETA}"
+            qsub \
+                -N "${JOB_NAME}" \
+                -v "PASSED_DATA=${EXP},PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
+                "${WORKER_SCRIPT_PATH}"
 
-                    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/pku-mmd/${EXP}/lat_dim=${DIM}_beta=${BETA}/results.txt"
+            JOB_NAME="vae_${EXP}_${DIM}_${BETA}_norm"
+            echo "Submitting job for EXP=${EXP}, DIM=${DIM}, BETA=${BETA}"
+            qsub \
+                -N "${JOB_NAME}" \
+                -v "PASSED_DATA=${EXP},PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
+                "${WORKER_SCRIPT_PATH_NORM}"
 
-                done
-            done
         done
     done
 done
+
