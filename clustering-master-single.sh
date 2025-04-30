@@ -13,44 +13,9 @@ PARTS_SCRIPT_PATH="/storage/brno12-cerit/home/drking/experiments/mocap-vae-featu
 DIMS=("256" "128" "64" "32" "16" "8")
 BETAS=("0.1" "1" "10")
 MODELS=("pku-mmd")
-KS=("1000" "2000" "3000" "4000" "5000" "6000" "7000" "8000" "9000" "10000")
-DATAS=("cs" "cv")
-
-# for DIM in "${DIMS[@]}"; do
-#     for BETA in "${BETAS[@]}"; do
-#         for K in "${KS[@]}"; do
-#             for MODEL in "${MODELS[@]}"; do
-#                 for DATA in "${DATAS[@]}"; do
-
-#                     JOB_NAME="clustering_${DIM}_${BETA}_${MODEL}_${DATA}_${K}"
-
-#                     if [[ "${DATA}" == "all" ]]; then
-#                         DATA_DIR="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=${MODEL}.data"
-#                         ROOT_DIR="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/clusters-${MODEL}"
-#                     fi                    
-#                     if [[ "${DATA}" == "cv" ]]; then
-#                         DATA_DIR="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=${MODEL}.data-cv-train"
-#                         ROOT_DIR="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}/clusters-${MODEL}"
-#                     fi
-#                     if [[ "${DATA}" == "cs" ]]; then
-#                         DATA_DIR="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=${MODEL}.data-cs-train"
-#                         ROOT_DIR="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/clusters-${MODEL}"
-#                     fi
-
-#                     qsub \
-#                         -N "${JOB_NAME}" \
-#                         -v "PASSED_DATA=${DATA_DIR},PASSED_ROOT=${ROOT_DIR},PASSED_K=${K}" \
-#                         "${PARTS_SCRIPT_PATH}"
-
-#                 done
-#             done
-#         done
-#     done
-# done
-
-DIMS=("64" "32" "16" "8" "4")
-MODELS=("pku-mmd-legR" "pku-mmd-legL" "pku-mmd-torso" "pku-mmd-handL" "pku-mmd-handR")
+# KS=("1000" "2000" "3000" "4000" "5000" "6000" "7000" "8000" "9000" "10000")
 KS=("50" "100" "150" "200" "250" "300" "350" "400" "500" "600" "750")
+DATAS=("cs" "cv")
 
 for DIM in "${DIMS[@]}"; do
     for BETA in "${BETAS[@]}"; do
@@ -84,37 +49,73 @@ for DIM in "${DIMS[@]}"; do
     done
 done
 
-for DIM in "${DIMS[@]}"; do
-    for BETA in "${BETAS[@]}"; do
-        for K in "${KS[@]}"; do
-            for MODEL in "${MODELS[@]}"; do
-                for DATA in "${DATAS[@]}"; do
+# DIMS=("64" "32" "16" "8" "4")
+# MODELS=("pku-mmd-legR" "pku-mmd-legL" "pku-mmd-torso" "pku-mmd-handL" "pku-mmd-handR")
+# KS=("50" "100" "150" "200" "250" "300" "350" "400" "500" "600" "750")
 
-                    JOB_NAME="clustering_${DIM}_${BETA}_${MODEL}_${DATA}_${K}_norm"
+# for DIM in "${DIMS[@]}"; do
+#     for BETA in "${BETAS[@]}"; do
+#         for K in "${KS[@]}"; do
+#             for MODEL in "${MODELS[@]}"; do
+#                 for DATA in "${DATAS[@]}"; do
 
-                    if [[ "${DATA}" == "all" ]]; then
-                        DATA_DIR="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=${MODEL}.data"
-                        ROOT_DIR="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/clusters-${MODEL}"
-                    fi                    
-                    if [[ "${DATA}" == "cv" ]]; then
-                        DATA_DIR="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions-norm/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model_norm=${MODEL}.data-cv-train"
-                        ROOT_DIR="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions-norm/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}/clusters-${MODEL}"
-                    fi
-                    if [[ "${DATA}" == "cs" ]]; then
-                        DATA_DIR="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions-norm/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model_norm=${MODEL}.data-cs-train"
-                        ROOT_DIR="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions-norm/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/clusters-${MODEL}"
-                    fi
+#                     JOB_NAME="clustering_${DIM}_${BETA}_${MODEL}_${DATA}_${K}"
 
-                    qsub \
-                        -N "${JOB_NAME}" \
-                        -v "PASSED_DATA=${DATA_DIR},PASSED_ROOT=${ROOT_DIR},PASSED_K=${K}" \
-                        "${PARTS_SCRIPT_PATH}"
+#                     if [[ "${DATA}" == "all" ]]; then
+#                         DATA_DIR="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=${MODEL}.data"
+#                         ROOT_DIR="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/clusters-${MODEL}"
+#                     fi                    
+#                     if [[ "${DATA}" == "cv" ]]; then
+#                         DATA_DIR="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=${MODEL}.data-cv-train"
+#                         ROOT_DIR="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}/clusters-${MODEL}"
+#                     fi
+#                     if [[ "${DATA}" == "cs" ]]; then
+#                         DATA_DIR="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=${MODEL}.data-cs-train"
+#                         ROOT_DIR="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/clusters-${MODEL}"
+#                     fi
 
-                done
-            done
-        done
-    done
-done
+#                     qsub \
+#                         -N "${JOB_NAME}" \
+#                         -v "PASSED_DATA=${DATA_DIR},PASSED_ROOT=${ROOT_DIR},PASSED_K=${K}" \
+#                         "${PARTS_SCRIPT_PATH}"
+
+#                 done
+#             done
+#         done
+#     done
+# done
+
+# for DIM in "${DIMS[@]}"; do
+#     for BETA in "${BETAS[@]}"; do
+#         for K in "${KS[@]}"; do
+#             for MODEL in "${MODELS[@]}"; do
+#                 for DATA in "${DATAS[@]}"; do
+
+#                     JOB_NAME="clustering_${DIM}_${BETA}_${MODEL}_${DATA}_${K}_norm"
+
+#                     if [[ "${DATA}" == "all" ]]; then
+#                         DATA_DIR="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=${MODEL}.data"
+#                         ROOT_DIR="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/clusters-${MODEL}"
+#                     fi                    
+#                     if [[ "${DATA}" == "cv" ]]; then
+#                         DATA_DIR="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions-norm/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model_norm=${MODEL}.data-cv-train"
+#                         ROOT_DIR="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions-norm/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}/clusters-${MODEL}"
+#                     fi
+#                     if [[ "${DATA}" == "cs" ]]; then
+#                         DATA_DIR="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions-norm/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model_norm=${MODEL}.data-cs-train"
+#                         ROOT_DIR="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions-norm/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/clusters-${MODEL}"
+#                     fi
+
+#                     qsub \
+#                         -N "${JOB_NAME}" \
+#                         -v "PASSED_DATA=${DATA_DIR},PASSED_ROOT=${ROOT_DIR},PASSED_K=${K}" \
+#                         "${PARTS_SCRIPT_PATH}"
+
+#                 done
+#             done
+#         done
+#     done
+# done
 
 
 
