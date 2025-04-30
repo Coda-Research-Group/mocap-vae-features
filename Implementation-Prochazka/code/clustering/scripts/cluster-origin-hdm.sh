@@ -240,7 +240,7 @@ function createCompositeMWClusteringMessif() {
                 ALGORITHM_PARAMS="-kmeans.k ${K}"
 
                 # PKU-MMD CV - no folds or splits
-                DATASET_PATH="/storage/brno12-cerit/home/drking/hdm05/class130-actions-segment80_shift16-coords_normPOS-fps12.data"
+                DATASET_PATH="/storage/brno12-cerit/home/drking/data/hdm05/class130-actions-segment80_shift16-coords_normPOS-fps12.data"
                 ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/baseline-skeleton/hdm05/all/"
 
 #                DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVector${FUNC}"
