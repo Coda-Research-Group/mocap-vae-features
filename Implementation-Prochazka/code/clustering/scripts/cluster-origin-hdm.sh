@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -l walltime=24:0:0
+#PBS -l walltime=8:0:0
 #PBS -l select=1:ncpus=4:mem=16gb
 #PBS -o /dev/null
 #PBS -e /dev/null
@@ -81,6 +81,7 @@ function formatResultFolderName() {
     # Replace every ' ' with '_'
     ESCAPED_ALGORITHM_PARAMS=${ALGORITHM_PARAMS//' '/'_'}
 	RESULT_FOLDER_NAME="${ROOT_FOLDER_FOR_RESULTS}/${ALGORITHM_NAME}-${ESCAPED_ALGORITHM_PARAMS}"
+
 }
 
 function createClusters() {
@@ -232,16 +233,15 @@ function createCompositeMWClusteringMessif() {
     for FOLD in '0'; do # HDM05-130 folds
         # for FOLD in '0,1,2,3,4,5,6,7,8' '0,1,2,3,4,5,6,7,9' '0,1,2,3,4,5,6,8,9' '0,1,2,3,4,5,7,8,9' '0,1,2,3,4,6,7,8,9' '0,1,2,3,5,6,7,8,9' '0,1,2,4,5,6,7,8,9' '0,1,3,4,5,6,7,8,9' '0,2,3,4,5,6,7,8,9' '1,2,3,4,5,6,7,8,9'; do # HDM05-65 folds
 
-        for EXP in 'cs' 'cv'; do
+        for EXP in 'cs' ; do
 
             for FUNC in ''; do
 
                 ALGORITHM_PARAMS="-kmeans.k ${K}"
 
                 # PKU-MMD CV - no folds or splits
-                DATASET_PATH="/storage/brno12-cerit/home/drking/pku-mmd/actions_singlesubject-segment24_shift4.8_initialshift0-coords_normPOS-fps10.data-${EXP}-train"
-                ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/baseline-skeleton/pku-mmd/${EXP}/"
-
+                DATASET_PATH="/storage/brno12-cerit/home/drking/hdm05/class130-actions-segment80_shift16-coords_normPOS-fps12.data"
+                ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/baseline-skeleton/hdm05/all/"
 
 #                DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVector${FUNC}"
 				DISTANCE_FUNCTION="mcdr.sequence.impl.SequenceMocapPoseCoordsL2DTW"
