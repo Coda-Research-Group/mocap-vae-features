@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#PBS -l walltime=48:0:0
+#PBS -l walltime=24:0:0
 #PBS -l select=1:ncpus=4:mem=32gb
 
 
@@ -24,10 +24,10 @@ conda activate "/storage/brno12-cerit/home/drking/.conda/envs/cuda4" || {
 }
 
 
-for EXP in "all" ; do
-    for DIM in "256" "128" "64" "32" "16" "8" "4" "2" "1"; do
+for EXP in "cv" "cs" ; do
+    for DIM in "256" "128" "64" "32" "16" "8"; do
         for BETA in "0.1" "1" "10"; do
-            python /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Tsim.py /storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=hdm05.data
+            python /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Tsim.py /storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/${EXP}/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=pku-mmd.data
             echo "--------------------------------------------------------------------"
         done
     done
