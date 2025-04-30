@@ -4,11 +4,9 @@
 #PBS -o /dev/null
 #PBS -e /dev/null
 
-
 # http://redsymbol.net/articles/unofficial-bash-strict-mode/
 set -euo pipefail
 IFS=$'\n\t'
-
 
 
 CURRENT_K=${PASSED_K}
@@ -53,7 +51,7 @@ ${JDK_PATH} \
 -jar ${MEDOIDS_JAR_PATH} \
 1 \
 -pcuseall \
--kmeans-max-iters 6 \
+-kmeans-max-iters 10 \
 -sf ${DATASET_PATH} \
 -cls ${DISTANCE_FUNCTION} \
 -pc ${ALGORITHM} \
