@@ -7,7 +7,7 @@ IFS=$'\n\t'
 cd /home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/code/motionvocabulary/dist/lib || exit
 
 
-CLS_OBJ="mcdr.sequence.impl.SequenceMocapPoseCoordsL2DTW"
+CLS_OBJ=""
 SOFTASSIGNPARAM="D0K1"   # optional (default is D0K1)
 TOSEQ="--tosequence"   # set if you need to convert the input file of segments to motion words _and_ merge the segments back to sequences/actions
 MEMORY="4g"
@@ -60,14 +60,15 @@ function convert() {
 #done
 
 # PKU-MMD CV - training and testing set
- for K in 'Cosine'; do
+ for K in '6000'; do
      PART="FULL"
 
- 	CLUSTER_FOLDER_PATH="/home/drking/Documents/bakalarka/data/pku-mmd/from-origin/KMeansPivotChooser--kmeans.k_350"
+ 	CLUSTER_FOLDER_PATH="/home/drking/Documents/bakalarka/data/SCL/cluster_test/rand/KMeansPivotChooser--kmeans.k_6000/"
+  	CLS_OBJ="messif.objects.impl.ObjectFloatVectorCosine"
 
       ## Training data:
- 	DATAFILE="/home/drking/Documents/bakalarka/data/pku-mmd/actions_singlesubject-segment24_shift4.8_initialshift0-coords_normPOS-fps10.data"
- 	OUTPUT_ROOT_PATH="/home/drking/Documents/bakalarka/data/pku-mmd/MW"
+ 	DATAFILE="/home/drking/Documents/bakalarka/data/SCL/cluster_test/predictions_segmented_model=pku-mmd.data"
+ 	OUTPUT_ROOT_PATH="/home/drking/Documents/bakalarka/data/SCL/cluster_test/rand/MWs"
  	convert
 
       ## Testing data:
@@ -80,12 +81,12 @@ function convert() {
 
 #for K in "5" "10" "20" "50" "100" "150" "200" "250" "300" "350" "400" "500" "600" "750"; do
 #for K in "3000"; do
-#	for PART in "pku-mmd-legR" "pku-mmd-legL" "pku-mmd-handR" "pku-mmd-handL" "pku-mmd-torso"; do
+#	for PART in "legR" "legL" "handR" "handL" "torso"; do
 #
 #		echo "${PART}"
-#	  	DATAFILE="/home/drking/Documents/bakalarka/data/pku-test/lat_dim=32_beta=1/predictions_segmented_model=${PART}.data"
-#		OUTPUT_ROOT_PATH="/home/drking/Documents/bakalarka/data/pku-test/lat_dim=32_beta=1/MWs-parts/KMeansPivotChooser--kmeans.k_${K}"
-#		CLUSTER_FOLDER_PATH="/home/drking/Documents/bakalarka/data/pku-test/lat_dim=32_beta=1/clusters-${PART}/KMeansPivotChooser--kmeans.k_${K}"
+#	  	DATAFILE="/home/drking/Documents/bakalarka/data/SCL/composite/predictions_segmented_model=hdm05-${PART}.data"
+#		OUTPUT_ROOT_PATH="/home/drking/Documents/bakalarka/data/SCL/composite/clusters/fold-mws/KMeansPivotChooser--kmeans.k_350"
+#		CLUSTER_FOLDER_PATH="/home/drking/Documents/bakalarka/data/SCL/composite/clusters/${PART}/KMedoidsFastPAM--kmeans.k_350"
 #
 #		convert
 #	done

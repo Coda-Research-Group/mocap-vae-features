@@ -206,9 +206,9 @@ ${JDK_PATH} \
 ## Composite MW clustering using ELKI
 function createCompositeMWClusteringELKI() {
 		CURRENT_DIM=256
-	    DATASET_PATH='/home/drking/Documents/bakalarka/data/SCL/cluster_test/elki-predictions_segmented_model=hdm05.data'
-    	ROOT_FOLDER_FOR_RESULTS="/home/drking/Documents/bakalarka/data/SCL/cluster_test/results/hdm05"
-		DISTANCE_FUNCTION='de.lmu.ifi.dbs.elki.distance.distancefunction.CosineDistanceFunction'
+		DATASET_PATH="/home/drking/Documents/bakalarka/data/elki-predictions_segmented_model=hdm05.data"
+		ROOT_FOLDER_FOR_RESULTS="/home/drking/Documents/bakalarka/data/SCL-clustering/ELKI"
+		DISTANCE_FUNCTION='messif.objects.impl.ObjectFloatVectorCosine'
 
 
       	createClusters
@@ -222,12 +222,12 @@ function createCompositeMWClusteringELKI() {
 function createCompositeMWClusteringMessif() {
 
     ALGORITHM='messif.pivotselection.KMeansPivotChooser'
-    MEDOIDS_JAR_PATH='/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/medoids_new.jar'
+    MEDOIDS_JAR_PATH='/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/medoids-test.jar'
 
     for FOLD in '0'; do # HDM05-130 folds
         # for FOLD in '0,1,2,3,4,5,6,7,8' '0,1,2,3,4,5,6,7,9' '0,1,2,3,4,5,6,8,9' '0,1,2,3,4,5,7,8,9' '0,1,2,3,4,6,7,8,9' '0,1,2,3,5,6,7,8,9' '0,1,2,4,5,6,7,8,9' '0,1,3,4,5,6,7,8,9' '0,2,3,4,5,6,7,8,9' '1,2,3,4,5,6,7,8,9'; do # HDM05-65 folds
 
-        for K in '10000'; do
+        for K in '6000'; do
 
             for FUNC in 'Cosine'; do
 
@@ -237,8 +237,8 @@ function createCompositeMWClusteringMessif() {
                 # SELECT DATASET_PATH AND ROOT_FOLDER_FOR_RESULTS:
 
                 # HDM05-130 - 2-fold cross validation - folds: '0' '1'
-#                DATASET_PATH="/home/drking/Documents/bakalarka/data/SCL/cluster_test/predictions_segmented_model=hdm05.data"
-#                ROOT_FOLDER_FOR_RESULTS="/home/drking/Documents/bakalarka/data/SCL/cluster_test/results/Cosine/"
+                DATASET_PATH="/home/drking/Documents/bakalarka/data/SCL/cluster_test/predictions_segmented_model=pku-mmd.data-cv-train"
+                ROOT_FOLDER_FOR_RESULTS="/home/drking/Documents/bakalarka/data/SCL/cluster_test/rand/"
 
                 # HDM05-65 - 10-fold cross validation - folds: '0,1,2,3,4,5,6,7,8' '0,1,2,3,4,5,6,7,9' '0,1,2,3,4,5,6,8,9' '0,1,2,3,4,5,7,8,9' '0,1,2,3,4,6,7,8,9' '0,1,2,3,5,6,7,8,9' '0,1,2,4,5,6,7,8,9' '0,1,3,4,5,6,7,8,9' '0,2,3,4,5,6,7,8,9' '1,2,3,4,5,6,7,8,9'
                 # DATASET_PATH="/home/xprocha6/cybela1-storage/folds-cluster/hdm05/65/class130-actions-segment80_shift16-coords_normPOS-fps12.data-cho2014-split${SPLIT}-fold${FOLD}"
@@ -249,8 +249,8 @@ function createCompositeMWClusteringMessif() {
 #                 ROOT_FOLDER_FOR_RESULTS='/home/xprocha6/cybela1-storage/folds-cluster-results/pku/cs'
 
                 # PKU-MMD CV - no folds or splits
-                 DATASET_PATH="/home/drking/Documents/bakalarka/data/pku-test/lat_dim=256_beta=1/predictions_segmented_model=pku-mmd.data-cv-train"
-                 ROOT_FOLDER_FOR_RESULTS="/home/drking/Documents/bakalarka/data/pku-test/Cosine"
+#                 DATASET_PATH="/home/drking/Documents/bakalarka/data/pku-test/lat_dim=256_beta=1/predictions_segmented_model=pku-mmd.data-cv-train"
+#                 ROOT_FOLDER_FOR_RESULTS="/home/drking/Documents/bakalarka/data/pku-test/Cosine"
 
 
                 # SELECT JOINTS_IDS:
@@ -278,7 +278,7 @@ function createCompositeMWClusteringMessif() {
                     # for JOINT_IDS in '3,4,7,8,22,23'; do
 
                 DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVector${FUNC}"
-#				DISTANCE_FUNCTION="mcdr.sequence.impl.SequenceMocapPoseCoordsL2DTW"
+#				DISTANCE_FUNCTION="mcdr.objects.impl.ObjectSegmentCodeList"
                 formatResultFolderName
 
                 mkdir -p "${RESULT_FOLDER_NAME}"
@@ -286,9 +286,10 @@ function createCompositeMWClusteringMessif() {
                 COMMAND="\
 ${JDK_PATH} \
 -jar ${MEDOIDS_JAR_PATH} \
-1 \
--pcuseall \
+0 \
 -sf ${DATASET_PATH} \
+-pcuseall \
+-kmeans-max-iters 10 \
 -cls ${DISTANCE_FUNCTION} \
 -pc ${ALGORITHM} \
 -np ${K} \
@@ -310,7 +311,7 @@ ${JDK_PATH} \
 #     createCompositeMWClusteringELKI
 #     sleep 10
 # done
-#
+
 # for K in 350; do
 #     ALGORITHM_PARAMS="-kmeans.k ${K}"
 #     createCompositeMWClusteringELKI

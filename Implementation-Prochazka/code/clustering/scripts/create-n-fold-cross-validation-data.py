@@ -75,7 +75,7 @@ def create_data_files_pku(actions_file: str, data_file: str) -> None:
 
     fold_data = create_category_action_mapping(data_file, actions_to_keep)
 
-    write_output_to_file(f"{data_file}-cv-test", fold_data)
+    write_output_to_file(f"{data_file}-cs-train", fold_data)
 
 
 # create_data_files(
@@ -90,6 +90,6 @@ def create_data_files_pku(actions_file: str, data_file: str) -> None:
 # )
 
 create_data_files_pku(
-    "/home/drking/Documents/bakalarka/data/pku-mmd/splits/CV_test_objects_messif-lines.txt",
-    "/home/drking/Documents/bakalarka/data/pku-test/lat_dim=256_beta=1/predictions_segmented_model=pku-mmd.data",
+    "/home/drking/Documents/bakalarka/data/pku-mmd/splits/CS_train_objects_messif-lines.txt",
+    "/home/drking/Documents/bakalarka/data/pku-mmd/actions_singlesubject-segment24_shift4.8_initialshift0-coords_normPOS-fps10.data",
 )

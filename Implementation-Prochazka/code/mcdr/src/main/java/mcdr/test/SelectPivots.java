@@ -332,11 +332,11 @@ public class SelectPivots {
             long startTime = System.currentTimeMillis();
             StatisticCounter.getStatistics("DistanceComputations").reset();
             Class<AbstractPivotChooser> chooserClass = Convert.getClassForName(pivotChooserString, AbstractPivotChooser.class);
-            // Instantiate the chooser...
+            System.out.println("Using pivot chooser: " + chooserClass.toString());
             try {
                 if (useAllSampleInChooser && KMeansPivotChooser.class.isAssignableFrom(chooserClass))
                     KMeansPivotChooser.PIVOTS_SAMPLE_SIZE = sampleObjects.size();
-                
+
                 if (initialPivots != null)
                     chooser = chooserClass.getConstructor(AbstractObjectList.class).newInstance(initialPivots);
                 else if (clusterDiameter > 0f)

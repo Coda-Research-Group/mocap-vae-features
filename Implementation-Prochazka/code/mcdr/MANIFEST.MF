@@ -1,4 +1,3 @@
 Manifest-Version: 1.0
-Main-Class: mcdr.test.SelectPivots
-Created-By: 21.0.6 (Red Hat, Inc.)
+Main-Class: mcdr.test.DescriptorTester
 

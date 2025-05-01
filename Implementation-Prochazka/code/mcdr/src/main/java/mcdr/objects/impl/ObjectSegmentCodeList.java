@@ -57,7 +57,7 @@ public class ObjectSegmentCodeList extends LocalAbstractObject implements Binary
     }
 
     //************ Overrided class LocalAbstractObject ************//
-    // Returns cosine distance as in SCL. [-1,1]
+    // Returns cosine distance as in SCL. [0,2]
     @Override
     protected float getDistanceImpl(LocalAbstractObject obj, float distThreshold) {
         float[] objCoords = ((ObjectSegmentCodeList) obj).getQuantizedDimensions();
