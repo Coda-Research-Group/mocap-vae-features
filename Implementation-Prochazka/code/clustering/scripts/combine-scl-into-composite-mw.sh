@@ -1,6 +1,6 @@
 #!/bin/bash
-#PBS -l walltime=12:0:0
-#PBS -l select=1:ncpus=4:mem=16gb:scratch_local=50gb
+#PBS -l walltime=4:0:0
+#PBS -l select=1:ncpus=4:mem=16gb
 
 
 # http://redsymbol.net/articles/unofficial-bash-strict-mode/
@@ -41,9 +41,9 @@ ${JDK_PATH} \
 
 DIMS=("64" "32" "16" "8" "4")
 BETAS=("0.1" "1" "10")
-MODELS=("pku-mmd")
-KS=("50" "100" "150" "200" "250" "300" "350" "400" "500" "600" "750")
-DATAS=("cs" "cv")
+MODELS=("hdm05")
+KS=("50" "100" "150" "200" "250" "300" "350" "400" "500" "600" "750" "1000" "1500" "2000")
+DATAS=("all")
 
 for DIM in "${DIMS[@]}"; do
     for BETA in "${BETAS[@]}"; do
@@ -51,11 +51,11 @@ for DIM in "${DIMS[@]}"; do
             for MODEL in "${MODELS[@]}"; do
                 for DATA in "${DATAS[@]}"; do
 
-                    BODY_PART_MWS_FOLDER="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/${DATA}/lat_dim=${DIM}_beta=${BETA}/MWs-parts/KMeansPivotChooser--kmeans.k_${K}"
+                    BODY_PART_MWS_FOLDER="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/${DATA}/lat_dim=${DIM}_beta=${BETA}/MWs-parts/KMeansPivotChooser--kmeans.k_${K}"
 
                     combineBodyPartsIntoCompositeMW
 
-                    BODY_PART_MWS_FOLDER="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions-norm/pku-mmd/${DATA}/lat_dim=${DIM}_beta=${BETA}/MWs-parts/KMeansPivotChooser--kmeans.k_${K}"
+                    BODY_PART_MWS_FOLDER="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions-norm/hdm05/${DATA}/lat_dim=${DIM}_beta=${BETA}/MWs-parts/KMeansPivotChooser--kmeans.k_${K}"
 
                     combineBodyPartsIntoCompositeMW
 
