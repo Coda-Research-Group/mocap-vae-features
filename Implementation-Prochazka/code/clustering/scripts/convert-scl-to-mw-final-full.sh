@@ -73,7 +73,7 @@ function convert() {
 #	done
 #done
 
-for K in "1000" "2000" "3000" "4000" "5000" "6000" "7000" "8000" "9000" "10000"; do
+for K in "50" "100" "150" "200" "250" "300" "350" "400" "500" "600" "750"; do
 	echo "${PART}"
 
 	DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/${DATA}/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=${PART}.data"
