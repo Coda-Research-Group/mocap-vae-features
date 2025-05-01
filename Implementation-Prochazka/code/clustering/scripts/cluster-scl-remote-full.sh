@@ -224,87 +224,39 @@ function createCompositeMWClusteringELKI() {
 function createCompositeMWClusteringMessif() {
 
     ALGORITHM='messif.pivotselection.KMeansPivotChooser'
-    MEDOIDS_JAR_PATH='/home/xprocha6/thesis/jars/medoids.jar'
-
-    for FOLD in '0' '1'; do # HDM05-130 folds
-        # for FOLD in '0,1,2,3,4,5,6,7,8' '0,1,2,3,4,5,6,7,9' '0,1,2,3,4,5,6,8,9' '0,1,2,3,4,5,7,8,9' '0,1,2,3,4,6,7,8,9' '0,1,2,3,5,6,7,8,9' '0,1,2,4,5,6,7,8,9' '0,1,3,4,5,6,7,8,9' '0,2,3,4,5,6,7,8,9' '1,2,3,4,5,6,7,8,9'; do # HDM05-65 folds
-
-        for K in '250' '300'; do
-
-            for SPLIT in '0' '1' '2' '3' '4'; do
-
-                ALGORITHM_PARAMS="-kmeans.k ${K}"
+    MEDOIDS_JAR_PATH='/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/medoids_new.jar'
+    EXTRACTED_MEDOIDS_FILE='medoids.txt'
 
 
-                # SELECT DATASET_PATH AND ROOT_FOLDER_FOR_RESULTS:
+    ALGORITHM_PARAMS="-kmeans.k ${CURRENT_K}"
 
-                # HDM05-130 - 2-fold cross validation - folds: '0' '1'
-                DATASET_PATH="/home/xprocha6/cybela1-storage/folds-cluster/hdm05/130/class130-actions-segment80_shift16-coords_normPOS-fps12.data-split${SPLIT}-fold${FOLD}"
-                ROOT_FOLDER_FOR_RESULTS="/home/xprocha6/cybela1-storage/folds-cluster-results/hdm05/130/split${SPLIT}-fold${FOLD}"
-
-                # HDM05-65 - 10-fold cross validation - folds: '0,1,2,3,4,5,6,7,8' '0,1,2,3,4,5,6,7,9' '0,1,2,3,4,5,6,8,9' '0,1,2,3,4,5,7,8,9' '0,1,2,3,4,6,7,8,9' '0,1,2,3,5,6,7,8,9' '0,1,2,4,5,6,7,8,9' '0,1,3,4,5,6,7,8,9' '0,2,3,4,5,6,7,8,9' '1,2,3,4,5,6,7,8,9'
-                # DATASET_PATH="/home/xprocha6/cybela1-storage/folds-cluster/hdm05/65/class130-actions-segment80_shift16-coords_normPOS-fps12.data-cho2014-split${SPLIT}-fold${FOLD}"
-                # ROOT_FOLDER_FOR_RESULTS="/home/xprocha6/cybela1-storage/folds-cluster-results/hdm05/65/split${SPLIT}-fold${FOLD}"
-
-                # PKU-MMD CS - no folds or splits
-                # DATASET_PATH='/home/xprocha6/cybela1-storage/folds-cluster/pku/actions_singlesubject-segment24_shift4.8_initialshift0-coords_normPOS-fps10.data-cs-train'
-                # ROOT_FOLDER_FOR_RESULTS='/home/xprocha6/cybela1-storage/folds-cluster-results/pku/cs'
-
-                # PKU-MMD CV - no folds or splits
-                # DATASET_PATH='/home/xprocha6/cybela1-storage/folds-cluster/pku/actions_singlesubject-segment24_shift4.8_initialshift0-coords_normPOS-fps10.data-cv-train'
-                # ROOT_FOLDER_FOR_RESULTS='/home/xprocha6/cybela1-storage/folds-cluster-results/pku/cv'
+    DATASET_PATH=${CURRENT_DATA}
+    ROOT_FOLDER_FOR_RESULTS=${CURRENT_ROOT}
 
 
-                # SELECT JOINTS_IDS:
+    DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVectorCosine"
 
-                # HDM05 - body parts
-                for JOINT_IDS in '2,3,4,5,6' '7,8,9,10,11' '12,13,14,15,16,17' '18,19,20,21,22,23,24' '25,26,27,28,29,30,31'; do
+    formatResultFolderName
 
-                    # HDM05 - relations consisting of RH (28,29,30,31), LH (21,22,23,24), and HEAD (16,17)
-                    # for JOINT_IDS in '28,29,30,31,21,22,23,24' '16,17,28,29,30,31' '16,17,21,22,23,24'; do
-                    #  1. RH + LH
-                    # for JOINT_IDS in '28,29,30,31,21,22,23,24'; do
-                    #  2. HEAD + RH
-                    # for JOINT_IDS in '16,17,28,29,30,31'; do
-                    #  3. HEAD + LH
-                    # for JOINT_IDS in '16,17,21,22,23,24'; do
+    mkdir -p "${RESULT_FOLDER_NAME}"
 
-                    # PKU-MMD - body parts
-                    # for JOINT_IDS in '2,3,4,21' '5,6,7,8,22,23' '9,10,11,12,24,25' '13,14,15,16' '17,18,19,20'; do
-
-                    # PKU-MMD - relations consisting of RH (11,12,24,25), LH (7,8,22,23), and HEAD (3,4)
-                    #  1. RH + LH
-                    # for JOINT_IDS in '11,12,24,25,7,8,22,23'; do
-                    #  2. HEAD + RH
-                    # for JOINT_IDS in '3,4,11,12,24,25'; do
-                    #  3. HEAD + LH
-                    # for JOINT_IDS in '3,4,7,8,22,23'; do
-
-                    DISTANCE_FUNCTION='mcdr.sequence.impl.SequenceMocapPoseCoordsL2DTWFiltered'
-                    COMPOSITE_MW_BODYPART_SUBFOLDER="${JOINT_IDS}"
-
-                    formatResultFolderName
-
-                    mkdir -p "${RESULT_FOLDER_NAME}"
-
-                    COMMAND="\
+    COMMAND="\
 ${JDK_PATH} \
 -jar ${MEDOIDS_JAR_PATH} \
-${JOINT_IDS} \
+1 \
+-pcuseall \
+-kmeans-max-iters 10 \
 -sf ${DATASET_PATH} \
 -cls ${DISTANCE_FUNCTION} \
 -pc ${ALGORITHM} \
--np ${K} \
+-np ${CURRENT_K} \
 "
-                    echo "${COMMAND}"
+    echo "${COMMAND}"
 
-                    eval "${COMMAND}" >"${RESULT_FOLDER_NAME}/${EXTRACTED_MEDOIDS_FILE}" 2>"${RESULT_FOLDER_NAME}/log.txt"
+    eval "${COMMAND}" >"${RESULT_FOLDER_NAME}/${EXTRACTED_MEDOIDS_FILE}" 2>"${RESULT_FOLDER_NAME}/log.txt"
 
-                done
-            done
-        done
-    done
 }
+
 
 ##########################################
 
@@ -315,12 +267,12 @@ ${JOINT_IDS} \
 #     sleep 10
 # done
 
- for K in 50 100 200 350 500; do
-     ALGORITHM_PARAMS="-kmeans.k ${K}"
-     createCompositeMWClusteringELKI
-     sleep 1
- done
+#  for K in 50 100 200 350 500; do
+#      ALGORITHM_PARAMS="-kmeans.k ${K}"
+#      createCompositeMWClusteringELKI
+#      sleep 1
+#  done
 
 
 # MESSIF clustering:
-#createCompositeMWClusteringMessif
+createCompositeMWClusteringMessif
