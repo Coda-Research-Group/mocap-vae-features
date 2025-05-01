@@ -14,31 +14,29 @@ EXP=${PASSED_EXP}
 
 # for K in "50" "100" "150" "200" "250" "300" "350" "400" "500" "600" "750" "1000" "2000" "3000" "4000" "5000" "6000" "7000" "8000" "9000" "10000"; do
 
-for K in "50" "100" "150" "200" "250" "300" "350" "400" "500" "600" "750" ; do
+for K in "50" "100" "150" "200" "250" "300" "350" "400" "500" "600" "750" "1000" "1500" "2000" ; do
 
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/${EXP}/lat_dim=${DIM}_beta=${BETA}/MWs-full/KMeansPivotChooser--kmeans.k_${K}/pku-mmd.D0K1 \
+-fp /storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/MWs-full-M/KMeansPivotChooser--kmeans.k_${K}/hdm05.D0K1 \
 -k 4 \
--${EXP} \
--dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
+-dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
 "
     echo "${COMMAND}"
-    mkdir -p "/storage/brno12-cerit/home/drking/experiments/results/pku-mmd/${EXP}/lat_dim=${DIM}_beta=${BETA}"
-    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/pku-mmd/${EXP}/lat_dim=${DIM}_beta=${BETA}/results-full-correct.txt"
+    mkdir -p "/storage/brno12-cerit/home/drking/experiments/results/hdm05/all/lat_dim=${DIM}_beta=${BETA}"
+    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/hdm05/all/lat_dim=${DIM}_beta=${BETA}/results-full-correct.txt"
 
 done
 
 # for K in "50" "100" "150" "200" "250" "300" "350" "400" "500" "600" "750" "1000" "2000" "3000" "4000" "5000" "6000" "7000" "8000" "9000" "10000"; do
 
-for K in "50" "100" "150" "200" "250" "300" "350" "400" "500" "600" "750"; do
+for K in "50" "100" "150" "200" "250" "300" "350" "400" "500" "600" "750" "1000" "1500" "2000"; do
 
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/${EXP}/lat_dim=${DIM}_beta=${BETA}/MWs-full/KMeansPivotChooser--kmeans.k_${K}/pku-mmd.D0K1 \
--${EXP} \
--dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
+-fp /storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/MWs-full-M/KMeansPivotChooser--kmeans.k_${K}/hdm05.D0K1 \
+-dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
 "
     echo "${COMMAND}"
-    mkdir -p "/storage/brno12-cerit/home/drking/experiments/results/pku-mmd/${EXP}/lat_dim=${DIM}_beta=${BETA}"
-    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/pku-mmd/${EXP}/lat_dim=${DIM}_beta=${BETA}/results-full-correct.txt"
+    mkdir -p "/storage/brno12-cerit/home/drking/experiments/results/hdm05/all/lat_dim=${DIM}_beta=${BETA}"
+    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/hdm05/all/lat_dim=${DIM}_beta=${BETA}/results-full-correct.txt"
 
 done
