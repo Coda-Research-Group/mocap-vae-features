@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -l walltime=48:0:0
+#PBS -l walltime=24:0:0
 #PBS -l select=1:ncpus=4:mem=16gb
 #PBS -o /dev/null
 #PBS -e /dev/null
@@ -9,7 +9,6 @@ set -euo pipefail
 IFS=$'\n\t'
 
 K=${PASSED_K}
-ITER=${PASSED_ITER}
 
 ##########################################
 
@@ -233,7 +232,7 @@ function createCompositeMWClusteringMessif() {
     for FOLD in '0'; do # HDM05-130 folds
         # for FOLD in '0,1,2,3,4,5,6,7,8' '0,1,2,3,4,5,6,7,9' '0,1,2,3,4,5,6,8,9' '0,1,2,3,4,5,7,8,9' '0,1,2,3,4,6,7,8,9' '0,1,2,3,5,6,7,8,9' '0,1,2,4,5,6,7,8,9' '0,1,3,4,5,6,7,8,9' '0,2,3,4,5,6,7,8,9' '1,2,3,4,5,6,7,8,9'; do # HDM05-65 folds
 
-        for EXP in 'cs'; do
+        for EXP in 'cs' 'cv'; do
 
             for FUNC in ''; do
 
@@ -241,7 +240,7 @@ function createCompositeMWClusteringMessif() {
 
                 # PKU-MMD CV - no folds or splits
                 DATASET_PATH="/storage/brno12-cerit/home/drking/data/pku-mmd/actions_singlesubject-segment24_shift4.8_initialshift0-coords_normPOS-fps10.data-${EXP}-train"
-                ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/baseline-skeleton/pku-mmd/${EXP}/${ITER}"
+                ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/baseline-skeleton/pku-mmd/${EXP}/"
 
 
 #                DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVector${FUNC}"
@@ -255,7 +254,7 @@ ${JDK_PATH} \
 -jar ${MEDOIDS_JAR_PATH} \
 1 \
 -pcuseall \
--kmeans-max-iters 10 \
+-kmeans-max-iters 15 \
 -sf ${DATASET_PATH} \
 -cls ${DISTANCE_FUNCTION} \
 -pc ${ALGORITHM} \

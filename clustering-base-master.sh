@@ -33,21 +33,21 @@ PARTS_SCRIPT_PATH="/storage/brno12-cerit/home/drking/experiments/mocap-vae-featu
 PARTS_SCRIPT_PATH2="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/scripts/cluster-origin-hdm.sh"
 
 for K in "100" "200" "350" "500" "750" "1000" "1500" "3000" ; do
-
+    for ITER in "1" "2" "3" "4" "5"; do
         JOB_NAME="clustering_${K}_base"
 
         echo "Submitting job for body part ${K}"
 
         qsub \
-            -N "${JOB_NAME}-pku" \
-            -v "PASSED_K=${K}" \
+            -N "${JOB_NAME}-pku-cs" \
+            -v "PASSED_K=${K},PASSED_ITER=${ITER}" \
             "${PARTS_SCRIPT_PATH}"
 
         qsub \
-            -N "${JOB_NAME}-hdm" \
-            -v "PASSED_K=${K}" \
+            -N "${JOB_NAME}-pku-cv" \
+            -v "PASSED_K=${K},PASSED_ITER=${ITER}" \
             "${PARTS_SCRIPT_PATH2}"
-
+    done
 done
 
 
