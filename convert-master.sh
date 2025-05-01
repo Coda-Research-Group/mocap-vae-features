@@ -18,43 +18,43 @@ MODELS=("pku-mmd")
 KS=("50" "100" "150" "200" "250" "300" "350" "400" "500" "600" "750")
 DATAS=("cs" "cv")
 
-# for DIM in "${DIMS[@]}"; do
-#     for BETA in "${BETAS[@]}"; do
-#         for MODEL in "${MODELS[@]}"; do
-#             for DATA in "${DATAS[@]}"; do
-#                 JOB_NAME="converting_${DIM}_${BETA}_${MODEL}_${DATA}_full"
-
-#                 qsub \
-#                     -N "${JOB_NAME}" \
-#                     -v "PASSED_DATA=${DATA},PASSED_DIM=${DIM},PASSED_BETA=${BETA},PASSED_MODEL=${MODEL}" \
-#                     "${PARTS_SCRIPT_PATH_FULL}"
-#             done
-#         done
-#     done
-# done
-
-DIMS=("64" "32" "16" "8" "4")
-MODELS=("pku-mmd-legR" "pku-mmd-legL" "pku-mmd-torso" "pku-mmd-handL" "pku-mmd-handR")
-
 for DIM in "${DIMS[@]}"; do
     for BETA in "${BETAS[@]}"; do
         for MODEL in "${MODELS[@]}"; do
             for DATA in "${DATAS[@]}"; do
-                JOB_NAME="converting_${DIM}_${BETA}_${MODEL}_${DATA}"
+                JOB_NAME="converting_${DIM}_${BETA}_${MODEL}_${DATA}_full"
 
                 qsub \
                     -N "${JOB_NAME}" \
                     -v "PASSED_DATA=${DATA},PASSED_DIM=${DIM},PASSED_BETA=${BETA},PASSED_MODEL=${MODEL}" \
-                    "${PARTS_SCRIPT_PATH}"
-                
-                JOB_NAME="converting_${DIM}_${BETA}_${MODEL}_${DATA}_norm"
-
-                qsub \
-                    -N "${JOB_NAME}" \
-                    -v "PASSED_DATA=${DATA},PASSED_DIM=${DIM},PASSED_BETA=${BETA},PASSED_MODEL=${MODEL}" \
-                    "${PARTS_SCRIPT_PATH_NORM}"
+                    "${PARTS_SCRIPT_PATH_FULL}"
             done
         done
     done
 done
+
+DIMS=("64" "32" "16" "8" "4")
+MODELS=("pku-mmd-legR" "pku-mmd-legL" "pku-mmd-torso" "pku-mmd-handL" "pku-mmd-handR")
+
+# for DIM in "${DIMS[@]}"; do
+#     for BETA in "${BETAS[@]}"; do
+#         for MODEL in "${MODELS[@]}"; do
+#             for DATA in "${DATAS[@]}"; do
+#                 JOB_NAME="converting_${DIM}_${BETA}_${MODEL}_${DATA}"
+
+#                 qsub \
+#                     -N "${JOB_NAME}" \
+#                     -v "PASSED_DATA=${DATA},PASSED_DIM=${DIM},PASSED_BETA=${BETA},PASSED_MODEL=${MODEL}" \
+#                     "${PARTS_SCRIPT_PATH}"
+                
+#                 JOB_NAME="converting_${DIM}_${BETA}_${MODEL}_${DATA}_norm"
+
+#                 qsub \
+#                     -N "${JOB_NAME}" \
+#                     -v "PASSED_DATA=${DATA},PASSED_DIM=${DIM},PASSED_BETA=${BETA},PASSED_MODEL=${MODEL}" \
+#                     "${PARTS_SCRIPT_PATH_NORM}"
+#             done
+#         done
+#     done
+# done
 
