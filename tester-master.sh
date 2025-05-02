@@ -34,7 +34,7 @@ WORKER_SCRIPT_PATH_SCL="/storage/brno12-cerit/home/drking/experiments/mocap-vae-
 #     done
 # done
 
-for EXP in "cs"; do
+for EXP in "cs" "cv"; do
     for DIM in "256" "128" "64" "32" "16" "8" ; do
         for BETA in "0.1" "1" "10"; do
 
