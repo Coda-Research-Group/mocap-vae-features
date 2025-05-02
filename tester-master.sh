@@ -34,16 +34,16 @@ WORKER_SCRIPT_PATH_SCL="/storage/brno12-cerit/home/drking/experiments/mocap-vae-
 #     done
 # done
 
-for EXP in "cs" "cv"; do
+for EXP in "cs" ; do
     for DIM in "256" "128" "64" "32" "16" "8" ; do
         for BETA in "0.1" "1" "10"; do
 
-            JOB_NAME="evaluation_${EXP}_${DIM}_${BETA}_full"
+            JOB_NAME="evaluation_${EXP}_${DIM}_${BETA}_scl"
             echo "Submitting job for EXP=${EXP}, DIM=${DIM}, BETA=${BETA}"
             qsub \
                 -N "${JOB_NAME}" \
                 -v "PASSED_EXP=${EXP},PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
-                "${WORKER_SCRIPT_PATH}"
+                "${WORKER_SCRIPT_PATH_SCL}"
 
         done
     done
