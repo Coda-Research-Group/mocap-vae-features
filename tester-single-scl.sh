@@ -37,48 +37,48 @@ echo "${COMMAND}"
 mkdir -p "/storage/brno12-cerit/home/drking/experiments/results/hdm05/all/lat_dim=${DIM}_beta=${BETA}"
 eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/hdm05/all/lat_dim=${DIM}_beta=${BETA}/scl.txt"
 
-# ----------------------------------------------------------------------------------------
+# # ----------------------------------------------------------------------------------------
 
-COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/experiments/SCL-actions-norm/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}/predictions_model_norm=pku-mmd.data \
--cv \
--k 4 \
---scl \
--dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
-"
-echo "${COMMAND}"
-mkdir -p "/storage/brno12-cerit/home/drking/experiments/results/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}"
-eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}/scl.txt"
+# COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
+# -fp /storage/brno12-cerit/home/drking/experiments/SCL-actions-norm/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}/predictions_model_norm=pku-mmd.data \
+# -cv \
+# -k 4 \
+# --scl \
+# -dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
+# "
+# echo "${COMMAND}"
+# mkdir -p "/storage/brno12-cerit/home/drking/experiments/results/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}"
+# eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}/scl.txt"
 
-COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/experiments/SCL-actions-norm/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}/predictions_model_norm=pku-mmd.data \
--cv \
---scl \
--dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
-"
-echo "${COMMAND}"
-mkdir -p "/storage/brno12-cerit/home/drking/experiments/results/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}"
-eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}/scl.txt"
+# COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
+# -fp /storage/brno12-cerit/home/drking/experiments/SCL-actions-norm/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}/predictions_model_norm=pku-mmd.data \
+# -cv \
+# --scl \
+# -dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
+# "
+# echo "${COMMAND}"
+# mkdir -p "/storage/brno12-cerit/home/drking/experiments/results/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}"
+# eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}/scl.txt"
 
-# ----------------------------------------------------------------------------------------
+# # ----------------------------------------------------------------------------------------
 
-COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/experiments/SCL-actions-norm/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/predictions_model_norm=pku-mmd.data \
--cs \
--k 4 \
---scl \
--dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
-"
-echo "${COMMAND}"
-mkdir -p "/storage/brno12-cerit/home/drking/experiments/results/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}"
-eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/scl.txt"
+# COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
+# -fp /storage/brno12-cerit/home/drking/experiments/SCL-actions-norm/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/predictions_model_norm=pku-mmd.data \
+# -cs \
+# -k 4 \
+# --scl \
+# -dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
+# "
+# echo "${COMMAND}"
+# mkdir -p "/storage/brno12-cerit/home/drking/experiments/results/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}"
+# eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/scl.txt"
 
-COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/experiments/SCL-actions-norm/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/predictions_model_norm=pku-mmd.data \
--cs \
---scl \
--dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
-"
-echo "${COMMAND}"
-mkdir -p "/storage/brno12-cerit/home/drking/experiments/results/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}"
-eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/scl.txt"
+# COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
+# -fp /storage/brno12-cerit/home/drking/experiments/SCL-actions-norm/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/predictions_model_norm=pku-mmd.data \
+# -cs \
+# --scl \
+# -dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
+# "
+# echo "${COMMAND}"
+# mkdir -p "/storage/brno12-cerit/home/drking/experiments/results/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}"
+# eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/scl.txt"
