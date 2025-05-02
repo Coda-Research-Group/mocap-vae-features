@@ -58,7 +58,7 @@ for DIM in "${DIMS[@]}"; do
             for MODEL in "${MODELS[@]}"; do
                 # for DATA in "${DATAS[@]}"; do
 
-                    BODY_PART_MWS_FOLDER="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/MWs-parts-MO/KMeansPivotChooser--kmeans.k_${K}"
+                    BODY_PART_MWS_FOLDER="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/MWs-full-MO/KMeansPivotChooser--kmeans.k_${K}"
 
                     combineBodyPartsIntoCompositeMW
 
@@ -74,7 +74,7 @@ for DIM in "${DIMS[@]}"; do
             for MODEL in "${MODELS[@]}"; do
                 for DATA in "${DATAS[@]}"; do
 
-                    BODY_PART_MWS_FOLDER="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/${DATA}/lat_dim=${DIM}_beta=${BETA}/MWs-parts-MO/KMeansPivotChooser--kmeans.k_${K}"
+                    BODY_PART_MWS_FOLDER="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/${DATA}/lat_dim=${DIM}_beta=${BETA}/MWs-full-MO/KMeansPivotChooser--kmeans.k_${K}"
 
                     combineBodyPartsIntoCompositeMW
 
