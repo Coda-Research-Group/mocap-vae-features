@@ -45,17 +45,36 @@ MODELS=("hdm05")
 KS=("50" "100" "150" "200" "250" "300" "350" "400" "500" "600" "750" "1000" "1500" "2000")
 DATAS=("all")
 
+DIMS=("256" "128" "64" "32" "16" "8")
+BETAS=("0.1" "1" "10")
+MODELS=("1" "2" "3" "4" "5")
+# KS=("1000" "2000" "3000" "4000" "5000" "6000" "7000" "8000" "9000" "10000")
+KS=("350" "1000")
+DATAS=("cs" "cv")
+
+for DIM in "${DIMS[@]}"; do
+    for BETA in "${BETAS[@]}"; do
+        for K in "${KS[@]}"; do
+            for MODEL in "${MODELS[@]}"; do
+                # for DATA in "${DATAS[@]}"; do
+
+                    BODY_PART_MWS_FOLDER="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/MWs-parts-MO/KMeansPivotChooser--kmeans.k_${K}"
+
+                    combineBodyPartsIntoCompositeMW
+
+                # done
+            done
+        done
+    done
+done
+
 for DIM in "${DIMS[@]}"; do
     for BETA in "${BETAS[@]}"; do
         for K in "${KS[@]}"; do
             for MODEL in "${MODELS[@]}"; do
                 for DATA in "${DATAS[@]}"; do
 
-                    BODY_PART_MWS_FOLDER="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/${DATA}/lat_dim=${DIM}_beta=${BETA}/MWs-parts-M/KMeansPivotChooser--kmeans.k_${K}"
-
-                    combineBodyPartsIntoCompositeMW
-
-                    BODY_PART_MWS_FOLDER="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions-norm/hdm05/${DATA}/lat_dim=${DIM}_beta=${BETA}/MWs-parts-M/KMeansPivotChooser--kmeans.k_${K}"
+                    BODY_PART_MWS_FOLDER="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/${DATA}/lat_dim=${DIM}_beta=${BETA}/MWs-parts-MO/KMeansPivotChooser--kmeans.k_${K}"
 
                     combineBodyPartsIntoCompositeMW
 
