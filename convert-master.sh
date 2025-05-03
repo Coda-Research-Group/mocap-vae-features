@@ -12,6 +12,7 @@ echo "Starting unzip process..."
 PARTS_SCRIPT_PATH="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/scripts/convert-scl-to-mw-final.sh"
 PARTS_SCRIPT_PATH_FULL="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/scripts/convert-scl-to-mw-final-full.sh"
 PARTS_SCRIPT_PATH_NORM="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/scripts/convert-scl-to-mw-final-norm.sh"
+PARTS_SCRIPT_PATH_O="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/scripts/convert-base-to-mw.sh"
 # DIMS=("256" "128" "64" "32" "16" "8")
 # BETAS=("0.1" "1" "10")
 # MODELS=("hdm05")
@@ -22,24 +23,25 @@ DIMS=("256" "128" "64" "32" "16" "8")
 BETAS=("0.1" "1" "10")
 MODELS=("1" "2" "3" "4" "5")
 # KS=("1000" "2000" "3000" "4000" "5000" "6000" "7000" "8000" "9000" "10000")
-KS=("50" "100" "200" "500" "650")
+KS=("500" "750" "1000")
 DATAS=("k")
 
 
-for DIM in "${DIMS[@]}"; do
-    for BETA in "${BETAS[@]}"; do
+# for DIM in "${DIMS[@]}"; do
+    # for BETA in "${BETAS[@]}"; do
         for MODEL in "${MODELS[@]}"; do
-            for DATA in "${DATAS[@]}"; do
-                JOB_NAME="converting_${DIM}_${BETA}_${MODEL}_${DATA}_full"
+            for K in "${KS[@]}"; do
+            for EXP in "cs" "cv"; dp
 
                 qsub \
                     -N "${JOB_NAME}" \
-                    -v "PASSED_DATA=${DATA},PASSED_DIM=${DIM},PASSED_BETA=${BETA},PASSED_MODEL=${MODEL}" \
-                    "${PARTS_SCRIPT_PATH_FULL}"
+                    -v "PASSED_EXP=${EXP},PASSED_MODEL=${MODEL},PASSED_K=${K}" \
+                    "${PARTS_SCRIPT_PATH_O}"
+            done
             done
         done
-    done
-done
+    # done
+# done
 
 # DIMS=("64" "32" "16" "8" "4")
 # MODELS=("hdm05-legR" "hdm05-legL" "hdm05-torso" "hdm05-handL" "hdm05-handR")
