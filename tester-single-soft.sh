@@ -18,7 +18,7 @@ for SOFTASSIGNPARAM in "D0.5K5" "D0.1K5" "D0.05K5"; do
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
 -fp /storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/MWs-soft/hdm05.${SOFTASSIGNPARAM} \
 -k 4 \
---soft
+--soft \
 -dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
 "
     echo "${COMMAND}"
@@ -28,7 +28,7 @@ for SOFTASSIGNPARAM in "D0.5K5" "D0.1K5" "D0.05K5"; do
 
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
 -fp /storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/MWs-soft/hdm05.${SOFTASSIGNPARAM} \
---soft
+--soft \
 -dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
 "
     echo "${COMMAND}"
@@ -43,8 +43,8 @@ for SOFTASSIGNPARAM in "D0.5K5" "D0.1K5" "D0.05K5"; do
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
 -fp /storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}/MWs-soft/pku-mmd.${SOFTASSIGNPARAM} \
 -k 4 \
---soft
--cv
+--soft \
+-cv \
 -dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
 "
     echo "${COMMAND}"
@@ -54,8 +54,8 @@ for SOFTASSIGNPARAM in "D0.5K5" "D0.1K5" "D0.05K5"; do
 
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
 -fp /storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}/MWs-soft/pku-mmd.${SOFTASSIGNPARAM} \
---soft
--cv
+--soft \
+-cv \
 -dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
 "
     echo "${COMMAND}"
@@ -71,8 +71,8 @@ for SOFTASSIGNPARAM in "D0.5K5" "D0.1K5" "D0.05K5"; do
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
 -fp /storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/MWs-soft/pku-mmd.${SOFTASSIGNPARAM} \
 -k 4 \
---soft
--cs
+--soft \
+-cs \
 -dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
 "
     echo "${COMMAND}"
@@ -82,8 +82,8 @@ for SOFTASSIGNPARAM in "D0.5K5" "D0.1K5" "D0.05K5"; do
 
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
 -fp /storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/MWs-soft/pku-mmd.${SOFTASSIGNPARAM} \
---soft
--cs
+--soft \
+-cs \
 -dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
 "
     echo "${COMMAND}"
