@@ -18,7 +18,7 @@ DATA=${PASSED_DATA}
 
 
 CLS_OBJ="messif.objects.impl.ObjectFloatVectorCosine"
-SOFTASSIGNPARAM="D0K1"   # optional (default is D0K1)
+SOFTASSIGNPARAM="D0K1"
 TOSEQ="--tosequence"   # set if you need to convert the input file of segments to motion words _and_ merge the segments back to sequences/actions
 MEMORY="8g"
 JDK_PATH="/storage/brno12-cerit/home/drking/jdk-21.0.7/bin/java"
@@ -87,7 +87,7 @@ function convert() {
 # done
 
 #HDM
-for K in "350" "1000"; do
+for K in "50" "100" "200" "500" "650"; do
 	echo "${PART}"
 
 	    DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=hdm05.data"
@@ -99,7 +99,7 @@ for K in "350" "1000"; do
 
 done
 #CV
-for K in "350" "1000"; do
+for K in "50" "100" "200" "500" "650"; do
 	echo "${PART}"
 
 	    DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=pku-mmd.data"
@@ -112,7 +112,7 @@ for K in "350" "1000"; do
 done
 
 #CS
-for K in "350" "1000"; do
+for K in "50" "100" "200" "500" "650"; do
 	echo "${PART}"
 
 	    DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=pku-mmd.data"
@@ -123,5 +123,32 @@ for K in "350" "1000"; do
 	convert
 
 done
+
+# #=======  SOFT ASSIGNMENT  =========
+# SOFTASSIGNPARAM="D0K1"
+# DIM="256"
+# BETA="1"
+# PART="hdm05"
+# DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=pku-mmd.data"
+# OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/MWs-full-MO/KMeansPivotChooser--kmeans.k_${K}"
+# CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/clusters-${PART}/KMeansPivotChooser--kmeans.k_${K}"
+
+# [ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
+# convert
+# #----------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 echo "Job finished successfully!"
