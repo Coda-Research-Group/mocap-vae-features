@@ -31,10 +31,9 @@ DATAS=("k")
     # for BETA in "${BETAS[@]}"; do
         for MODEL in "${MODELS[@]}"; do
             for K in "${KS[@]}"; do
-            for EXP in "cs" "cv"; dp
+            for EXP in "cs" "cv"; do
 
                 qsub \
-                    -N "${JOB_NAME}" \
                     -v "PASSED_EXP=${EXP},PASSED_MODEL=${MODEL},PASSED_K=${K}" \
                     "${PARTS_SCRIPT_PATH_O}"
             done
