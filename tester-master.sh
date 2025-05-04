@@ -81,11 +81,26 @@ WORKER_SCRIPT_PATH_BASE="/storage/brno12-cerit/home/drking/experiments/mocap-vae
     # done
 # done
 
-for SET in "all" "cv" "cs" "alln" "cvn" "csn" ; do
-    JOB_NAME="evaluation_base_${SET}"
+# for SET in "all" "cv" "cs" "alln" "cvn" "csn" ; do
+#     JOB_NAME="evaluation_base_${SET}"
+
+#     qsub \
+#         -N "${JOB_NAME}" \
+#         -v "PASSED_SET=${SET}" \
+#         "${WORKER_SCRIPT_PATH_BASE}"
+# done
+
 
     qsub \
         -N "${JOB_NAME}" \
-        -v "PASSED_SET=${SET}" \
-        "${WORKER_SCRIPT_PATH_BASE}"
+        "${WORKER_SCRIPT_PATH_MO}"
+
+
+for EXP in "cs" "cv"; do
+    qsub \
+        -N "${JOB_NAME}" \
+        -v "PASSED_EXP=${SET}" \
+        "${WORKER_SCRIPT_PATH_MO_PKU}"
+
+
 done
