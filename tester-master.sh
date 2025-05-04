@@ -87,5 +87,5 @@ for SET in "all" "cv" "cs" "alln" "cvn" "csn" ; do
     qsub \
         -N "${JOB_NAME}" \
         -v "PASSED_SET=${SET}" \
-        "${WORKER_SCRIPT_PATH_MO_PKU}"
-
+        "${WORKER_SCRIPT_PATH_BASE}"
+done

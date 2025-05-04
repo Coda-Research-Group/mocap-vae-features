@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -l walltime=48:0:0
-#PBS -l select=1:ncpus=4:mem=8gb
+#PBS -l select=1:ncpus=4:mem=16gb
 #PBS -o /dev/null
 #PBS -e /dev/null
 
@@ -29,7 +29,7 @@ SET=${PASSED_SET}
 
 if [[ "${SET}" == "all" ]]; then
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/data/hdm05/class130-actions-segment80_shift16-coords_normPOS-fps12.data \
+-fp /storage/brno12-cerit/home/drking/data/hdm05/class130-actions-coords_normPOS-fps12.data \
 --base \
 -k 4 \
 -dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
@@ -40,7 +40,7 @@ if [[ "${SET}" == "all" ]]; then
 fi                    
 if [[ "${SET}" == "cv" ]]; then
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/data/pku-mmd/actions_singlesubject-segment24_shift4.8_initialshift0-coords_normPOS-fps10.data \
+-fp /storage/brno12-cerit/home/drking/data/pku-mmd/actions-single-subject-all-POS-fps10.data \
 --base \
 -cv \
 -k 4 \
@@ -52,7 +52,7 @@ if [[ "${SET}" == "cv" ]]; then
 fi
 if [[ "${SET}" == "cs" ]]; then
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/data/pku-mmd/actions_singlesubject-segment24_shift4.8_initialshift0-coords_normPOS-fps10.data \
+-fp /storage/brno12-cerit/home/drking/data/pku-mmd/actions-single-subject-all-POS-fps10.data \
 --base \
 -cs \
 -k 4 \
@@ -65,7 +65,7 @@ fi
 #---------------------------------------------------------------------------------------------------------------
 if [[ "${SET}" == "alln" ]]; then
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/data/hdm05/class130-actions-segment80_shift16-coords_normPOS-fps12.data \
+-fp /storage/brno12-cerit/home/drking/data/hdm05/class130-actions-coords_normPOS-fps12.data \
 --base \
 -dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
 "
@@ -75,7 +75,7 @@ if [[ "${SET}" == "alln" ]]; then
 fi                    
 if [[ "${SET}" == "cvn" ]]; then
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/data/pku-mmd/actions_singlesubject-segment24_shift4.8_initialshift0-coords_normPOS-fps10.data \
+-fp /storage/brno12-cerit/home/drking/data/pku-mmd/actions-single-subject-all-POS-fps10.data \
 --base \
 -cv \
 -dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
@@ -86,7 +86,7 @@ if [[ "${SET}" == "cvn" ]]; then
 fi
 if [[ "${SET}" == "csn" ]]; then
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/data/pku-mmd/actions_singlesubject-segment24_shift4.8_initialshift0-coords_normPOS-fps10.data \
+-fp /storage/brno12-cerit/home/drking/data/pku-mmd/actions-single-subject-all-POS-fps10.data \
 --base \
 -cs \
 -dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
