@@ -49,38 +49,39 @@ DIMS=("256" "128" "64" "32" "16" "8")
 BETAS=("0.1" "1" "10")
 MODELS=("1" "2" "3" "4" "5")
 # KS=("1000" "2000" "3000" "4000" "5000" "6000" "7000" "8000" "9000" "10000")
-KS=("350" "1000")
+KS=("100" "200" "350" "500" "750" "1000" "1500" "3000")
 DATAS=("cs" "cv")
 
-for DIM in "${DIMS[@]}"; do
-    for BETA in "${BETAS[@]}"; do
+# for DIM in "${DIMS[@]}"; do
+#     for BETA in "${BETAS[@]}"; do
         for K in "${KS[@]}"; do
-            for MODEL in "${MODELS[@]}"; do
+            # for MODEL in "${MODELS[@]}"; do
                 # for DATA in "${DATAS[@]}"; do
-
-                    BODY_PART_MWS_FOLDER="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/MWs-full-MO/KMeansPivotChooser--kmeans.k_${K}"
+	                
+                    BODY_PART_MWS_FOLDER="/storage/brno12-cerit/home/drking/experiments/baseline-skeleton/hdm05/all/composites/KMeansPivotChooser--kmeans.k_${K}"
 
                     combineBodyPartsIntoCompositeMW
 
                 # done
             done
-        done
-    done
-done
+        # done
+#     done
+# done
+KS=( "500" "750" "1000")
 
-for DIM in "${DIMS[@]}"; do
-    for BETA in "${BETAS[@]}"; do
+# for DIM in "${DIMS[@]}"; do
+    # for BETA in "${BETAS[@]}"; do
         for K in "${KS[@]}"; do
-            for MODEL in "${MODELS[@]}"; do
+            # for MODEL in "${MODELS[@]}"; do
                 for DATA in "${DATAS[@]}"; do
 
-                    BODY_PART_MWS_FOLDER="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/${DATA}/lat_dim=${DIM}_beta=${BETA}/MWs-full-MO/KMeansPivotChooser--kmeans.k_${K}"
+                    BODY_PART_MWS_FOLDER="/storage/brno12-cerit/home/drking/experiments/baseline-skeleton/pku-mmd/${DATA}/composites/KMeansPivotChooser--kmeans.k_${K}"
 
                     combineBodyPartsIntoCompositeMW
 
                 done
             done
-        done
-    done
-done
+        # done
+    # done
+# done
         
