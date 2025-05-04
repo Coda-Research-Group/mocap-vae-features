@@ -97,8 +97,19 @@ for K in "100" "200" "350" "500" "750" "1000" "1500" "3000"; do
 
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
 -fp /storage/brno12-cerit/home/drking/experiments/baseline-skeleton/hdm05/all/composites/KMeansPivotChooser--kmeans.k_${K}/1.D0K1 \
---nmatches 2 \
 -k 4 \
+-dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
+"
+    echo "${COMMAND}"
+    mkdir -p "/storage/brno12-cerit/home/drking/experiments/baseline-skeleton/hdm05/all/results"
+    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/baseline-skeleton/hdm05/all/results/results.txt"
+
+done
+
+for K in "100" "200" "350" "500" "750" "1000" "1500" "3000"; do
+
+    COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
+-fp /storage/brno12-cerit/home/drking/experiments/baseline-skeleton/hdm05/all/composites/KMeansPivotChooser--kmeans.k_${K}/1.D0K1 \
 -dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
 "
     echo "${COMMAND}"
