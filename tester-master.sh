@@ -42,21 +42,21 @@ for EXP in "cs" ; do
         for BETA in "0.1" "1" "10"; do
 
             JOB_NAME="evaluation_${EXP}_${DIM}_${BETA}_all"
-            echo "Submitting job for EXP=${EXP}, DIM=${DIM}, BETA=${BETA}"
+            echo "Submitting job for EXP=all, DIM=${DIM}, BETA=${BETA}"
             qsub \
                 -N "${JOB_NAME}" \
                 -v "PASSED_EXP=all,PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
                 "${WORKER_SCRIPT_PATH_MO}"
 
             JOB_NAME="evaluation_${EXP}_${DIM}_${BETA}_cv"
-            echo "Submitting job for EXP=${EXP}, DIM=${DIM}, BETA=${BETA}"
+            echo "Submitting job for EXP=cv, DIM=${DIM}, BETA=${BETA}"
             qsub \
                 -N "${JOB_NAME}" \
                 -v "PASSED_EXP=cv,PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
                 "${WORKER_SCRIPT_PATH_MO_PKU}"
 
             JOB_NAME="evaluation_${EXP}_${DIM}_${BETA}_cs"
-            echo "Submitting job for EXP=${EXP}, DIM=${DIM}, BETA=${BETA}"
+            echo "Submitting job for EXP=cs, DIM=${DIM}, BETA=${BETA}"
             qsub \
                 -N "${JOB_NAME}" \
                 -v "PASSED_EXP=cs,PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
