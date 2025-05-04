@@ -90,9 +90,9 @@ function convert() {
     # for I in "1" "2" "3" "4" "5"; do
 	    # echo "${PART}"
 
-            DATAFILE="/storage/brno12-cerit/home/drking/data/pku-mmd/actions_singlesubject-segment24_shift4.8_initialshift0-coords_normPOS-fps10.data"
-            CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/baseline-skeleton/pku-mmd/${EXP}/${PART}/KMeansPivotChooser--kmeans.k_${K}"
-	        OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/baseline-skeleton/pku-mmd/${EXP}/composites/KMeansPivotChooser--kmeans.k_${K}"
+            DATAFILE="/storage/brno12-cerit/home/drking/data/hdm05/class130-actions-segment80_shift16-coords_normPOS-fps12.data"
+            CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/baseline-skeleton/hdm05/all/${PART}/KMeansPivotChooser--kmeans.k_${K}"
+	        OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/baseline-skeleton/hdm05/all/composites/KMeansPivotChooser--kmeans.k_${K}"
 
         [ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
 	    convert

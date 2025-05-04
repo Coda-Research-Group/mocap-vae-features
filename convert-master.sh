@@ -23,7 +23,7 @@ DIMS=("256" "128" "64" "32" "16" "8")
 BETAS=("0.1" "1" "10")
 MODELS=("1" "2" "3" "4" "5")
 # KS=("1000" "2000" "3000" "4000" "5000" "6000" "7000" "8000" "9000" "10000")
-KS=("500" "750" "1000")
+KS=("100" "200" "350" "500" "750" "1000" "1500" "3000")
 DATAS=("k")
 
 
@@ -31,7 +31,7 @@ DATAS=("k")
     # for BETA in "${BETAS[@]}"; do
         for MODEL in "${MODELS[@]}"; do
             for K in "${KS[@]}"; do
-            for EXP in "cs" "cv"; do
+            for EXP in "all"; do
 
                 qsub \
                     -v "PASSED_EXP=${EXP},PASSED_MODEL=${MODEL},PASSED_K=${K}" \
