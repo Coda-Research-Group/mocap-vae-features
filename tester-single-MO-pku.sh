@@ -15,7 +15,7 @@ EXP=${PASSED_EXP}
 for K in "500" "750" "1000"; do
 
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/experiments/baseline-skeleton/pku-mmd/${EXP}/composites/KMeansPivotChooser--kmeans.k_${K}.composite \
+-fp /storage/brno12-cerit/home/drking/experiments/baseline-skeleton/pku-mmd/${EXP}/composites/KMeansPivotChooser--kmeans.k_${K}/1.D0K1 \
 --nmatches 2 \
 -${EXP} \
 -k 4 \
@@ -23,7 +23,7 @@ for K in "500" "750" "1000"; do
 "
     echo "${COMMAND}"
     mkdir -p "/storage/brno12-cerit/home/drking/experiments/baseline-skeleton/pku-mmd/${EXP}/results"
-    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/baseline-skeleton/pku-mmd/${EXP}/results/results-MO.txt"
+    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/baseline-skeleton/pku-mmd/${EXP}/results/results.txt"
 
 done
 
@@ -32,12 +32,12 @@ done
 for K in  "500" "750" "1000"; do
 
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/experiments/baseline-skeleton/pku-mmd/${EXP}/composites/KMeansPivotChooser--kmeans.k_${K}.composite \
+-fp /storage/brno12-cerit/home/drking/experiments/baseline-skeleton/pku-mmd/${EXP}/composites/KMeansPivotChooser--kmeans.k_${K}/1.D0K1 \
 --nmatches 2 \
 -${EXP} \
 -dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
 "
     echo "${COMMAND}"
-    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/baseline-skeleton/pku-mmd/${EXP}/results/results-MO.txt"
+    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/baseline-skeleton/pku-mmd/${EXP}/results/results.txt"
 
 done
