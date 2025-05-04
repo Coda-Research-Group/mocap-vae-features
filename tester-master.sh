@@ -92,14 +92,12 @@ WORKER_SCRIPT_PATH_BASE="/storage/brno12-cerit/home/drking/experiments/mocap-vae
 
 
     qsub \
-        -N "${JOB_NAME}" \
         "${WORKER_SCRIPT_PATH_MO}"
 
 
 for EXP in "cs" "cv"; do
     qsub \
-        -N "${JOB_NAME}" \
-        -v "PASSED_EXP=${SET}" \
+        -v "PASSED_EXP=${EXP}" \
         "${WORKER_SCRIPT_PATH_MO_PKU}"
 
 
