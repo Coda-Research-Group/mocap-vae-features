@@ -12,8 +12,8 @@ WORKER_SCRIPT_PATH_NORM="/storage/brno12-cerit/home/drking/experiments/mocap-vae
 WORKER_SCRIPT_PATH_FULL="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/tester-single-full.sh"
 WORKER_SCRIPT_PATH_SCL="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/tester-single-scl.sh"
 WORKER_SCRIPT_PATH_MO="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/tester-single-MO.sh"
-WORKER_SCRIPT_PATH_MO_PKU="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/tester-single_MO_pku.sh"
-
+WORKER_SCRIPT_PATH_MO_PKU="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/tester-single-MO-pku.sh"
+WORKER_SCRIPT_PATH_BASE="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/tester-single-base.sh"
 
 # for EXP in "cs"; do
 #     for DIM in "64" "32" "16" "8" "4"; do
@@ -37,34 +37,34 @@ WORKER_SCRIPT_PATH_MO_PKU="/storage/brno12-cerit/home/drking/experiments/mocap-v
 #     done
 # done
 
-for EXP in "cs" ; do
-    for DIM in "256" "128" "64" "32" "16" "8" ; do
-        for BETA in "0.1" "1" "10"; do
+# for EXP in "cs" ; do
+#     for DIM in "256" "128" "64" "32" "16" "8" ; do
+#         for BETA in "0.1" "1" "10"; do
 
-            JOB_NAME="evaluation_${EXP}_${DIM}_${BETA}_all"
-            echo "Submitting job for EXP=all, DIM=${DIM}, BETA=${BETA}"
-            qsub \
-                -N "${JOB_NAME}" \
-                -v "PASSED_EXP=all,PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
-                "${WORKER_SCRIPT_PATH_MO}"
+#             JOB_NAME="evaluation_${EXP}_${DIM}_${BETA}_all"
+#             echo "Submitting job for EXP=all, DIM=${DIM}, BETA=${BETA}"
+#             qsub \
+#                 -N "${JOB_NAME}" \
+#                 -v "PASSED_EXP=all,PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
+#                 "${WORKER_SCRIPT_PATH_MO}"
 
-            JOB_NAME="evaluation_${EXP}_${DIM}_${BETA}_cv"
-            echo "Submitting job for EXP=cv, DIM=${DIM}, BETA=${BETA}"
-            qsub \
-                -N "${JOB_NAME}" \
-                -v "PASSED_EXP=cv,PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
-                "${WORKER_SCRIPT_PATH_MO_PKU}"
+#             JOB_NAME="evaluation_${EXP}_${DIM}_${BETA}_cv"
+#             echo "Submitting job for EXP=cv, DIM=${DIM}, BETA=${BETA}"
+#             qsub \
+#                 -N "${JOB_NAME}" \
+#                 -v "PASSED_EXP=cv,PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
+#                 "${WORKER_SCRIPT_PATH_MO_PKU}"
 
-            JOB_NAME="evaluation_${EXP}_${DIM}_${BETA}_cs"
-            echo "Submitting job for EXP=cs, DIM=${DIM}, BETA=${BETA}"
-            qsub \
-                -N "${JOB_NAME}" \
-                -v "PASSED_EXP=cs,PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
-                "${WORKER_SCRIPT_PATH_MO_PKU}"
+#             JOB_NAME="evaluation_${EXP}_${DIM}_${BETA}_cs"
+#             echo "Submitting job for EXP=cs, DIM=${DIM}, BETA=${BETA}"
+#             qsub \
+#                 -N "${JOB_NAME}" \
+#                 -v "PASSED_EXP=cs,PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
+#                 "${WORKER_SCRIPT_PATH_MO_PKU}"
 
-        done
-    done
-done
+#         done
+#     done
+# done
 
 # for EXP in "hdm05/all" "pku-mmd/cv" "pku-mmd/cs"; do
     # for DIM in "256" "128" "64" "32" "16" "8" ; do
@@ -80,3 +80,12 @@ done
     #     done
     # done
 # done
+
+for SET in "all" "cv" "cs" "alln" "cvn" "csn" ; do
+    JOB_NAME="evaluation_base_${SET}"
+
+    qsub \
+        -N "${JOB_NAME}" \
+        -v "PASSED_SET=${SET}" \
+        "${WORKER_SCRIPT_PATH_MO_PKU}"
+
