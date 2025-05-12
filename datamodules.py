@@ -122,18 +122,23 @@ class MoCapDataModule(pl.LightningDataModule):
 
         grouped = samples.groupby('sequence_id')
 
+        # split setup
         if self.train is None:
             groups = np.array([x for x in grouped.groups])
             self.rng.shuffle(groups)
 
-            n_sequences = len(groups)
-            n_train = round(n_sequences * 0.70)
-            n_valid = round(n_sequences * 0.15)
-            n_test  = n_sequences - n_train - n_valid
+            # n_sequences = len(groups)
+            # n_train = round(n_sequences * 0.70)
+            # n_valid = round(n_sequences * 0.15)
+            # n_test  = n_sequences - n_train - n_valid
             
-            train_groups = groups[:n_train]
-            valid_groups = groups[n_train:n_train + n_valid]
-            test_groups  = groups[-n_test:]
+            # train_groups = groups[:n_train]
+            # valid_groups = groups[n_train:n_train + n_valid]
+            # test_groups  = groups[-n_test:]
+
+            train_groups = groups
+            valid_groups = groups
+            test_groups  = groups
         else:
             with open(self.train, 'r') as train_file:
                 train_groups = list(map(str.rstrip, train_file))

@@ -42,7 +42,7 @@ conda activate "/storage/brno12-cerit/home/drking/.conda/envs/${ENV_NAME}" || {
 # for MODEL in "${MODELS[@]}"; do
 
     python /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/train.py --multirun exp=hdm05/all \
-        latent_dim=512 beta=1 body_model=hdm05 > /dev/null 2>&1
+        latent_dim=256 beta=1 body_model=hdm05 > /dev/null 2>&1
 
 # done
 
