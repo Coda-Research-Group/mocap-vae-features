@@ -4,37 +4,9 @@ import time
 import sys
 import os
 import random
+import numpy as np
+from scipy.spatial.distance import pdist
 
-# Check for NumPy installation
-try:
-    import numpy as np
-except ImportError:
-    print("Error: NumPy library not found.")
-    print("Please install it using: pip install numpy")
-    sys.exit(1)
-
-# Check for SciPy installation (optional but preferred for pdist)
-try:
-    from scipy.spatial.distance import pdist
-    use_scipy = True
-except ImportError:
-    print("Warning: SciPy not found. Pairwise distances will be calculated using a slower NumPy loop.")
-    print("         Consider installing SciPy: pip install scipy")
-    use_scipy = False
-
-def calculate_distances_numpy_loop(data_subset_np):
-    """Calculates pairwise Euclidean distances using a NumPy loop (if SciPy is unavailable)."""
-    n_subset = data_subset_np.shape[0]
-    distances = []
-    print(f"Calculating pairwise distances for subset ({n_subset} points) using NumPy loop...")
-    start_time = time.time()
-    for i in range(n_subset):
-        for j in range(i + 1, n_subset):
-            dist = np.sqrt(np.sum((data_subset_np[i] - data_subset_np[j])**2))
-            distances.append(dist)
-    end_time = time.time()
-    print(f"NumPy loop distance calculation took {end_time - start_time:.2f} seconds.")
-    return np.array(distances)
 
 def load_and_sample_data(filepath, subset_size=None, required_dim=None, random_seed=None):
     """
@@ -172,22 +144,16 @@ def calculate_tsim(data_np, percentile_value=0.5):
 
     print(f"\nCalculating pairwise distances for {data_np.shape[0]} points...")
     try:
-        if use_scipy:
-            # Use SciPy's pdist (faster and more memory efficient for this part)
-            pairwise_distances = pdist(data_np, metric='cosine')
-        else:
-            # Fallback to NumPy loop (slower)
-            pairwise_distances = calculate_distances_numpy_loop(data_np)
+        pairwise_distances = pdist(data_np, metric='cosine')
+
 
         print(f"Successfully calculated {len(pairwise_distances)} pairwise distances.")
 
-        # Calculate the specified percentile of these distances.
         print(f"Calculating the {percentile_value}th percentile...")
         T_sim = np.percentile(pairwise_distances, percentile_value)
 
-        print(f"\n---> Similarity Threshold (T_sim) from {'subset' if data_np.shape[0] < 500000 else 'data'}: {T_sim:.6f}") # Adjust threshold for subset size if needed
+        print(f"\n---> Similarity Threshold (T_sim) from {'subset' if data_np.shape[0] < 50000 else 'data'}: {T_sim:.6f}")
 
-        # Optional verification
         num_similar_pairs = np.sum(pairwise_distances <= T_sim)
         expected_num = len(pairwise_distances) * (percentile_value / 100.0)
         print(f"      Number of pairs with distance <= T_sim: {num_similar_pairs}")
@@ -229,7 +195,7 @@ def main():
         args.input_file,
         args.subset_size,
         args.dim,
-        args.seed
+        args.seed 
     )
 
     # 2. Calculate T_sim on the subset
@@ -239,8 +205,7 @@ def main():
     print("\n" + "="*30)
     if T_sim is not None:
         print(f"Final Estimated T_sim ({args.percentile}th percentile): {T_sim:.6f}")
-        if data_subset_np is not None and data_subset_np.shape[0] < 500000: # Check if subset was actually used
-             print(f"(Calculated using a subset of size {data_subset_np.shape[0]})")
+        print(f"(Calculated using a subset of size {data_subset_np.shape[0]})")
     else:
         print("Failed to calculate T_sim due to errors.")
     print("="*30)

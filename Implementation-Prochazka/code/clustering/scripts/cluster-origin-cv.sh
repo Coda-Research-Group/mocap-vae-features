@@ -232,7 +232,7 @@ function createCompositeMWClusteringMessif() {
     for FOLD in '0'; do # HDM05-130 folds
         # for FOLD in '0,1,2,3,4,5,6,7,8' '0,1,2,3,4,5,6,7,9' '0,1,2,3,4,5,6,8,9' '0,1,2,3,4,5,7,8,9' '0,1,2,3,4,6,7,8,9' '0,1,2,3,5,6,7,8,9' '0,1,2,4,5,6,7,8,9' '0,1,3,4,5,6,7,8,9' '0,2,3,4,5,6,7,8,9' '1,2,3,4,5,6,7,8,9'; do # HDM05-65 folds
 
-        for EXP in 'cs' 'cv'; do
+        for EXP in 'cv'; do
 
             for FUNC in ''; do
 
@@ -254,7 +254,7 @@ ${JDK_PATH} \
 -jar ${MEDOIDS_JAR_PATH} \
 1 \
 -pcuseall \
--kmeans-max-iters 15 \
+-kmeans-max-iters 6 \
 -sf ${DATASET_PATH} \
 -cls ${DISTANCE_FUNCTION} \
 -pc ${ALGORITHM} \

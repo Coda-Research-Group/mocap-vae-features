@@ -15,7 +15,7 @@ JDK_PATH='/usr/bin/java'
 MEMORY='3g'
 #CLASSPATH=''
 CLASSPATH=${CLASSPATH:-'MESSIF.jar:MESSIF-Utility.jar:/home/drking/Documents/bakalarka/Implementation/code/motionvocabulary/MotionVocabulary.jar:commons-cli-1.4.jar:smf-core-1.0.jar:smf-impl-1.0.jar:/home/drking/Documents/bakalarka/Implementation/code/motionvocabulary/MCDR.jar:m-index.jar:trove4j-3.0.3.jar'}
-# Object class to work with in the dataset and pivots (default is messif.objects.impl.ObjectFloatVectorNeuralNetworkL2)
+# Object class to worggfgk with in the dataset and pivots (default is messif.objects.impl.ObjectFloatVectorNeuralNetworkL2)
 CLS_OBJ='mcdr.sequence.impl.SequenceMocapPoseCoordsL2DTWFiltered'
 # Dataset file path - which objects to convert
 DATAFILE='/home/drking/Documents/bakalarka/data/hdm05/class130-actions-segment80_shift16-coords_normPOS-fps12.data'

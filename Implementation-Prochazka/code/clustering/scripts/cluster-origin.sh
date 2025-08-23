@@ -255,7 +255,7 @@ ${JDK_PATH} \
 -jar ${MEDOIDS_JAR_PATH} \
 1 \
 -pcuseall \
--kmeans-max-iters 10 \
+-kmeans-max-iters 6 \
 -sf ${DATASET_PATH} \
 -cls ${DISTANCE_FUNCTION} \
 -pc ${ALGORITHM} \

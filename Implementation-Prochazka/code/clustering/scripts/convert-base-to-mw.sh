@@ -91,7 +91,7 @@ function convert() {
 	    # echo "${PART}"
 
             DATAFILE="/storage/brno12-cerit/home/drking/data/hdm05/class130-actions-segment80_shift16-coords_normPOS-fps12.data"
-            CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/baseline-skeleton/hdm05/all/${PART}/KMeansPivotChooser--kmeans.k_${K}"
+            CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/baseline-skeleton/hdm05/cv/${PART}/KMeansPivotChooser--kmeans.k_${K}"
 	        OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/baseline-skeleton/hdm05/all/composites/KMeansPivotChooser--kmeans.k_${K}"
 
         [ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"

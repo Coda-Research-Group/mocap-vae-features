@@ -16,26 +16,24 @@ PKUMMD_RUNS=(
 #     python reconstruct.py \
 #         $RUN \
 #         $DATA \
-#         --train-split "data/hdm05/2foldsBal_2-class122.txt" \
-#         --valid-split "data/hdm05/2foldsBal_1-class122.txt" \
-#         --test-split "data/hdm05/2foldsBal_1-class122.txt" \
 #         --body-model hdm05 \
 #         --fps 12 \
 #         --limit 5 \
 #         --every-n 100
 # done
 
-for RUN in ${PKUMMD_RUNS[@]}; do
-    DATA="/home/drking/Documents/bakalarka/data/pku-mmd/actions_singlesubject-segment24_shift4.8_initialshift0-coords_normPOS-fps10.data"
+# for RUN in ${HDM05_RUNS[@]}; do
+    DATA="/home/drking/Documents/bakalarka/data/hdm05/class130-actions-segment80_shift16-coords_normPOS-fps12.data"
+    RUN="/home/drking/Documents/bakalarka/mocap-vae-features/runs/hdm05/all/beta=1,body_model=hdm05,latent_dim=1024/lightning_logs/version_0"
 
     python reconstruct.py \
         $RUN \
         $DATA \
-        --train-split "/home/drking/Documents/bakalarka/data/pku-mmd/splits/CS_train_objects_messif-lines.txt" \
-        --valid-split "/home/drking/Documents/bakalarka/data/pku-mmd/splits/CS_test_objects_messif-lines.txt" \
-        --test-split "/home/drking/Documents/bakalarka/data/pku-mmd/splits/CS_test_objects_messif-lines.txt" \
-        --body-model pku-mmd \
+        --train-split /home/drking/Documents/bakalarka/mocap-vae-features/runs/hdm05/all/beta=1,body_model=hdm05,latent_dim=1024/lightning_logs/version_0/train_ids.txt.gz \
+        --valid-split /home/drking/Documents/bakalarka/mocap-vae-features/runs/hdm05/all/beta=1,body_model=hdm05,latent_dim=1024/lightning_logs/version_0/valid_ids.txt.gz \
+        --test-split /home/drking/Documents/bakalarka/mocap-vae-features/runs/hdm05/all/beta=1,body_model=hdm05,latent_dim=1024/lightning_logs/version_0/test_ids.txt.gz \
+        --body-model hdm05 \
         --fps 10 \
         --limit 5 \
         --every-n 100
-done
+# done
