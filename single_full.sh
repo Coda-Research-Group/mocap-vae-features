@@ -6,8 +6,6 @@
 #PBS -o /dev/null
 #PBS -e /dev/null
 
-# TODO: replace LOGIN with your login
-# TODO: select a particular cluster: https://metavo.metacentrum.cz/pbsmon2/nodes/pbs
 
 export OMP_NUM_THREADS=$PBS_NUM_PPN # set it equal to PBS variable PBS_NUM_PPN (number of CPUs in a chunk)
 export GPUS=$CUDA_VISIBLE_DEVICES
@@ -35,8 +33,7 @@ conda activate "/storage/brno12-cerit/home/drking/.conda/envs/${ENV_NAME}" || {
     exit 2
 }
 
-# 3x6x3 = 54
-for EXP in "fold2" "all" "fold1"; do
+for EXP in "all"; do
     for DIM in "256" "128" "64" "32" "16" "8"; do
         for BETA in "0.1" "1" "10"; do
 
