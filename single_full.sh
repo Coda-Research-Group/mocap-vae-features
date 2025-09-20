@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #PBS -q gpu@pbs-m1.metacentrum.cz
-#PBS -l walltime=48:0:0
+#PBS -l walltime=4:0:0
 #PBS -l select=1:ncpus=2:ngpus=1:mem=16gb:gpu_mem=4gb:scratch_local=50gb:cuda_version=12.6
 #PBS -o /dev/null
 #PBS -e /dev/null
@@ -34,8 +34,10 @@ conda activate "/storage/brno12-cerit/home/drking/.conda/envs/${ENV_NAME}" || {
 }
 
 for EXP in "all"; do
-    for DIM in "256" "128" "64" "32" "16" "8"; do
-        for BETA in "0.1" "1" "10"; do
+    # for DIM in "256" "128" "64" "32" "16" "8"; do
+    #     for BETA in "0.1" "1" "10"; do
+    for DIM in "16"; do
+        for BETA in "1"; do
 
             python /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/train.py --multirun exp=hdm05/${EXP} \
                 latent_dim=${DIM} beta=${BETA} body_model=hdm05 > /dev/null 2>&1

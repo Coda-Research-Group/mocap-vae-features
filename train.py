@@ -350,7 +350,7 @@ def main(args):
 
 
     # predictions in .data format
-    segmented_actions_path = Path('/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions-all')
+    segmented_actions_path = Path('/storage/brno12-cerit/home/drking/experiments/_SCL-segmented-actions-all')
     predictions_data_file_path = segmented_actions_path / dataset / folder_path / f'lat_dim={args.latent_dim}_beta={args.beta}'
     predictions_data_file_path.mkdir(parents=True, exist_ok=True)
     predictions_data_file_segmented = predictions_data_file_path / f'predictions_segmented_model={args.body_model}.data.gz'
@@ -363,7 +363,7 @@ def main(args):
             data_row = pd.DataFrame([vals]).to_csv(index=False, header=False, float_format=float_format).strip()
             print(data_row, file=f)
 
-    actions_path = Path('/storage/brno12-cerit/home/drking/experiments/SCL-actions-all')
+    actions_path = Path('/storage/brno12-cerit/home/drking/experiments/_SCL-actions-all')
     predictions_data_file_path = actions_path / dataset / folder_path / f'lat_dim={args.latent_dim}_beta={args.beta}'
     predictions_data_file_path.mkdir(parents=True, exist_ok=True)
     predictions_data_file = predictions_data_file_path / f'predictions_model={args.body_model}.data.gz'
