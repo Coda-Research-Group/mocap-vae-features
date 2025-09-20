@@ -131,12 +131,10 @@ class MoCapDataModule(pl.LightningDataModule):
 
             n_sequences = len(groups)
             n_train = round(n_sequences * 0.80)
-            n_valid = round(n_sequences * 0.20)
-            n_test  = 0
             
             train_groups = groups[:n_train]
-            valid_groups = groups[n_train:n_train + n_valid]
-            test_groups  = groups[-n_test:]
+            valid_groups = groups[n_train:-1]
+            test_groups  = []
 
             # train_groups = groups
             # valid_groups = groups
