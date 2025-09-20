@@ -7,8 +7,10 @@ import pytorch_lightning as pl
 import numpy as np
 import pandas as pd
 import torch
+import random
 from torch.utils.data import TensorDataset, DataLoader
 from tqdm import tqdm
+
 
 
 def split_subsequences_from_data_file(data_path):
@@ -127,23 +129,30 @@ class MoCapDataModule(pl.LightningDataModule):
             groups = np.array([x for x in grouped.groups])
             self.rng.shuffle(groups)
 
-            # n_sequences = len(groups)
-            # n_train = round(n_sequences * 0.70)
-            # n_valid = round(n_sequences * 0.15)
-            # n_test  = n_sequences - n_train - n_valid
+            n_sequences = len(groups)
+            n_train = round(n_sequences * 0.80)
+            n_valid = round(n_sequences * 0.20)
+            n_test  = 0
             
-            # train_groups = groups[:n_train]
-            # valid_groups = groups[n_train:n_train + n_valid]
-            # test_groups  = groups[-n_test:]
+            train_groups = groups[:n_train]
+            valid_groups = groups[n_train:n_train + n_valid]
+            test_groups  = groups[-n_test:]
 
-            train_groups = groups
-            valid_groups = groups
-            test_groups  = groups
+            # train_groups = groups
+            # valid_groups = groups
+            # test_groups  = groups
         else:
+
             with open(self.train, 'r') as train_file:
-                train_groups = list(map(str.rstrip, train_file))
-            with open(self.valid, 'r') as valid_file:
-                valid_groups = list(map(str.rstrip, valid_file))
+                all_groups = list(map(str.rstrip, train_file))
+
+            random.seed(42)
+            random.shuffle(all_groups)
+
+            split_idx = int(len(all_groups) * 0.8)
+            train_groups = all_groups[:split_idx]
+            valid_groups = all_groups[split_idx:]
+
             with open(self.test , 'r') as  test_file:
                 test_groups  = list(map(str.rstrip,  test_file))
                 
