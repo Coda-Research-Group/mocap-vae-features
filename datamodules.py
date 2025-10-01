@@ -140,7 +140,8 @@ class MoCapDataModule(pl.LightningDataModule):
             # valid_groups = groups
             # test_groups  = groups
         else:
-
+            #PKU-MMD
+            print(self.train)
             with open(self.train, 'r') as train_file:
                 all_groups = list(map(str.rstrip, train_file))
 
@@ -193,9 +194,9 @@ class MoCapDataModule(pl.LightningDataModule):
 
 if __name__ == "__main__":
     # data_path = 'data/class130-actions-segment120_shift16-coords_normPOS-fps12.data'
-    data_path = 'THIS_DATA_PAH_SHOULD_NOT_BE_USED!!!'
-    train_split = 'Should be used train split'
-    test_split = 'should be used test split'
+    data_path = '/home/drking/Documents/Bakalarka/data/raw/class130-actions-segment80_shift16-coords_normPOS-fps12.data'
+    train_split = None
+    test_split = None
     dm = MoCapDataModule(
         data_path,
         train=train_split,
