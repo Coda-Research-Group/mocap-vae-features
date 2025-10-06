@@ -9,14 +9,15 @@ SCRIPT_DIR='/storage/brno12-cerit/home/drking/experiments/mocap-vae-features'
 REPO_DIR='/storage/brno12-cerit/home/drking/experiments'
 ENV_NAME='cuda4'
 
-if [ -z "${PASSED_EXP}" ] || [ -z "${PASSED_DIM}" ] || [ -z "${PASSED_BETA}" ]; then
-    echo "Error: One or more required variables (PASSED_EXP, PASSED_DIM, PASSED_BETA) were not provided." >&2
+if [ -z "${PASSED_EXP}" ] || [ -z "${PASSED_DIM}" ] || [ -z "${PASSED_BETA}"  || [ -z "${PASSED_RUN}" ]]; then
+    echo "Error: One or more required variables (PASSED_EXP, PASSED_DIM, PASSED_BETA, PASSED_RUN) were not provided." >&2
     exit 1
 fi
 
-CURRENT_EXP=${PASSED_EXP}
-CURRENT_DIM=${PASSED_DIM}
-CURRENT_BETA=${PASSED_BETA}
+EXP=${PASSED_EXP}
+DIM=${PASSED_DIM}
+BETA=${PASSED_BETA}
+RUN=${PASSED_RUN}
 
 module add conda-modules
 module add mambaforge
@@ -31,7 +32,7 @@ conda activate "/storage/brno12-cerit/home/drking/.conda/envs/${ENV_NAME}" || {
     exit 2
 }
 
-# MODELS=("pku-mmd-torso" "pku-mmd-handL" "pku-mmd-handR" "pku-mmd-legL" "pku-mmd-legR")
+MODELS=("pku-mmd-torso" "pku-mmd-handL" "pku-mmd-handR" "pku-mmd-legL" "pku-mmd-legR")
 
 # for MODEL in "${MODELS[@]}"; do
 
@@ -39,11 +40,11 @@ conda activate "/storage/brno12-cerit/home/drking/.conda/envs/${ENV_NAME}" || {
 #         latent_dim=${CURRENT_DIM} beta=${CURRENT_BETA} body_model=${MODEL} > /dev/null 2>&1
 
 # done
-# for MODEL in "${MODELS[@]}"; do
+for MOD in "${MODELS[@]}"; do
 
-    python /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/train.py --multirun exp=hdm05/all \
-        latent_dim=256 beta=1 body_model=hdm05 > /dev/null 2>&1
+            python /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/train.py --multirun exp=pku-mmd/${CURRENT_EXP} \
+                latent_dim=${DIM} beta=${BETA} iteration=${ITER} body_model=${MOD} > /dev/null 2>&1
 
-# done
+done
 
 conda deactivate

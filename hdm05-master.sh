@@ -4,9 +4,10 @@
 EXPS=("all")
 DIMS=("256" "128" "64" "32" "16" "8" "4")
 BETAS=("0.1" "1" "10")
+ITERS=("1" "2" "3")
 
 # PATHS to scripts
-WORKER_SCRIPT_PATH="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/single_job.sh"
+WORKER_SCRIPT_PATH="/storage/brno12-cerit/home/drking/experimwents/mocap-vae-features/single_job.sh"
 WHOLE_SCRIPT_PATH="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/single_whole.sh"
 
 PBS_LOG_BASE_DIR="/storage/brno12-cerit/home/drking/experiments/pbs"
