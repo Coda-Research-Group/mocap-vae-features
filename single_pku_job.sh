@@ -17,7 +17,7 @@ fi
 EXP=${PASSED_EXP}
 DIM=${PASSED_DIM}
 BETA=${PASSED_BETA}
-RUN=${PASSED_RUN}
+MOD=${PASSED_MODEL}
 
 module add conda-modules
 module add mambaforge
@@ -32,19 +32,9 @@ conda activate "/storage/brno12-cerit/home/drking/.conda/envs/${ENV_NAME}" || {
     exit 2
 }
 
-MODELS=("pku-mmd-torso" "pku-mmd-handL" "pku-mmd-handR" "pku-mmd-legL" "pku-mmd-legR")
-
-# for MODEL in "${MODELS[@]}"; do
-
-#     python /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/train.py --multirun exp=pku-mmd/${CURRENT_EXP} \
-#         latent_dim=${CURRENT_DIM} beta=${CURRENT_BETA} body_model=${MODEL} > /dev/null 2>&1
-
-# done
-for MOD in "${MODELS[@]}"; do
-
-            python /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/train.py --multirun exp=pku-mmd/${CURRENT_EXP} \
-                latent_dim=${DIM} beta=${BETA} iteration=${ITER} body_model=${MOD} > /dev/null 2>&1
-
+for RUN in "1" "2" "3"; do 
+    python /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/train.py --multirun exp=pku-mmd/${EXP} \
+        latent_dim=${DIM} beta=${BETA} iteration=${RUN} body_model=${MOD} > /dev/null 2>&1
 done
 
 conda deactivate
