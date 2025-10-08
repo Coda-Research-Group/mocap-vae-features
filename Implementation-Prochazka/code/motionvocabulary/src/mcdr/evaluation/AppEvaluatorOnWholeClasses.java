@@ -52,11 +52,11 @@ public class AppEvaluatorOnWholeClasses {
         //String hullDir = "K:/research/motion-words/hulls/hdm05-actions-hulls-on-poses";
         
         Class<SequenceMocapPoseCoordsL2DTW> segmentClass = SequenceMocapPoseCoordsL2DTW.class;
-        String queryFile = "Y:/datasets/mocap/hdm05/segmentation/class130-actions-segment80_shift16-coords_normPOS-fps12.data";
-        String hullDir = "K:/research/motion-words/hulls/hdm05-gt-by-class-actions-segment80_shift16-coords_normPOS-fps12"; // Needs: readHullsWithCenters or readHulls
+        String queryFile = "/home/drking/Documents/Bakalarka/data/class130-actions-segment80_shift16-coords_normPOS-fps12.data";
+        String hullDir = "/home/drking/Documents/Bakalarka/data/hdm05-gt-by-class-actions-segment80_shift16-coords_normPOS-fps12"; // Needs: readHullsWithCenters or readHulls
         
         // structures
-        ObjectCategoryMgmt categoryMgmt = new ObjectCategoryMgmt("Y:/datasets/mocap/hdm05/meta/category_description_short.txt");
+        ObjectCategoryMgmt categoryMgmt = new ObjectCategoryMgmt("/home/drking/Documents/Bakalarka/data/category_description.txt");
         
         //Class<SequenceMocapPoseCoordsL2DTW> segmentClass = SequenceMocapPoseCoordsL2DTW.class;
         // Read queries

@@ -39,10 +39,12 @@ public class AppEvaluator {
         final boolean includeExactMatchInResult = false;
         final boolean includeMatchFromTheSameSequenceInResult = true;
         final boolean evaluateQueriesIndependently = true; // indicates whether each query is evaluated independently, or only one multi-object query is constructed for each category
-        int[] fixedKsToEvaluate = new int[]{1, 2, 3, 4, 5, 10, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100};
+//        int[] fixedKsToEvaluate = new int[]{1, 2, 3, 4, 5, 10, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100};
+        int[] fixedKsToEvaluate = new int[]{4};
+
         //int[] fixedKsToEvaluate = new int[]{};
-        String queryFile = "Y:/datasets/mocap/hdm05/segmentation/class130-actions-segment80_shift16-coords_normPOS-fps12.data";
-        String hullDir = "K:/research/motion-words/hulls/hdm05-sgm80sh16-actions-hulls";
+        String queryFile = "/home/drking/Documents/Bakalarka/data/class130-actions-segment80_shift16-coords_normPOS-fps12.data";
+        String hullDir = "/home/drking/Documents/Bakalarka/data/hdm05-sgm80sh16-actions-hulls";
 //        String queryFile = "Y:/datasets/mocap/hdm05/segmentation/class130-actions-segment20_shift20-coords_normPOS-fps12.data";
 //        String hullDir = "K:/research/motion-words/hulls/hdm05-sgm20sh20-actions-hulls";
         Class<SequenceMocapPoseCoordsL2DTW> segmentClass = SequenceMocapPoseCoordsL2DTW.class;
@@ -52,7 +54,7 @@ public class AppEvaluator {
         //String hullDir = "K:/research/motion-words/hulls/hdm05-actions-hulls-on-poses";
         
         // structures
-        ObjectCategoryMgmt categoryMgmt = new ObjectCategoryMgmt("Y:/datasets/mocap/hdm05/meta/category_description_short.txt");
+        ObjectCategoryMgmt categoryMgmt = new ObjectCategoryMgmt("/home/drking/Documents/Bakalarka/data/category_description.txt");
         
         //Class<SequenceMocapPoseCoordsL2DTW> segmentClass = SequenceMocapPoseCoordsL2DTW.class;
         // Read queries
@@ -72,8 +74,8 @@ public class AppEvaluator {
         Map<ObjectCategoryMgmt.Category, List<RankingQueryOperation>> origCategoryOperationsMap
                 = dataMgmt.executeKNNQueries(queryMgmt, maxK, includeExactMatchInResult, includeMatchFromTheSameSequenceInResult);
 //        Map<ObjectCategoryMgmt.Category, List<RankingQueryOperation>> origCategoryOperationsMap
-//                = dataMgmt.executeKNNQueries(queryMgmt, maxK, 
-//                                        maxK, new HullRerankingCollection(null), 
+//                = dataMgmt.executeKNNQueries(queryMgmt, maxK,
+//                                        maxK, new HullRerankingCollection(null),
 //                                        includeExactMatchInResult, includeMatchFromTheSameSequenceInResult);
         System.out.println("Querying time: " + ((System.currentTimeMillis() - startTime) / 1000f) + " s");
 
