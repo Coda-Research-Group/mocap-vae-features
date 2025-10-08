@@ -20,6 +20,7 @@ import messif.objects.MetaObject;
 import messif.objects.util.RankedAbstractObject;
 import messif.objects.util.StreamGenericAbstractObjectIterator;
 import messif.operations.RankingQueryOperation;
+import messif.operations.RankingSingleQueryOperation;
 import messif.operations.query.KNNQueryOperation;
 import messif.utility.FileUtils;
 import messif.utility.HullRepresentationAsLocalAbstractObject;
@@ -71,7 +72,7 @@ public class AppEvaluator {
         Integer maxK = (fixedKsToEvaluate.length == 0) ? null : Arrays.stream(fixedKsToEvaluate).summaryStatistics().getMax();
         System.out.println("maxK = " + maxK);
         long startTime = System.currentTimeMillis();
-        Map<ObjectCategoryMgmt.Category, List<RankingQueryOperation>> origCategoryOperationsMap
+        Map<ObjectCategoryMgmt.Category, List<RankingSingleQueryOperation>> origCategoryOperationsMap
                 = dataMgmt.executeKNNQueries(queryMgmt, maxK, includeExactMatchInResult, includeMatchFromTheSameSequenceInResult);
 //        Map<ObjectCategoryMgmt.Category, List<RankingQueryOperation>> origCategoryOperationsMap
 //                = dataMgmt.executeKNNQueries(queryMgmt, maxK,
@@ -81,7 +82,7 @@ public class AppEvaluator {
 
         // Dump distances to the 1NN and lastNN:
         System.out.println("***** Distances for 1st and last object in each query:");
-        for (Map.Entry<ObjectCategoryMgmt.Category, List<RankingQueryOperation>> e : origCategoryOperationsMap.entrySet()) {
+        for (Map.Entry<ObjectCategoryMgmt.Category, List<RankingSingleQueryOperation>> e : origCategoryOperationsMap.entrySet()) {
             System.out.println("*** Category: " + e.getKey().id + " " + e.getKey().description);
             for (RankingQueryOperation ro : e.getValue()) {
                 KNNQueryOperation op = (KNNQueryOperation)ro;
@@ -110,7 +111,7 @@ public class AppEvaluator {
             for (int k : fixedKsToEvaluate) {
                 System.out.println("Search evaluation (k=" + k + "):");
 
-                Map<ObjectCategoryMgmt.Category, List<RankingQueryOperation>> categoryOperationsMap = ObjectMgmt.cloneCategorizedRankingOperations(origCategoryOperationsMap, k);
+                Map<ObjectCategoryMgmt.Category, List<RankingSingleQueryOperation>> categoryOperationsMap = ObjectMgmt.cloneCategorizedRankingOperations(origCategoryOperationsMap, k);
                 dataMgmt.evaluateRetrieval(categoryOperationsMap, evaluateQueriesIndependently, true, false);
 
                 // evaluation of classification

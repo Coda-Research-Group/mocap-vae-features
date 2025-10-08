@@ -32,7 +32,7 @@ conda activate "/storage/brno12-cerit/home/drking/.conda/envs/${ENV_NAME}" || {
     exit 2
 }
 
-for RUN in "1" "2" "3"; do 
+for RUN in "1" "2" "3" "4" "5"; do 
     python /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/train.py --multirun exp=pku-mmd/${EXP} \
         latent_dim=${DIM} beta=${BETA} iteration=${RUN} body_model=${MOD} > /dev/null 2>&1
 done

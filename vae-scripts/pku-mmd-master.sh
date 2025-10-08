@@ -7,7 +7,7 @@ BETAS=("0.1" "1" "10")
 MODELS=("pku-mmd-torso" "pku-mmd-handL" "pku-mmd-handR" "pku-mmd-legL" "pku-mmd-legR")
 
 
-WORKER_SCRIPT_PATH="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/single_pku_job.sh"
+WORKER_SCRIPT_PATH="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/vae-scripts/single_pku_job.sh"
 
 PBS_LOG_BASE_DIR="/storage/brno12-cerit/home/drking/experiments/pbs"
 mkdir -p "${PBS_LOG_BASE_DIR}"
@@ -33,7 +33,7 @@ done
 
 
 DIMS=("256" "128" "64" "32" "16" "8" "4")
-
+MODELS=("pku-mmd")
 
 for EXP in "${EXPS[@]}"; do
     for DIM in "${DIMS[@]}"; do

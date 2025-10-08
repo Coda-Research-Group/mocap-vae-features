@@ -5,7 +5,7 @@ PBS_LOGS_DIR='/storage/brno12-cerit/home/drking/experiments/pbs'
 REPO_DIR='/storage/brno12-cerit/home/drking/experiments'
 ENV_NAME='cuda4'
 
-WORKER_SCRIPT_PATH="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/single_config.sh"
+WORKER_SCRIPT_PATH="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/vae-scripts/single_hdm_job.sh"
 
 
 cd "${REPO_DIR}" || {
@@ -15,7 +15,7 @@ cd "${REPO_DIR}" || {
 
 
 for MOD in "hdm05" "hdm05-torso" "hdm05-handL" "hdm05-handR" "hdm05-legL" "hdm05-legR"; do
-    for ITER in "1" "2" "3"; do
+    for ITER in "1" "2" "3" "4" "5"; do
         JOB_NAME="training_VAE_on_${MOD}-iteration-${ITER}"
         echo "Submitting job for MODEL = ${MOD}, ITERATION = ${ITER}"
 

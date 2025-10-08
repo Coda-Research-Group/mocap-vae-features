@@ -1,132 +1,148 @@
+import math
+import time
+from tslearn.metrics import dtw_path_from_metric, dtw
+import torch
+from torch.nn import functional as F
 import numpy as np
-from scipy.spatial.distance import pdist, squareform
-import random
-import os
+from sklearn.neighbors import NearestNeighbors
+from random import random
+from sklearn.metrics import recall_score
 
-def evaluate_unsupervised_subset(file_path, subset_size, sim_percentile=0.5, dissim_percentile=40):
-    """
-    Parses a large dataset, takes a random subset, and evaluates unsupervised
-    precision/recall using percentile-based pseudo-ground truth.
+path = "/home/drking/Documents/Bakalarka/data/class130-actions-segment80_shift16-coords_normPOS-fps12.data"
 
-    Args:
-        file_path (str): The path to the data file.
-        subset_size (int): The number of objects to sample for evaluation.
-        sim_percentile (float): The percentile for the similarity threshold (T_sim).
-        dissim_percentile (float): The percentile for the dissimilarity threshold (T_dissim).
+class MocapObject:
+    def __init__(self, obj_id, data, num_frames):
+        self.obj_id = obj_id
+        self.data = torch.tensor(data, requires_grad=False)
+        self.data = self.data / self.data.norm(dim=1)[:, None]
+        self.num_frames = num_frames 
+        self.class_id = int(obj_id.split("_")[1])
 
-    Returns:
-        dict: A dictionary containing tp, fp, fn, tn, precision, recall, and thresholds.
-    """
-    # 1. Parse Data and Create the Subset
-    vectors = []
-    
-    # First pass: Get all object keys and their corresponding vectors
-    with open(file_path, 'r') as f:
-        all_vectors = []
-        current_vector = None
-        for line in f:
-            if line.startswith('#objectKey'):
-                if current_vector is not None:
-                    all_vectors.append(current_vector)
-                current_vector = None
-            else:
-                try:
-                    current_vector = [float(x) for x in line.strip().split(',')]
-                except ValueError:
-                    # Handle cases where the line might be empty or malformed
-                    continue
-        if current_vector is not None:
-            all_vectors.append(current_vector)
-    
-    if len(all_vectors) < subset_size:
-        print("Warning: Dataset size is smaller than the requested subset size. Using the full dataset.")
-        subset_vectors = all_vectors
+# def utw_distance(obj1, obj2):
+#     matrix = torch_cosine_similarity(obj1, obj2)
+
+#     a = matrix.shape[0]
+#     b= matrix.shape[1]
+#     m = max(matrix.shape)
+#     t_ind_a = torch.round(torch.linspace(0,a-1, steps=m)).int()
+#     t_ind_b = torch.round(torch.linspace(0,b-1, steps=m)).int()
+
+#     return matrix[t_ind_a,t_ind_b].sum()
+
+
+def utw_distance(obj1:MocapObject, obj2:MocapObject):
+    m = max(obj1.num_frames,obj2.num_frames)
+    if obj2.num_frames > obj1.num_frames:
+        t_ind_a = torch.round(torch.linspace(0,obj1.num_frames-1, steps=m)).int()
+        t_ind_b = np.arange(obj2.num_frames)
+    elif obj1.num_frames > obj2.num_frames:
+        t_ind_a = np.arange(obj1.num_frames)
+        t_ind_b = torch.round(torch.linspace(0,obj2.num_frames-1, steps=m)).int()
     else:
-        subset_vectors = random.sample(all_vectors, subset_size)
+        t_ind_a = np.arange(obj1.num_frames)
+        t_ind_b = np.arange(obj2.num_frames)
+    return torch_cosine_similarity(obj1, obj2)[t_ind_a,t_ind_b].sum()
+
+
+           
     
-    data_vectors = np.array(subset_vectors)
-    
-    # 2. Calculate Cosine Distance Matrix for the Subset
-    # Use pdist to calculate pairwise distances in a condensed format
-    pairwise_distances = pdist(data_vectors, metric='cosine')
-    
-    # Use squareform to convert the condensed matrix to a square one
-    distance_matrix = squareform(pairwise_distances)
+# Cosine similarity between two sequences calculated with torch
+def cosine_similarity_between_sequences_raw(obj1 : MocapObject, obj2 : MocapObject):
+    # Convert to torch tensors
+    dist_mat = torch.zeros((obj1.num_frames, obj2.num_frames))
+    for i in range(obj1.num_frames):
+        for j in range(0,obj2.num_frames):
+            dist = F.cosine_similarity(obj1.data[i], obj2.data[j], dim=0)
+            dist_mat[i][j] = dist
+    dist_mat = 1 - dist_mat
+    # dist_mat = dist_mat.sum(0).numpy()
 
-    # 3. Define GT and Calculate TP, FP, FN, TN
-    # Get a flattened, sorted list of all unique distances (excluding self-distances)
-    upper_triangle = distance_matrix[np.triu_indices(distance_matrix.shape[0], k=1)]
-    
-    # Determine the similarity and dissimilarity thresholds based on percentiles
-    t_sim = np.percentile(upper_triangle, sim_percentile)
-    t_dissim = np.percentile(upper_triangle, dissim_percentile)
-    
-    # Initialize the counts for the confusion matrix
-    tp, fp, fn, tn = 0, 0, 0, 0
+    return dist_mat
 
-    # Iterate through all unique pairs (upper triangle of the matrix)
-    num_objects = distance_matrix.shape[0]
-    for i in range(num_objects):
-        for j in range(i + 1, num_objects):
-            distance = distance_matrix[i, j]
+def torch_cosine_similarity(obj1, obj2):
+    a = obj1.data
+    b = obj2.data
+    return 1 - torch.mm(a, b.transpose(0,1))
 
-            # Define the pseudo-ground truth (GT)
-            is_gt_similar = (distance <= t_sim)
-            is_gt_dissimilar = (distance >= t_dissim)
+def distance_between_sequences_raw(obj1:MocapObject, obj2: MocapObject):
+    matrix = torch_cosine_similarity(obj1, obj2)
 
-            # Ignore pairs in the grey zone
-            if not is_gt_similar and not is_gt_dissimilar:
-                continue
+    # matrix = cosine_similarity_between_sequences_raw(obj1, obj2)
+    # cost = random()
+    path, cost = dtw_path_from_metric(matrix.numpy(), metric="precomputed")
+    if cost < 0:
+        return 0
+    return cost
 
-            # Define the model's "prediction"
-            is_predicted_matching = (distance <= t_sim)
-            
-            # Update the counts based on the GT and prediction
-            if is_gt_similar:
-                if is_predicted_matching:
-                    tp += 1
-                else:
-                    fn += 1
-            elif is_gt_dissimilar:
-                if is_predicted_matching:
-                    fp += 1
-                else:
-                    tn += 1
+# database = list()
+# with open(path) as file:
+#     current_obj = MocapObject("", [], 0)
+#     for line in file:
+#         line = line.rstrip()
+#         if (line.startswith("#")):
+#             current_obj = MocapObject("", [], 0)
+#             current_obj.obj_id = line.split(" ")[2]
+#             current_obj.class_id = int(current_obj.obj_id.split("_")[1])
+#             database.append(current_obj)
+#         elif ("mcdr" in line):
+#             current_obj.num_frames = int(line.split(";")[0])
+#         else :
+#             splits = line.split(",")
+#             float_data = [float(x) for x in splits]
+#             current_obj.data.append(float_data)
+database = list()
+with open(path) as file:
+    obj_id = ""
+    class_id = -1
+    vectors = []
+    num_frames = 0
+    for line in file.readlines():
+        line = line.rstrip()
+        if (line.startswith("#")):
+            if num_frames > 0:
+                database.append(MocapObject(obj_id, vectors, num_frames))
+                vectors = []
+            obj_id = line.split(" ")[2]
+        elif ("mcdr" in line):
+            num_frames = int(line.split(";")[0])
+        else :
+            splits = line.split(",")
+            float_data = [float(x) for x in splits]
+            vectors.append(float_data)
+print(f"Loaded {len(database)} objects")
 
-    # Calculate precision and recall
-    precision = tp / (tp + fp) if (tp + fp) > 0 else 0
-    recall = tp / (tp + fn) if (tp + fn) > 0 else 0
-    
-    return {
-        'tp': tp,
-        'fp': fp,
-        'fn': fn,
-        'tn': tn,
-        'precision': precision,
-        'recall': recall,
-        'T_sim': t_sim,
-        'T_dissim': t_dissim
-    }
 
-datapath = '/home/drking/Documents/Bakalarka/data/_SCL-segmented-actions-all/hdm05/all/lat_dim=256_beta=0.1/predictions_segmented_model=hdm05.data'
+#distance matrix
+start = time.time()
+distance_matrix_data = np.ndarray((len(database), len(database)))
 
-if not os.path.exists(datapath):
-    print(f"ERROR: path {datapath} does not exists!")
+for i in range(len(database)):
+    # if (i % 10 == 0):
+    print(f"Processed {i} objects")
+    for j in range(i, len(database)):
+        if (i == j):
+            distance = 500000
+        else:
+            distance = utw_distance(database[i], database[j])
+            # distance = distance_between_sequences_raw(database[i], database[j])
+        distance_matrix_data[i][j] = distance
+        distance_matrix_data[j][i] = distance
+end = time.time()
+print("elapsed time for matrix " + str(end - start))
 
-results = evaluate_unsupervised_subset(
-    file_path=datapath,
-    subset_size=10000,
-    sim_percentile=0.5,
-    dissim_percentile=40
-)
+#1nn from dist matrix
+nn = NearestNeighbors(n_neighbors=1, metric="precomputed")
+nn.fit(distance_matrix_data)
+distances, indices = nn.kneighbors(distance_matrix_data)
 
-print("\nEvaluation Results on a Subset:")
-print(f"Subset Size: 5000 objects")
-print(f"Similarity Threshold (T_sim): {results['T_sim']:.4f}")
-print(f"Dissimilarity Threshold (T_dissim): {results['T_dissim']:.4f}")
-print(f"True Positives (TP): {results['tp']}")
-print(f"False Positives (FP): {results['fp']}")
-print(f"False Negatives (FN): {results['fn']}")
-print(f"True Negatives (TN): {results['tn']}")
-print(f"Precision: {results['precision']:.4f}")
-print(f"Recall: {results['recall']:.4f}")
+
+predicted = []
+gt = []
+for i in range(len(indices)):
+    # print(f"Object {database[i].obj_id} is closest to object {database[indices[i][0]].obj_id} with distance {distances[i][0]}")
+    predicted.append(database[indices[i][0]].class_id)
+    gt.append(database[i].class_id)
+
+# compute recall 
+recall = recall_score(gt, predicted, average='micro')
+print(f"Recall: {recall}")
