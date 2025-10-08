@@ -344,7 +344,7 @@ def main(args):
         folder_path = 'cv'
         dataset = "pku-mmd"
 
-    predictions_csv = Path('/storage/brno12-cerit/home/drking/data/experiments/SCL')
+    predictions_csv = Path('/storage/brno12-cerit/home/drking/experiments/SCL')
     
     predictions_data_file_path = predictions_csv / dataset / folder_path / f'model={args.body_model}_lat-dim={args.latent_dim}_beta={args.beta}' / f'{args.iteration}'
     predictions_data_file_path.mkdir(parents=True, exist_ok=True)
