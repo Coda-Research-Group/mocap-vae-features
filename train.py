@@ -334,7 +334,7 @@ def main(args):
     # prediction csv
     run_dir = Path(trainer.log_dir)
 
-    # get fold folder 
+    # get fold folder
     folder_path = 'all'
     dataset = 'hdm05'
     if args.train_split == '/storage/brno12-cerit/home/drking/data/pku-mmd/splits/CS_train_objects_messif-lines.txt':
@@ -352,7 +352,6 @@ def main(args):
     predictions.to_csv(predictions_data_file)
 
     # predictions in .data format
-    segmented_actions_path = Path('/storage/brno12-cerit/home/drking/experiments/SCL')
     predictions_data_file_segmented = predictions_data_file_path / f'predictions_segmented.data.gz'
 
     float_format = '%.8f'
@@ -363,7 +362,6 @@ def main(args):
             data_row = pd.DataFrame([vals]).to_csv(index=False, header=False, float_format=float_format).strip()
             print(data_row, file=f)
 
-    actions_path = Path('/storage/brno12-cerit/home/drking/experiments/SCL')
     predictions_data_file = predictions_data_file_path / f'predictions_full.data.gz'
     predictions.index = predictions.index.str.rsplit('_', n=1, expand=True).rename(['seq_id', 'frame'])
 
