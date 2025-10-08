@@ -5,7 +5,6 @@
 #PBS -o /dev/null
 #PBS -e /dev/null
 
-SCRIPT_DIR='/storage/brno12-cerit/home/drking/experiments/mocap-vae-features'
 REPO_DIR='/storage/brno12-cerit/home/drking/experiments'
 ENV_NAME='cuda4'
 
