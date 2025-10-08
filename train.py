@@ -334,8 +334,12 @@ def main(args):
     # prediction csv
     run_dir = Path(trainer.log_dir)
 
-    predictions_csv = run_dir / f'predictions_norm_dim={args.latent_dim}_beta={args.beta}_model={args.body_model}' / f'{args.iteration}' / 'prediction.csv.gz'
-    predictions.to_csv(predictions_csv)
+    predictions_csv = Path('/storage/brno12-cerit/home/drking/data/experiments/SCL')
+    
+    predictions_data_file_path = predictions_csv / dataset / folder_path / f'model={args.body_model}_lat-dim={args.latent_dim}_beta={args.beta}' / f'{args.iteration}'
+    predictions_data_file_path.mkdir(parents=True, exist_ok=True)
+    predictions_data_file = predictions_data_file_path / f'predictions.data.gz'
+    predictions.to_csv(predictions_data_file)
 
     # get fold folder 
     folder_path = 'all'
@@ -348,9 +352,7 @@ def main(args):
         dataset = "pku-mmd"
 
     # predictions in .data format
-    segmented_actions_path = Path('/storage/brno12-cerit/home/drking/experiments/SCL/segmented-actions')
-    predictions_data_file_path = segmented_actions_path / dataset / folder_path / f'model={args.body_model}_lat-dim={args.latent_dim}_beta={args.beta}' / f'{args.iteration}'
-    predictions_data_file_path.mkdir(parents=True, exist_ok=True)
+    segmented_actions_path = Path('/storage/brno12-cerit/home/drking/experiments/SCL')
     predictions_data_file_segmented = predictions_data_file_path / f'predictions_segmented.data.gz'
 
     float_format = '%.8f'
@@ -361,9 +363,7 @@ def main(args):
             data_row = pd.DataFrame([vals]).to_csv(index=False, header=False, float_format=float_format).strip()
             print(data_row, file=f)
 
-    actions_path = Path('/storage/brno12-cerit/home/drking/experiments/SCL/full-actions')
-    predictions_data_file_path = actions_path / dataset / folder_path / f'model={args.body_model}_lat-dim={args.latent_dim}_beta={args.beta}' / f'{args.iteration}'
-    predictions_data_file_path.mkdir(parents=True, exist_ok=True)
+    actions_path = Path('/storage/brno12-cerit/home/drking/experiments/SCL')
     predictions_data_file = predictions_data_file_path / f'predictions_full.data.gz'
     predictions.index = predictions.index.str.rsplit('_', n=1, expand=True).rename(['seq_id', 'frame'])
 
@@ -373,12 +373,10 @@ def main(args):
             print(f'{len(group)};mcdr.objects.ObjectMocapPose', file=f)
             print(group.to_csv(index=False, header=False), end='', file=f)
 
-    set_ids_path = run_dir / f'predictions_norm_dim={args.latent_dim}_beta={args.beta}_model={args.body_model}' / f'{args.iteration}' 
-
     # segments ids
-    pd.DataFrame(dm.train_ids).to_csv(set_ids_path / 'train_ids.txt.gz', header=False, index=False)
-    pd.DataFrame(dm.valid_ids).to_csv(set_ids_path / 'valid_ids.txt.gz', header=False, index=False)
-    pd.DataFrame( dm.test_ids).to_csv(set_ids_path /  'test_ids.txt.gz', header=False, index=False)
+    pd.DataFrame(dm.train_ids).to_csv(predictions_data_file_path / 'train_ids.txt.gz', header=False, index=False)
+    pd.DataFrame(dm.valid_ids).to_csv(predictions_data_file_path / 'valid_ids.txt.gz', header=False, index=False)
+    pd.DataFrame( dm.test_ids).to_csv(predictions_data_file_path /  'test_ids.txt.gz', header=False, index=False)
 
 
 def argparse_cli():
