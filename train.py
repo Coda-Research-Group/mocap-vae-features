@@ -275,9 +275,9 @@ def main(args):
 
     }
 
-    if predictions_file.exists():
-        print("Skipping existing run.")
-        return
+    # if predictions_file.exists():
+    #     print("Skipping existing run.")
+    #     return
 
     seed_everything(127, workers=True)
 
