@@ -89,18 +89,15 @@ def create_data_files_pku(actions_file: str, data_file: str, model: str) -> None
 # #     10,
 # )
 
-DIMS = ["64", "32", "16", "8", "4"]
-BETAS = ["0.1", "1", "10"]
-MODELS = ["pku-mmd-torso", "pku-mmd-handL", "pku-mmd-handR", "pku-mmd-legL", "pku-mmd-legR"]
-
+MODELS = ["motion_hands_l_norm.data", "motion_hands_r_norm.data", "motion_legs_l_norm.data", "motion_legs_r_norm.data", "motion_torso_norm.data"]
 print("Starting decompression process...")
 
-for dim in DIMS:
-    for beta in BETAS:
-        for model in MODELS:
-            create_data_files_pku(
-                "/storage/brno12-cerit/home/drking/data/pku-mmd/splits/CV_train_objects_messif-lines.txt",
-                f"/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions-norm/pku-mmd/cv/lat_dim={dim}_beta={beta}/predictions_segmented_model_norm={model}.data",
-                "cv",
-            )
 
+for model in MODELS:
+    create_data_files_pku(
+        "/home/drking/Documents/Bakalarka/data/data/pku-mmd/splits/CS_train_objects_messif-lines.txt",
+        f"/home/drking/Documents/Bakalarka/data/data/pku-mmd/parts_norm/{model}",
+        "cs",
+    )
+
+print("finished")
