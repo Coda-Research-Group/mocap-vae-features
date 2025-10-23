@@ -146,6 +146,7 @@ def compute_metrics(skeletons, scl_vectors, skeleton_thresh, scl_thresh):
 
     TP = FP = FN = TN = 0
     g = 0
+    o = 0
 
     # Iterate over unique pairs
     for i, j in tqdm(combinations(range(len(skeletons)), 2), total=len(skeletons)*(len(skeletons)-1)//2):
@@ -159,6 +160,7 @@ def compute_metrics(skeletons, scl_vectors, skeleton_thresh, scl_thresh):
         elif d_skel > p40_skel:
             label_skel = False
         else:
+            o += 1
             continue  # gray zone
 
         # Postprocessed distance
@@ -185,7 +187,7 @@ def compute_metrics(skeletons, scl_vectors, skeleton_thresh, scl_thresh):
     recall = TP / (TP + FN) if (TP + FN) > 0 else 0.0
     F1 = 2 * precision * recall / (precision + recall) if (precision + recall) > 0 else 0.0
     F025 = (1 + 0.25 ** 2) * precision * recall / ((0.25 ** 2) * precision + recall) if (precision + recall) > 0 else 0.0
-    return precision, recall, F025, F1, g
+    return precision, recall, F025, F1, g, o
 
 
 # ---------------------
@@ -208,13 +210,14 @@ def main():
 
     assert len(skeletons) == len(scl_vectors), "Skeleton and SCL object counts must match"
 
-    precision, recall, F025, F1, g = compute_metrics(skeletons, scl_vectors, skel_thresh, scl_thresh)
+    precision, recall, F025, F1, g, o = compute_metrics(skeletons, scl_vectors, skel_thresh, scl_thresh)
 
     print(f"Precision: {precision:.6f}")
     print(f"Recall:    {recall:.6f}")
     print(f"F0.25:     {F025:.6f}")
     print(f"F1:        {F1:.6f}")
     print(f"Gray zone skipped: {g}")
+    print(o)
 
 
 if __name__ == "__main__":

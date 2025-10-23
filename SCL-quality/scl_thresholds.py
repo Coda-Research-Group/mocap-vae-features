@@ -12,6 +12,7 @@ def stream_sample_objects(file_path, valid_prefixes, subset_size, seed=None):
     """
     Stream through a .data.gz file and randomly sample up to subset_size objects
     whose prefix matches one of the valid_prefixes.
+    If valid_prefixes is None or empty, include all objects.
     """
     if seed is not None:
         random.seed(seed)
@@ -34,7 +35,7 @@ def stream_sample_objects(file_path, valid_prefixes, subset_size, seed=None):
                     continue
 
                 prefix = "_".join(current_id.split("_")[:-1])
-                if prefix in valid_prefixes:
+                if not valid_prefixes or prefix in valid_prefixes:
                     total_matching += 1
                     vector = np.array([float(x) for x in line.split(",")], dtype=np.float32)
 
@@ -49,7 +50,7 @@ def stream_sample_objects(file_path, valid_prefixes, subset_size, seed=None):
                 current_id = None
 
     if not reservoir:
-        raise RuntimeError("No matching objects found for the given train IDs.")
+        raise RuntimeError("No matching objects found for the given prefixes.")
     return np.stack(reservoir), total_matching
 
 
@@ -60,24 +61,23 @@ def compute_percentiles(vectors, metric="cosine", percentiles=(0.5, 40)):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Compute percentile distances for train ID-matched objects (streaming).")
+    parser = argparse.ArgumentParser(description="Compute percentile distances for objects (optionally filtered by train IDs).")
     parser.add_argument("objects_file", help="Path to the .data.gz objects file")
-    parser.add_argument("train_ids_file", help="Path to the train IDs text file")
-    parser.add_argument("--metric", choices=["cosine", "euclidean"], default="cosine",
-                        help="Distance metric to use")
-    parser.add_argument("--subset-size", type=int, required=True,
-                        help="Number of objects to randomly sample per run")
-    parser.add_argument("--runs", type=int, default=10,
-                        help="Number of random subset runs to average over (default: 10)")
-    parser.add_argument("--output", type=str, default=None,
-                        help="Optional path to output simple JSON with averaged percentiles")
+    parser.add_argument("--train-ids-file", help="Optional path to train IDs text file (if not provided, all objects are used)", default=None)
+    parser.add_argument("--metric", choices=["cosine", "euclidean"], default="cosine", help="Distance metric to use")
+    parser.add_argument("--subset-size", type=int, required=True, help="Number of objects to randomly sample per run")
+    parser.add_argument("--runs", type=int, default=10, help="Number of random subset runs to average over (default: 10)")
+    parser.add_argument("--output", type=str, default=None, help="Optional path to output simple JSON with averaged percentiles")
     args = parser.parse_args()
 
-    # Load train IDs
-    with open(args.train_ids_file, "r", encoding="utf-8") as f:
-        train_ids = {line.strip() for line in f if line.strip()}
-
-    print(f"Loaded {len(train_ids)} train IDs")
+    # Load train IDs (if provided)
+    if args.train_ids_file:
+        with open(args.train_ids_file, "r", encoding="utf-8") as f:
+            train_ids = {line.strip() for line in f if line.strip()}
+        print(f"Loaded {len(train_ids)} train IDs")
+    else:
+        train_ids = None
+        print("No train IDs file provided — using all objects.")
 
     all_results = []
     for run in tqdm(range(args.runs), desc="Runs"):
@@ -97,14 +97,10 @@ def main():
     print(f"40th percentile:  {mean_p[1]:.6f}")
 
     if args.output:
-        results = {
-            "p0.5": float(mean_p[0]),
-            "p40": float(mean_p[1])
-        }
+        results = {"p0.5": float(mean_p[0]), "p40": float(mean_p[1])}
         with open(args.output, "w", encoding="utf-8") as jf:
             json.dump(results, jf, indent=2)
         print(f"Saved results to {args.output}")
-
 
 
 if __name__ == "__main__":
