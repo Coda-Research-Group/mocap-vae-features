@@ -21,9 +21,17 @@ def load_thresholds(file_path):
 # ---------------------
 # Unified skeleton loader
 # ---------------------
-def load_skeleton_objects(file_path, valid_ids=None, max_objects=None):
-    """Unified loader for HDM05, PKU-MMD, NPZ; skips sequences not exactly 8 frames."""
-    # NPZ format
+import numpy as np
+import gzip
+from typing import List, Tuple, Dict # Added imports for type hints
+
+def load_skeleton_objects(file_path, valid_ids=None, max_objects=None) -> Tuple[List[np.ndarray], List[str]]:
+    """
+    Unified loader for HDM05, PKU-MMD, NPZ. The text-based (.data/.data.gz) 
+    format is revised to load sequences of ALL lengths and use the full ID 
+    (mimicking the load_data function).
+    """
+    # NPZ format (Retained original Code 2 NPZ logic, which filters for 8 frames)
     if file_path.endswith(".npz"):
         data = np.load(file_path, allow_pickle=True)
         ids = list(data['sample_ids'])
@@ -42,55 +50,76 @@ def load_skeleton_objects(file_path, valid_ids=None, max_objects=None):
             raise RuntimeError(f"No sequences loaded from {file_path}")
         return objects, loaded_ids
 
-    # Text-based format (.data or .data.gz)
+    # ----------------------------------------------------------------------
+    # Text-based format (.data or .data.gz) - REVISED to match load_data
+    # ----------------------------------------------------------------------
     opener = gzip.open if file_path.endswith(".gz") else open
+    
+    # We use lists (objects, loaded_ids) to conform to the function's return type
     objects, loaded_ids = [], []
-    current_id = None
-    frame_lines = []
+    
+    # Load all lines into memory first, mimicking the load_data style for easier parsing
+    try:
+        with opener(file_path, "rt", encoding="utf-8") as f:
+            lines = [ln.rstrip() for ln in f]
+    except Exception as e:
+        raise RuntimeError(f"Error reading file {file_path}: {e}")
 
-    def finalize_object():
-        if len(frame_lines) != 8:
-            return
-        obj_array = np.stack(frame_lines)
-        if valid_ids is None or current_id in valid_ids:
-            objects.append(obj_array)
-            loaded_ids.append(current_id)
-
-    with opener(file_path, "rt", encoding="utf-8") as f:
-        for line in f:
-            line = line.strip()
-            if not line:
-                continue
-            if line.startswith("#objectKey"):
-                if current_id is not None:
-                    finalize_object()
-                current_id = "_".join(line.split()[-1].split("_")[:-1])
-                frame_lines = []
-            else:
-                if current_id is None:
-                    continue
-                if ";" in line and any(c.isalpha() for c in line.split(";")[1]):
-                    continue
-                frames = line.split(";")
-                frame_arrays = []
-                for fr in frames:
-                    fr = fr.strip()
-                    if fr:
-                        try:
-                            xyz = np.array([float(x) for x in fr.split(",")], dtype=np.float32)
-                            frame_arrays.append(xyz)
-                        except ValueError:
-                            continue
-                if frame_arrays:
-                    frame_lines.append(np.concatenate(frame_arrays))
+    i = 0
+    while i < len(lines):
+        ln = lines[i].strip()
+        
+        if ln.startswith("#objectKey"):
+            # FIX 1: Use the full segmented ID (last token, index -1)
+            key = ln.split()[-1]
+            i += 1
+            
+            # Skip blank lines and metadata lines (8;mcdr.objects)
+            while i < len(lines) and (lines[i].strip() == "" or lines[i].startswith("8;mcdr.objects")):
+                i += 1
+                
+            pose_lines = []
+            # Collect all lines until the next objectKey
+            while i < len(lines) and not lines[i].startswith("#objectKey"):
+                if lines[i].strip() and not lines[i].startswith("8;mcdr.objects"):
+                    pose_lines.append(lines[i].strip())
+                i += 1
+                
+            frames = []
+            # Parse the pose lines collected
+            for pl in pose_lines:
+                coords = []
+                # Split by semicolon, only keeping parts with coordinate data (contain a comma)
+                parts = [p.strip() for p in pl.split(';') if ',' in p]
+                for p in parts:
+                    # Split by comma and convert to float (3 numbers per joint)
+                    nums = [float(x.strip()) for x in p.split(',') if x.strip()]
+                    if len(nums) % 3 == 0 and len(nums) > 0:
+                        coords.append(np.array(nums).reshape(-1))
+                
+                # If valid coordinates were found for the frame, concatenate them
+                if coords:
+                    frames.append(np.concatenate(coords))
+            
+            # FIX 2: Load the sequence if it has any frames (no 8-frame filter)
+            if frames:
+                seq_array = np.stack(frames, axis=0).astype(np.float32)
+                
+                # FIX 3: Check against valid_ids and max_objects using the full ID
+                if valid_ids is None or key in valid_ids:
+                    objects.append(seq_array)
+                    loaded_ids.append(key)
+                    
                 if max_objects and len(objects) >= max_objects:
                     break
-        if current_id is not None:
-            finalize_object()
+        else:
+            i += 1
+            
     if not objects:
         raise RuntimeError(f"No sequences loaded from {file_path}")
+        
     return objects, loaded_ids
-
+    
 # ---------------------
 # Postprocessed SCL loader
 # ---------------------
@@ -167,7 +196,7 @@ def evaluate_pair(i, j, skeletons, scl_vectors, skel_thresh, scl_thresh):
     elif d_skel > p40_skel:
         label_skel = False
     else:
-        return (0, 0, 0, 0, 0, 0)
+        return (0, 0, 0, 0, 1, 0)
 
     d_scl = cosine(scl_vectors[i], scl_vectors[j])
     if d_scl < p0_5_scl:
@@ -175,10 +204,7 @@ def evaluate_pair(i, j, skeletons, scl_vectors, skel_thresh, scl_thresh):
     elif d_scl > p40_scl:
         label_scl = False
     else:
-        if label_skel:
-            return (0, 0, 0, 0, 1, 0)
-        else:
-            return (0, 0, 0, 0, 0, 1)
+        return (0, 0, 0, 0, 0, 1)
 
     TP = FP = FN = TN = 0
     if label_skel and label_scl:
@@ -220,7 +246,7 @@ def compute_metrics_on_subsets(skeletons, scl_vectors, skel_thresh, scl_thresh,
         indices = random.sample(range(n_objects), min(subset_size, n_objects))
         metrics = compute_metrics_for_subset(indices, skeletons, scl_vectors, skel_thresh, scl_thresh)
         results.append(metrics)
-        print(f"TP: {metrics['TP']}, TN: {metrics['TN']}, FP: {metrics['FP']}, FN: {metrics['FN']}")
+        print(f"TP: {metrics['TP']}, TN: {metrics['TN']}, FP: {metrics['FP']}, FN: {metrics['FN']}, out_skel: {metrics['gray']}, out_scl: {metrics['o']}")
         print(f"Precision: {metrics['precision']:.6f}, Recall: {metrics['recall']:.6f}, F0.25: {metrics['F025']:.6f}, F1: {metrics['F1']:.6f}, Accuracy: {metrics['accuracy']:.6f}\n")
     # Aggregate
     print("="*50)
@@ -254,6 +280,7 @@ def main():
 
     if len(skeletons) != len(scl_vectors):
         print(f"Warning: {len(skeletons)} skeletons vs {len(scl_vectors)} SCL vectors")
+        raise RuntimeError(f"Lengths must be the same so the indexes in the cycle are equal.")
 
     compute_metrics_on_subsets(skeletons, scl_vectors, skel_thresh, scl_thresh,
                                n_subsets=args.n_subsets, subset_size=args.subset_size, seed=args.seed)

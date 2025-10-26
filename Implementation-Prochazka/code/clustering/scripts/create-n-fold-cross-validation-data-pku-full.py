@@ -95,12 +95,12 @@ MODELS = ["pku-mmd"]
 
 print("Starting decompression process...")
 
-for dim in DIMS:
-    for beta in BETAS:
-        for model in MODELS:
-            create_data_files_pku(
-                "/storage/brno12-cerit/home/drking/data/pku-mmd/splits/CV_train_objects_messif-lines.txt",
-                f"/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions-norm/pku-mmd/cv/lat_dim={dim}_beta={beta}/predictions_segmented_model_norm={model}.data",
-                "cv",
-            )
+# for dim in DIMS:
+#     for beta in BETAS:
+#         for model in MODELS:
+create_data_files_pku(
+    "/home/drking/Documents/Bakalarka/data/data/pku-mmd/splits/CV_train_objects_messif-lines.txt",
+    f"/home/drking/Documents/Bakalarka/data/data/pku-mmd/actions_singlesubject-segment24_shift4.8_initialshift0-coords_normPOS-fps10.data",
+    "cv",
+)
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#PBS -l walltime=24:0:0
+#PBS -l walltime=48:0:0
 #PBS -l select=1:ncpus=16:mem=64gb
 #PBS -o /dev/null
 #PBS -e /dev/null
