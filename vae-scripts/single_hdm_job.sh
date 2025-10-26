@@ -31,7 +31,7 @@ conda activate "/storage/brno12-cerit/home/drking/.conda/envs/${ENV_NAME}" || {
 }
 
 
-if [ "${MOD}" -eq "hdm05" ]; then
+if [ "${MOD}" == "hdm05" ]; then
 
     for DIM in "256" "128" "64" "32" "16" "8" "4"; do
         for BETA in "0.1" "1" "10"; do
