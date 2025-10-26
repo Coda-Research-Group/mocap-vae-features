@@ -2,15 +2,11 @@
 
 #PBS -l walltime=24:0:0
 #PBS -l select=1:ncpus=16:mem=64gb
-#PBS -o /dev/null
-#PBS -e /dev/null
+
 
 REPO_DIR='/storage/brno12-cerit/home/drking/experiments'
 ENV_NAME='cuda4'
 SINGLE_JOB='/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/SCL-quality/single_precision.sh'
-
-module add conda-modules
-module add mambaforge
 
 ITER=${ITERATION}
 DIM=${DIMENSION}
@@ -30,6 +26,8 @@ case "$FILE" in
     ;;
 esac
 
+module add conda-modules
+module add mambaforge
 
 conda activate "/storage/brno12-cerit/home/drking/.conda/envs/${ENV_NAME}" || {
     echo >&2 "Conda environment does not exist!"
@@ -40,6 +38,7 @@ python3 /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/SCL-qua
     /storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=${VAR}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz \
     --subset-size 20000 --subset-repeats 5 --n-jobs 16 --output /storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=${VAR}_lat-dim=${DIM}_beta=${BETA}/${ITER}/scl.json
 
+wait 
 
 python3 /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/SCL-quality/precision-recall.py \
     /storage/brno12-cerit/home/drking/data/hdm05/${FILE}.npz \

@@ -9,21 +9,12 @@ REPO_DIR='/storage/brno12-cerit/home/drking/experiments'
 ENV_NAME='cuda4'
 SINGLE_HDM='/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/SCL-quality/single_precision_hdm05.sh'
 
-module add conda-modules
-module add mambaforge
-
-conda activate "/storage/brno12-cerit/home/drking/.conda/envs/${ENV_NAME}" || {
-    echo >&2 "Conda environment does not exist!"
-    exit 2
-}
-
 for FILE in "parts_norm/motion_hands_l_norm" "parts_norm/motion_hands_r_norm" "parts_norm/motion_legs_l_norm" "parts_norm/motion_legs_r_norm" "parts_norm/motion_torso_norm" "class130-actions-segment80_shift16-coords_normPOS-fps12"; do
     for BETA in "0.1" "1" "10"; do 
         for DIM in "64" "32" "16" "8" "4"; do 
             for ITER in "1" "2" "3" "4" "5"; do
 
-                JOB_NAME="testing_VAE_ITERATION=${ITER},DIMENSION=${DIM},BETA=${BETA},FILE=${FILE}"
-                echo "testing_VAE_ITERATION=${ITER},DIMENSION=${DIM},BETA=${BETA},FILE=${FILE}"
+                JOB_NAME="vae_${FILE}_${DIM}_${BETA}_${ITER}"
 
                 qsub \
                     -N "${JOB_NAME}" \
