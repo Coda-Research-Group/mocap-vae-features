@@ -36,7 +36,7 @@ conda activate "/storage/brno12-cerit/home/drking/.conda/envs/${ENV_NAME}" || {
 
 python3 /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/SCL-quality/scl_thresholds.py \
     /storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz \
-    --subset-size 20000 --subset-repeats 5 --n-jobs 16 \
+    --subset-size 50000 \
     --output /storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/scl.json
 
 wait 
