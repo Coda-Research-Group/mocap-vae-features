@@ -9,7 +9,7 @@ REPO_DIR='/storage/brno12-cerit/home/drking/experiments'
 ENV_NAME='cuda4'
 SINGLE_HDM='/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/SCL-quality/single_precision_hdm05.sh'
 
-for DATAFILE in "parts_norm/motion_hands_l_norm" "parts_norm/motion_hands_r_norm" "parts_norm/motion_legs_l_norm" "parts_norm/motion_legs_r_norm" "parts_norm/motion_torso_norm"; do
+for DATAFILE in "hdm05-handL" "hdm05-handR" "hdm05-legL" "hdm05-legR" "hdm05-torso"; do
     for BETA in "0.1" "1" "10"; do 
         for DIM in "64" "32" "16" "8" "4"; do 
             for ITER in "1" "2" "3" "4" "5"; do
@@ -25,6 +25,7 @@ for DATAFILE in "parts_norm/motion_hands_l_norm" "parts_norm/motion_hands_r_norm
         done
     done
 done
+
 
 # for DATAFILE in "class130-actions-segment80_shift16-coords_normPOS-fps12"; do
 #     for BETA in "0.1" "1" "10"; do 
