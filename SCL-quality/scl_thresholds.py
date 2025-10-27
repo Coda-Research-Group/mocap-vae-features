@@ -140,8 +140,8 @@ def main():
     all_results = []
     first_run_distances = None 
     
-    for run in tqdm(range(args.runs), desc="Runs"):
-        # The seed for each run is derived from the base seed
+    for run in range(args.runs):
+            # The seed for each run is derived from the base seed
         vectors, total_matching = stream_sample_objects(
             args.objects_file, train_ids, subset_size=args.subset_size, seed=args.seed + run 
         )
