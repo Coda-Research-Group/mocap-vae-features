@@ -18,11 +18,11 @@ DATAFILE=${DATAFILE}
 SETUP=${SETUP}
 
 case "$DATAFILE" in
-  "pku-mmd-handL") PATH_PART="parts_norm/motion_hands_l_norm" ;;
-  "pku-mmd-handR") PATH_PART="parts_norm/motion_hands_r_norm" ;;
-  "pku-mmd-legL")  PATH_PART="parts_norm/motion_legs_l_norm" ;;
-  "pku-mmd-legR")  PATH_PART="parts_norm/motion_legs_r_norm" ;;
-  "pku-mmd-torso") PATH_PART="parts_norm/motion_torso_norm" ;;
+  "pku-mmd-handL") PATH_PART="${SETUP}_parts/motion_hands_l_norm" ;;
+  "pku-mmd-handR") PATH_PART="${SETUP}_parts/motion_hands_r_norm" ;;
+  "pku-mmd-legL")  PATH_PART="${SETUP}_parts/motion_legs_l_norm" ;;
+  "pku-mmd-legR")  PATH_PART="${SETUP}_parts/motion_legs_r_norm" ;;
+  "pku-mmd-torso") PATH_PART="${SETUP}_parts/motion_torso_norm" ;;
   "pku-mmd")       PATH_PART="actions_singlesubject-segment24_shift4.8_initialshift0-coords_normPOS-fps10" ;;
   *)
     echo "Unknown DATAFILE: $DATAFILE"
@@ -43,7 +43,7 @@ python3 /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/data-sp
 
 python3 /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/SCL-quality/scl_thresholds.py \
     /storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data-train \
-    --subset-size 50000 \
+    --subset-size 50000 --runs 5 \
     --output /storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/scl.json
 
 python3 /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/SCL-quality/precision-recall.py \
