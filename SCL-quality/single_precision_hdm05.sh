@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #PBS -l walltime=24:0:0
-#PBS -l select=1:ncpus=10:mem=64gb
+#PBS -l select=1:ncpus=10:mem=16gb
 #PBS -o /dev/null
 #PBS -e /dev/null
 
@@ -31,7 +31,7 @@ esac
 
 conda activate "/storage/brno12-cerit/home/drking/.conda/envs/${ENV_NAME}" || {
     echo >&2 "Conda environment does not exist!"
-    exit 2
+    exit 8
 }
 
 python3 /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/SCL-quality/scl_thresholds.py \
@@ -44,5 +44,5 @@ python3 /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/SCL-qua
     /storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz \
     /storage/brno12-cerit/home/drking/data/hdm05/${PATH_PART}.json \
     /storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/scl.json \
-    --dataset hdm05 --n-subsets 5 --subset-size 3000 --n-jobs 10 \
+    --dataset hdm05 --n-subsets 5 --subset-size 6000 --n-jobs 10 \
     --output /storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/metrics.json

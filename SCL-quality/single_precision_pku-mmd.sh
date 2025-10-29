@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #PBS -l walltime=24:0:0
-#PBS -l select=1:ncpus=:mem=16gb
+#PBS -l select=1:ncpus=10:mem=16gb
 #PBS -o /dev/null
 #PBS -e /dev/null
 
@@ -32,7 +32,7 @@ esac
 
 conda activate "/storage/brno12-cerit/home/drking/.conda/envs/${ENV_NAME}" || {
     echo >&2 "Conda environment does not exist!"
-    exit 2
+    exit 8
 }
 
 python3 /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/data-splitting-scripts/train-test-splitting.py \
