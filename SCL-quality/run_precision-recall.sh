@@ -22,7 +22,7 @@ for DATAFILE in "hdm05-handL" "hdm05-handR" "hdm05-legL" "hdm05-legR" "hdm05-tor
                     -N "${JOB_NAME}" \
                     -v "ITERATION=${ITER},DIMENSION=${DIM},BETA=${BETA},DATAFILE=${DATAFILE}" \
                     "${SINGLE_HDM}"
-
+                sleep 0.2
             done
         done
     done
@@ -39,6 +39,7 @@ for DATAFILE in "hdm05"; do
                     -N "${JOB_NAME}" \
                     -v "ITERATION=${ITER},DIMENSION=${DIM},BETA=${BETA},DATAFILE=${DATAFILE}" \
                     "${SINGLE_HDM}"
+                sleep 0.2
 
             done
         done
@@ -58,6 +59,7 @@ for DATAFILE in "pku-mmd-handL" "pku-mmd-handR" "pku-mmd-legL" "pku-mmd-legR" "p
                         -N "${JOB_NAME}" \
                         -v "ITERATION=${ITER},DIMENSION=${DIM},BETA=${BETA},DATAFILE=${DATAFILE},SETUP=${SETUP}" \
                         "${SINGLE_PKU}"
+                sleep 0.2
 
                 done
             done
@@ -77,6 +79,7 @@ for DATAFILE in "pku-mmd"; do
                         -N "${JOB_NAME}" \
                         -v "ITERATION=${ITER},DIMENSION=${DIM},BETA=${BETA},DATAFILE=${DATAFILE},SETUP=${SETUP}" \
                         "${SINGLE_PKU}"
+                sleep 0.2
 
                 done
             done
