@@ -26,7 +26,7 @@ def normalize_part_data(input_file_path, output_file_path):
         return
     try:
         # allow_pickle=True is often needed for npz files containing object arrays
-        data = np.load(input_file_path)
+        data = np.load(input_file_path, allow_pickle=True)
         # Verify required keys exist
         if 'sample_ids' not in data or 'subsequences' not in data:
              print(f"Error: Required keys 'sample_ids' or 'subsequences' not found in {input_file_path}")
@@ -82,26 +82,28 @@ def normalize_part_data(input_file_path, output_file_path):
     # Note: This simple version assumes you want all original sample_ids saved.
     # If skipping sequences means you need to filter sample_ids, add that logic here.
     try:
-        # Save using savez_compressed. dtype=object is robust for lists of arrays.
+        # Convert the list of arrays into a NumPy object array
+        normalized_sequences_object_array = np.array(normalized_subsequences, dtype=object)
+
+        # Save using np.savez
         np.savez(output_file_path,
                             sample_ids=sample_ids,
-                            subsequences=np.array(normalized_subsequences))
+                            subsequences=normalized_sequences_object_array)
         print(f"Saved normalized data ({len(normalized_subsequences)} sequences) to {output_file_path}")
     except Exception as e:
         print(f"Error saving normalized data to {output_file_path}: {e}")
 
-
 # --- How to Use ---
 
 # 1. Specify the body model you are working with (used for path construction)
-body_model = 'pku-mmd'  # Or 'pku-mmd'
+body_model = 'cs'  # Or 'pku-mmd'
 
 # 2. Define the path where your SPLIT part files ARE LOCATED
 #    (These are the .npz outputs of your first script)
-input_base_path = Path(f'/home/drking/Documents/bakalarka/data/{body_model}/parts')
+input_base_path = Path(f'/home/drking/Documents/Bakalarka/data/data/pku-mmd/parts/{body_model}/')
 
 # 3. Define where you want to SAVE the NORMALIZED part files
-output_base_path = Path(f'/home/drking/Documents/bakalarka/data/{body_model}/parts_norm')
+output_base_path = Path(f'/home/drking/Documents/Bakalarka/data/data/pku-mmd/normilized/{body_model}/')
 output_base_path.mkdir(parents=True, exist_ok=True) # Create the output directory
 
 # 4. List the base names of the part files you want to normalize
