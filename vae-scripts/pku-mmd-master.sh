@@ -32,24 +32,24 @@ for EXP in "${EXPS[@]}"; do
 done
 
 
-DIMS=("256" "128" "64" "32" "16" "8" "4")
-MODELS=("pku-mmd")
+# DIMS=("256" "128" "64" "32" "16" "8" "4")
+# MODELS=("pku-mmd")
 
-for EXP in "${EXPS[@]}"; do
-    for DIM in "${DIMS[@]}"; do
-        for BETA in "${BETAS[@]}"; do
-            for MOD in "${MODELS[@]}"; do 
+# for EXP in "${EXPS[@]}"; do
+#     for DIM in "${DIMS[@]}"; do
+#         for BETA in "${BETAS[@]}"; do
+#             for MOD in "${MODELS[@]}"; do 
 
-                JOB_NAME="vae_pku-mmd_${EXP}_${DIM}_${BETA}_${MOD}"
+#                 JOB_NAME="vae_pku-mmd_${EXP}_${DIM}_${BETA}_${MOD}"
 
-                qsub \
-                    -N "${JOB_NAME}" \
-                    -v "PASSED_EXP=${EXP},PASSED_DIM=${DIM},PASSED_BETA=${BETA},PASSED_MODEL=${MOD}" \
-                    "${WORKER_SCRIPT_PATH}"
+#                 qsub \
+#                     -N "${JOB_NAME}" \
+#                     -v "PASSED_EXP=${EXP},PASSED_DIM=${DIM},PASSED_BETA=${BETA},PASSED_MODEL=${MOD}" \
+#                     "${WORKER_SCRIPT_PATH}"
 
-            done
-        done
-    done
-done
+#             done
+#         done
+#     done
+# done
 
 

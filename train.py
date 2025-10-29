@@ -260,17 +260,17 @@ def main(args):
     predictions_file = log_dir / 'predictions.csv'
 
     DATA_PATHS={
-        "hdm05-torso":"/storage/brno12-cerit/home/drking/data/hdm05/parts_norm/motion_torso_norm.npz",
-        "hdm05-handL":"/storage/brno12-cerit/home/drking/data/hdm05/parts_norm/motion_hands_l_norm.npz",
-        "hdm05-handR":"/storage/brno12-cerit/home/drking/data/hdm05/parts_norm/motion_hands_r_norm.npz",
-        "hdm05-legL":"/storage/brno12-cerit/home/drking/data/hdm05/parts_norm/motion_legs_l_norm.npz",
-        "hdm05-legR":"/storage/brno12-cerit/home/drking/data/hdm05/parts_norm/motion_legs_r_norm.npz",
+        "hdm05-torso":"/storage/brno12-cerit/home/drking/data/hdm05/parts/motion_torso.npz",
+        "hdm05-handL":"/storage/brno12-cerit/home/drking/data/hdm05/parts/motion_hands_l.npz",
+        "hdm05-handR":"/storage/brno12-cerit/home/drking/data/hdm05/parts/motion_hands_r.npz",
+        "hdm05-legL":"/storage/brno12-cerit/home/drking/data/hdm05/parts/motion_legs_l.npz",
+        "hdm05-legR":"/storage/brno12-cerit/home/drking/data/hdm05/parts/motion_legs_r.npz",
         "hdm05":"/storage/brno12-cerit/home/drking/data/hdm05/class130-actions-segment80_shift16-coords_normPOS-fps12.npz",
-        "pku-mmd-torso":"/storage/brno12-cerit/home/drking/data/pku-mmd/parts_norm/motion_torso_norm.npz",
-        "pku-mmd-handL":"/storage/brno12-cerit/home/drking/data/pku-mmd/parts_norm/motion_hands_l_norm.npz",
-        "pku-mmd-handR":"/storage/brno12-cerit/home/drking/data/pku-mmd/parts_norm/motion_hands_r_norm.npz",
-        "pku-mmd-legL":"/storage/brno12-cerit/home/drking/data/pku-mmd/parts_norm/motion_legs_l_norm.npz",
-        "pku-mmd-legR":"/storage/brno12-cerit/home/drking/data/pku-mmd/parts_norm/motion_legs_r_norm.npz",
+        "pku-mmd-torso":"/storage/brno12-cerit/home/drking/data/pku-mmd/parts/motion_torso.npz",
+        "pku-mmd-handL":"/storage/brno12-cerit/home/drking/data/pku-mmd/parts/motion_hands_l.npz",
+        "pku-mmd-handR":"/storage/brno12-cerit/home/drking/data/pku-mmd/parts/motion_hands_r.npz",
+        "pku-mmd-legL":"/storage/brno12-cerit/home/drking/data/pku-mmd/parts/motion_legs_l.npz",
+        "pku-mmd-legR":"/storage/brno12-cerit/home/drking/data/pku-mmd/parts/motion_legs_r.npz",
         "pku-mmd":"/storage/brno12-cerit/home/drking/data/pku-mmd/actions_singlesubject-segment24_shift4.8_initialshift0-coords_normPOS-fps10.npz",
 
     }
@@ -344,7 +344,7 @@ def main(args):
         folder_path = 'cv'
         dataset = "pku-mmd"
 
-    predictions_csv = Path('/storage/brno12-cerit/home/drking/experiments/SCL')
+    predictions_csv = Path('/storage/brno12-cerit/home/drking/experiments/SCL-non-norm')
     
     predictions_data_file_path = predictions_csv / dataset / folder_path / f'model={args.body_model}_lat-dim={args.latent_dim}_beta={args.beta}' / f'{args.iteration}'
     predictions_data_file_path.mkdir(parents=True, exist_ok=True)
