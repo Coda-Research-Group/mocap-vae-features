@@ -1,0 +1,55 @@
+#!/bin/bash
+
+#PBS -l walltime=24:0:0
+#PBS -l select=1:ncpus=:mem=16gb
+#PBS -o /dev/null
+#PBS -e /dev/null
+
+module add conda-modules
+module add mambaforge
+
+REPO_DIR='/storage/brno12-cerit/home/drking/experiments'
+ENV_NAME='cuda4'
+
+ITER=${ITERATION}
+DIM=${DIMENSION}
+BETA=${BETA}
+DATAFILE=${DATAFILE}
+SETUP=${SETUP}
+
+case "$DATAFILE" in
+  "pku-mmd-handL") PATH_PART="parts_norm/motion_hands_l_norm" ;;
+  "pku-mmd-handR") PATH_PART="parts_norm/motion_hands_r_norm" ;;
+  "pku-mmd-legL")  PATH_PART="parts_norm/motion_legs_l_norm" ;;
+  "pku-mmd-legR")  PATH_PART="parts_norm/motion_legs_r_norm" ;;
+  "pku-mmd-torso") PATH_PART="parts_norm/motion_torso_norm" ;;
+  "pku-mmd")       PATH_PART="actions_singlesubject-segment24_shift4.8_initialshift0-coords_normPOS-fps10" ;;
+  *)
+    echo "Unknown DATAFILE: $DATAFILE"
+    exit 7
+    ;;
+esac
+
+conda activate "/storage/brno12-cerit/home/drking/.conda/envs/${ENV_NAME}" || {
+    echo >&2 "Conda environment does not exist!"
+    exit 2
+}
+
+python3 /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/data-splitting-scripts/train-test-splitting.py \
+    /storage/brno12-cerit/home/drking/data/pku-mmd/splits/${SETUP}_train_objects_messif-lines.txt \
+    /storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz \
+    /storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data-train
+
+
+python3 /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/SCL-quality/scl_thresholds.py \
+    /storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data-train \
+    --subset-size 50000 \
+    --output /storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/scl.json
+
+python3 /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/SCL-quality/precision-recall.py \
+    /storage/brno12-cerit/home/drking/data/pku-mmd/${PATH_PART}.data-${SETUP}-train \
+    /storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data-train \
+    /storage/brno12-cerit/home/drking/data/pku-mmd/${PATH_PART}-${SETUP}.json \
+    /storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/scl.json \
+    --dataset pku-mmd --n-subsets 5 --subset-size 6000 --n-jobs 10 \
+    --output /storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/metrics.json

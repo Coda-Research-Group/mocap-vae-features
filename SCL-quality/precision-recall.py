@@ -5,10 +5,10 @@ import json
 import numpy as np
 from scipy.spatial.distance import cosine
 from itertools import combinations
-from tqdm import tqdm
 import random
 from math import inf
 import os
+from joblib import Parallel, delayed
 
 # ---------------------
 # Load thresholds
@@ -220,10 +220,11 @@ def evaluate_pair(i, j, skeletons, scl_vectors, skel_thresh, scl_thresh):
 # ---------------------
 # Metrics computation
 # ---------------------
-def compute_metrics_for_subset(indices, skeletons, scl_vectors, skel_thresh, scl_thresh):
+def compute_metrics_for_subset(indices, skeletons, scl_vectors, skel_thresh, scl_thresh, subset_idx=None):
     TP = FP = FN = TN = g = o = 0
     pairs = list(combinations(indices, 2))
-    for i, j in tqdm(pairs, desc="Processing pairs", leave=False):
+    
+    for i, j in pairs:
         r = evaluate_pair(i, j, skeletons, scl_vectors, skel_thresh, scl_thresh)
         TP += r[0]; FP += r[1]; FN += r[2]; TN += r[3]; g += r[4]; o += r[5]
 
@@ -236,20 +237,34 @@ def compute_metrics_for_subset(indices, skeletons, scl_vectors, skel_thresh, scl
             'accuracy': accuracy, 'TP': TP, 'TN': TN, 'FP': FP, 'FN': FN, 'gray': g, 'o': o}
 
 def compute_metrics_on_subsets(skeletons, scl_vectors, skel_thresh, scl_thresh,
-                               n_subsets=5, subset_size=1000, seed=42):
+                               n_subsets=5, subset_size=1000, seed=42, n_jobs=-1):
     random.seed(seed); np.random.seed(seed)
     n_objects = len(skeletons)
     print(f"Total objects: {n_objects}")
-    results = []
+    print(f"Processing {n_subsets} subsets in parallel using {n_jobs} cores...")
+    
+    # Generate all subset indices upfront
+    subset_indices = []
     for subset_idx in range(n_subsets):
-        print(f"=== Subset {subset_idx + 1}/{n_subsets} ===")
         indices = random.sample(range(n_objects), min(subset_size, n_objects))
-        metrics = compute_metrics_for_subset(indices, skeletons, scl_vectors, skel_thresh, scl_thresh)
-        results.append(metrics)
+        subset_indices.append((subset_idx, indices))
+    
+    # Process subsets in parallel
+    results = Parallel(n_jobs=n_jobs, verbose=0)(
+        delayed(compute_metrics_for_subset)(
+            indices, skeletons, scl_vectors, skel_thresh, scl_thresh, subset_idx
+        )
+        for subset_idx, indices in subset_indices
+    )
+    
+    # Print individual results
+    for subset_idx, metrics in enumerate(results):
+        print(f"\n=== Subset {subset_idx + 1}/{n_subsets} ===")
         print(f"TP: {metrics['TP']}, TN: {metrics['TN']}, FP: {metrics['FP']}, FN: {metrics['FN']}, out_skel: {metrics['gray']}, out_scl: {metrics['o']}")
-        print(f"Precision: {metrics['precision']:.6f}, Recall: {metrics['recall']:.6f}, F0.25: {metrics['F025']:.6f}, F1: {metrics['F1']:.6f}, Accuracy: {metrics['accuracy']:.6f}\n")
+        print(f"Precision: {metrics['precision']:.6f}, Recall: {metrics['recall']:.6f}, F0.25: {metrics['F025']:.6f}, F1: {metrics['F1']:.6f}, Accuracy: {metrics['accuracy']:.6f}")
+    
     # Aggregate
-    print("="*50)
+    print("\n" + "="*50)
     print("AGGREGATED RESULTS (Mean ± Std)")
     for metric in ['precision', 'recall', 'F025', 'F1', 'accuracy']:
         vals = [r[metric] for r in results]
@@ -270,6 +285,8 @@ def main():
     parser.add_argument("--n-subsets", type=int, default=5)
     parser.add_argument("--subset-size", type=int, default=1000)
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--n-jobs", type=int, default=-1, 
+                       help="Number of parallel jobs (-1 uses all cores)")
     args = parser.parse_args()
 
     skel_thresh = load_thresholds(args.skeleton_thresh)
@@ -283,7 +300,8 @@ def main():
         raise RuntimeError(f"Lengths must be the same so the indexes in the cycle are equal.")
 
     compute_metrics_on_subsets(skeletons, scl_vectors, skel_thresh, scl_thresh,
-                               n_subsets=args.n_subsets, subset_size=args.subset_size, seed=args.seed)
+                               n_subsets=args.n_subsets, subset_size=args.subset_size, 
+                               seed=args.seed, n_jobs=args.n_jobs)
 
 if __name__ == "__main__":
     main()
