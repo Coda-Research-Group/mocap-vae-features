@@ -237,7 +237,7 @@ def compute_metrics_for_subset(indices, skeletons, scl_vectors, skel_thresh, scl
             'accuracy': accuracy, 'TP': TP, 'TN': TN, 'FP': FP, 'FN': FN, 'gray': g, 'o': o}
 
 def compute_metrics_on_subsets(skeletons, scl_vectors, skel_thresh, scl_thresh,
-                               n_subsets=5, subset_size=1000, seed=42, n_jobs=-1):
+                               n_subsets=5, subset_size=1000, seed=42, n_jobs=-1, output_file=None):
     random.seed(seed); np.random.seed(seed)
     n_objects = len(skeletons)
     print(f"Total objects: {n_objects}")
@@ -266,9 +266,29 @@ def compute_metrics_on_subsets(skeletons, scl_vectors, skel_thresh, scl_thresh,
     # Aggregate
     print("\n" + "="*50)
     print("AGGREGATED RESULTS (Mean ± Std)")
-    for metric in ['precision', 'recall', 'F025', 'F1', 'accuracy']:
+    aggregated = {}
+    for metric in ['precision', 'recall', 'F025', 'F1', 'accuracy', 'TP', 'TN', 'FP', 'FN', 'gray', 'o']:
         vals = [r[metric] for r in results]
-        print(f"{metric.capitalize():10s}: {np.mean(vals):.6f} ± {np.std(vals):.6f}")
+        mean_val = np.mean(vals)
+        std_val = np.std(vals)
+        aggregated[metric] = {'mean': float(mean_val), 'std': float(std_val)}
+        if metric in ['precision', 'recall', 'F025', 'F1', 'accuracy']:
+            print(f"{metric.capitalize():10s}: {mean_val:.6f} ± {std_val:.6f}")
+    
+    # Write results to output file if specified
+    if output_file:
+        output_data = {
+            'n_objects': n_objects,
+            'n_subsets': n_subsets,
+            'subset_size': subset_size,
+            'seed': seed,
+            'individual_results': results,
+            'aggregated': aggregated
+        }
+        with open(output_file, 'w', encoding='utf-8') as f:
+            json.dump(output_data, f, indent=2)
+        print(f"\nResults saved to {output_file}")
+    
     return results
 
 # ---------------------
@@ -287,6 +307,8 @@ def main():
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--n-jobs", type=int, default=-1, 
                        help="Number of parallel jobs (-1 uses all cores)")
+    parser.add_argument("--output", type=str, default=None,
+                       help="Output file path for saving results (JSON format)")
     args = parser.parse_args()
 
     skel_thresh = load_thresholds(args.skeleton_thresh)
@@ -301,7 +323,7 @@ def main():
 
     compute_metrics_on_subsets(skeletons, scl_vectors, skel_thresh, scl_thresh,
                                n_subsets=args.n_subsets, subset_size=args.subset_size, 
-                               seed=args.seed, n_jobs=args.n_jobs)
+                               seed=args.seed, n_jobs=args.n_jobs, output_file=args.output)
 
 if __name__ == "__main__":
     main()

@@ -25,13 +25,12 @@ def stream_sample_objects(file_path, valid_prefixes, subset_size, seed=None):
     total_matching = 0
     current_id = None
 
-    # Determine file opener based on extension
     if file_path.endswith(".gz"):
         opener = gzip.open
-        mode = "rt" # Read text mode
+        mode = "rt"
     else:
         opener = open
-        mode = "r" # Read mode
+        mode = "r"
 
     try:
         with opener(file_path, mode, encoding="utf-8") as f:
@@ -41,34 +40,28 @@ def stream_sample_objects(file_path, valid_prefixes, subset_size, seed=None):
                     continue
 
                 if line.startswith("#objectKey"):
-                    # The ID is the 3rd token (index 2)
+
                     parts = line.split()
                     current_id = parts[2] if len(parts) >= 3 else None
                 else:
                     if current_id is None:
                         continue
                     
-                    # Skip the metadata line if it's still present (e.g., "8;mcdr.objects.ObjectMocapPose")
                     if current_id.startswith("8;mcdr.objects"): 
                         continue
 
-                    # Extract the base prefix from the full segmented ID (e.g., '0002-M_32_182_50' from '0002-M_32_182_50_0')
                     prefix_parts = current_id.rsplit('_', 1)
                     prefix = prefix_parts[0] if len(prefix_parts) > 1 else current_id
                     
-                    # Check against the valid prefixes
                     if valid_prefixes is None or prefix in valid_prefixes:
                         total_matching += 1
                         
-                        # Assuming the rest of the line contains the vector data for the SCL vector file
                         try:
                             vector = np.array([float(x) for x in line.split(",")], dtype=np.float32)
                         except ValueError:
-                            # Skip lines that don't contain pure float data (like coordinate lines in a full .data file)
                             current_id = None
                             continue
 
-                        # Reservoir sampling
                         if len(reservoir) < subset_size:
                             reservoir.append(vector)
                         else:
@@ -76,7 +69,7 @@ def stream_sample_objects(file_path, valid_prefixes, subset_size, seed=None):
                             if j < subset_size:
                                 reservoir[j] = vector
 
-                    current_id = None # End of the object block
+                    current_id = None
         
     except Exception as e:
         print(f"Error processing file {file_path}: {e}")
@@ -92,7 +85,7 @@ def stream_sample_objects(file_path, valid_prefixes, subset_size, seed=None):
 # ---------------------
 def compute_percentiles(vectors, metric="cosine", percentiles=(0.5, 40), return_dists=False):
     """Compute pairwise distance percentiles and optionally returns the distance array."""
-    # pdist computes distances between all unique pairs
+
     dists = pdist(vectors, metric=metric)
     
     if return_dists:
@@ -121,10 +114,9 @@ def main():
     parser.add_argument("--runs", type=int, default=10, help="Number of random subset runs to average over (default: 10)")
     parser.add_argument("--output", type=str, default=None, help="Optional path to output simple JSON with averaged percentiles")
     parser.add_argument("--plot", action="store_true", help="Plot a histogram of the distance distribution for the first run.")
-    parser.add_argument("--seed", type=int, default=42, help="Initial random seed for reproducibility (default: 42)") # <-- ADDED SEED ARGUMENT
+    parser.add_argument("--seed", type=int, default=42, help="Initial random seed for reproducibility (default: 42)")
     args = parser.parse_args()
 
-    # Load train IDs (if provided)
     if args.train_ids_file:
         try:
             with open(args.train_ids_file, "r", encoding="utf-8") as f:
@@ -141,12 +133,11 @@ def main():
     first_run_distances = None 
     
     for run in range(args.runs):
-            # The seed for each run is derived from the base seed
+
         vectors, total_matching = stream_sample_objects(
             args.objects_file, train_ids, subset_size=args.subset_size, seed=args.seed + run 
         )
         
-        # Determine if we need to return the full distance array for the first run
         return_dists = (args.plot and run == 0)
         
         if return_dists:
@@ -178,7 +169,6 @@ def main():
             json.dump(results, jf, indent=2)
         print(f"Saved results to {args.output}")
 
-    # Plot the distribution of the first run
     if args.plot and first_run_distances is not None:
         plot_distribution(first_run_distances, args.metric)
 
