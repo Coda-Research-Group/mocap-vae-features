@@ -51,5 +51,5 @@ python3 /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/SCL-qua
     /storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data-train \
     /storage/brno12-cerit/home/drking/data/pku-mmd/${PATH_PART}.json \
     /storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/scl.json \
-    --dataset pku-mmd --n-subsets 5 --subset-size 6000 --n-jobs 10 \
+    --dataset pku-mmd --n-subsets 5 --subset-size 5000 --n-jobs 10 \
     --output /storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/metrics.json

@@ -96,14 +96,14 @@ def normalize_part_data(input_file_path, output_file_path):
 # --- How to Use ---
 
 # 1. Specify the body model you are working with (used for path construction)
-body_model = 'cs'  # Or 'pku-mmd'
+body_model = ''  # Or 'pku-mmd'
 
 # 2. Define the path where your SPLIT part files ARE LOCATED
 #    (These are the .npz outputs of your first script)
-input_base_path = Path(f'/home/drking/Documents/Bakalarka/data/data/pku-mmd/parts/{body_model}/')
+input_base_path = Path(f'/home/drking/Documents/Bakalarka/data/data/pku-mmd/parts/')
 
 # 3. Define where you want to SAVE the NORMALIZED part files
-output_base_path = Path(f'/home/drking/Documents/Bakalarka/data/data/pku-mmd/normilized/{body_model}/')
+output_base_path = Path(f'/home/drking/Documents/Bakalarka/data/data/pku-mmd/normilized/')
 output_base_path.mkdir(parents=True, exist_ok=True) # Create the output directory
 
 # 4. List the base names of the part files you want to normalize

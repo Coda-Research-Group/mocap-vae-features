@@ -1,13 +1,13 @@
 #!/bin/bash
 
-#PBS -l walltime=48:0:0
-#PBS -l select=1:ncpus=16:mem=128gb
+#PBS -l walltime=24:0:0
+#PBS -l select=1:ncpus=16:mem=12gb
 #PBS -o /dev/null
 #PBS -e /dev/null
 
 REPO_DIR='/storage/brno12-cerit/home/drking/experiments'
 ENV_NAME='cuda4'
-SINGLE_SKELETON="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/SCL-quality/skeleton-single.sh"
+SINGLE_SKELETON="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/SCL-quality/skeleton_single.sh"
 
 module add conda-modules
 module add mambaforge

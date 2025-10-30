@@ -31,8 +31,8 @@ def npz_to_data(npz_file: str, data_file: str):
 
 # Example usage
 npz_to_data(
-    "/home/drking/Documents/Bakalarka/data/data/pku-mmd/normilized/motion_torso_norm.npz",
-    "/home/drking/Documents/Bakalarka/data/data/pku-mmd/normilized/motion_torso_norm.data"
+    "/home/drking/Documents/Bakalarka/data/data/pku-mmd/normilized/motion_hands_l_norm.npz",
+    "/home/drking/Documents/Bakalarka/data/data/pku-mmd/normilized/motion_hands_l_norm.data"
 )
 npz_to_data(
     "/home/drking/Documents/Bakalarka/data/data/pku-mmd/normilized/motion_hands_l_norm.npz",

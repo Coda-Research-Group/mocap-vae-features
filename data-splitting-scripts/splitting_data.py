@@ -1,91 +1,141 @@
 import numpy as np
-from pathlib import Path
 import argparse
 import re
+from pathlib import Path
+from tqdm import tqdm
+
+
+# --- UTILITY FUNCTIONS ---
+
+def split_subsequences_from_data_file(data_path):
+    """Parses a .data file into individual subsequence lines."""
+    subsequence_lines = []
+    with open(data_path, 'r') as lines:
+        for line in lines:
+            if line.lstrip().startswith("#objectKey"):
+                if subsequence_lines:
+                    yield subsequence_lines
+                    subsequence_lines = []
+            subsequence_lines.append(line.strip())
+
+        if subsequence_lines:
+            yield subsequence_lines
+
+def parse_pose_line(line):
+    """Parses a single line of pose data into a NumPy array."""
+    # Modified to handle both space/comma/semicolon separation
+    values = re.split(';|,| ', line)
+    values = [float(v) for v in values if v]  # Filter out empty strings
+    values = np.array(values, dtype=np.float32)
+    values = values.reshape(-1, 3)
+    return values
+
+def convert_subsequence_to_numpy(subsequence_lines):
+    """Converts a list of lines for one subsequence into a NumPy array."""
+    header = subsequence_lines[:2]
+    data = subsequence_lines[2:]
+
+    sample_id = header[0].split(' ')[-1]
+
+    # Parse and stack pose data
+    data = map(parse_pose_line, data)
+    data = np.stack(list(data))
+
+    # Basic check using the frame count from the header
+    try:
+        expected_frames = int(header[1].split(';')[0])
+        assert len(data) == expected_frames, f'Error parsing data: expected {expected_frames} frames, got {len(data)}'
+    except (IndexError, ValueError):
+        # Handle cases where header might be malformed or missing frame count
+        pass
+
+    return sample_id, data
+
+
+def normalize_sequence_length(sequence, max_length):
+    """Pads/crops a sequence to a fixed length (max_length)."""
+    pad = max_length - len(sequence)
+    if pad > 0:  # pad small sequences
+        # Pad evenly on both sides, 'edge' mode repeats the first/last frame
+        pad = ((pad // 2, -(-pad // 2)), (0, 0), (0, 0))
+        sequence = np.pad(sequence, pad, mode='edge')
+    
+    sequence = sequence[:max_length]  # crop big sequences
+    return sequence
+
+def get_body_parts_indices(body_model):
+    """Get body part indices for the specified body model."""
+    if body_model == 'hdm05':
+        # Indices are 1-based in the original source, converted to 0-based here
+        return {
+            'torso': [10, 11, 12, 13, 14, 15], # Corresponds to 11-16
+            'handL': [16, 17, 18, 19, 20, 21, 22], # Corresponds to 17-23
+            'handR': [23, 24, 25, 26, 27, 28, 29], # Corresponds to 24-30
+            'legL': [0, 1, 2, 3, 4], # Corresponds to 1-5
+            'legR': [5, 6, 7, 8, 9], # Corresponds to 6-10
+        }
+    elif body_model == 'pku-mmd':
+        # Indices are 0-based
+        return {
+            'torso': [0, 1, 2, 3, 20],
+            'handL': [4, 5, 6, 7, 21, 22],
+            'handR': [8, 9, 10, 11, 23, 24],
+            'legL': [12, 13, 14, 15],
+            'legR': [16, 17, 18, 19],
+        }
+    else:
+        raise ValueError(f"Unrecognized body model: {body_model}. Supported models: 'hdm05', 'pku-mmd'")
+
+
+# --- I/O AND MAIN LOGIC ---
 
 def load_from_data_file(file_path: Path):
     """Load sequences from a .data text file."""
-    sample_ids = []
-    subsequences = []
+    subsequences = split_subsequences_from_data_file(file_path)
+    subsequences = map(convert_subsequence_to_numpy, tqdm(subsequences, desc=f"Parsing {file_path.name}"))
+    sample_ids, subsequences = zip(*list(subsequences))
     
-    with open(file_path, 'r', encoding='utf-8') as f:
-        lines = f.readlines()
-    
-    i = 0
-    while i < len(lines):
-        line = lines[i].strip()
-        
-        # Look for object key
-        if line.startswith('#objectKey'):
-            # Extract the key (last part of the line)
-            key = line.split()[-1]
-            sample_ids.append(key)
-            i += 1
-            
-            # Next line should be the frame count
-            if i < len(lines):
-                meta_line = lines[i].strip()
-                frame_count = int(meta_line.split(';')[0])
-                i += 1
-                
-                # Read frames
-                frames = []
-                for _ in range(frame_count):
-                    if i < len(lines):
-                        frame_line = lines[i].strip()
-                        # Parse joints: each joint is "x,y,z" separated by ";"
-                        joints_str = frame_line.split(';')
-                        joints = []
-                        for joint_str in joints_str:
-                            if joint_str:
-                                coords = [float(x) for x in joint_str.split(',')]
-                                joints.append(coords)
-                        frames.append(joints)
-                        i += 1
-                
-                # Convert to numpy array: shape (num_frames, num_joints, 3)
-                subsequences.append(np.array(frames))
-        else:
-            i += 1
-    
-    return np.array(sample_ids), subsequences
+    # NOTE: subsequences is a list of arrays with potentially different lengths
+    return np.array(sample_ids), list(subsequences)
 
-def save_to_data_file(file_path: Path, base_sample_ids, subsequences, part_name):
-    """
-    Save sequences to a .data text file, preserving the original sample IDs.
-    """
+def save_to_data_file(file_path: Path, base_sample_ids, subsequences):
+    """Save sequences to a .data text file."""
     
     with open(file_path, 'w', encoding='utf-8') as f:
         for i, key in enumerate(base_sample_ids):
             seq = subsequences[i]
             
-            # Write the original ID to the file
             f.write(f"#objectKey messif.objects.keys.AbstractObjectKey {key}\n")
             f.write(f"{seq.shape[0]};mcdr.objects.ObjectMocapPose\n")
             
             for frame in seq:
-                # Ensure frame has the correct shape for processing
-                if frame.ndim == 1:
-                    # If frame is flat (e.g., (3,) for one joint), reshape it to (1, 3)
-                    frame = np.expand_dims(frame, axis=0)
-                    
-                frame_lines = ["{:.6f},{:.6f},{:.6f}".format(*frame[j]) for j in range(frame.shape[0])]
+                # Format joints coordinates (x,y,z) with high precision, separated by semicolon
+                frame_lines = [",".join([f"{c:.8f}" for c in joint_coords]) for joint_coords in frame]
                 f.write(";".join(frame_lines) + "\n")
-            
+
+
 def save_to_npz_file(file_path: Path, sample_ids, subsequences):
     """
-    Save sequences to an .npz file (compressed NumPy format).
-    The IDs and sequences are stored as parallel arrays.
-    
-    Updated to use keys 'sample_ids' and 'subsequences' as required by the user's loader.
+    Save sequences to an .npz file, applying padding/cropping to ensure 
+    a homogeneous array, making it compatible with MoCapDataModule.
     """
     
-    # Convert subsequences list (of arrays) to a NumPy object array for saving
-    # The 'dtype=object' is necessary because the arrays might have different lengths.
-    seq_array = np.array(subsequences, dtype=object)
+    if not subsequences:
+        seq_array = np.array([])
+        max_length = 0
+    else:
+        # 1. Find the max length across all sequences in this body part
+        max_length = max(len(s) for s in subsequences)
+        print(f"    [NPZ] Fixed Subsequence Length for save: {max_length}")
+        
+        # 2. Apply padding/cropping to standardize length
+        padded_subsequences = [normalize_sequence_length(s, max_length) for s in subsequences]
+        
+        # 3. Stack them into a single, homogeneous array (Shape N x T x J x 3)
+        # THIS STEP ELIMINATES dtype=object, ensuring compatibility.
+        seq_array = np.stack(padded_subsequences)
     
-    # Save the IDs and the sequences into a compressed .npz archive
-    # Changed keys from 'ids' and 'sequences' to 'sample_ids' and 'subsequences'
+    # Save the IDs and the homogeneous sequences array
     np.savez_compressed(
         file_path, 
         sample_ids=np.array(sample_ids), 
@@ -93,59 +143,22 @@ def save_to_npz_file(file_path: Path, sample_ids, subsequences):
     )
 
 
-def get_body_parts_indices(body_model):
-    """Get body part indices for the specified body model."""
-    if body_model == 'hdm05':
-        return {
-            'legs_l': [1, 2, 3, 4, 5],
-            'legs_r': [6, 7, 8, 9, 10],
-            'torso': [11, 12, 13, 14, 15, 16],
-            'hands_l': [17, 18, 19, 20, 21, 22, 23],
-            'hands_r': [24, 25, 26, 27, 28, 29, 30]
-        }
-    elif body_model == 'pku-mmd':
-        return {
-            'legs_l': [12, 13, 14, 15],
-            'legs_r': [16, 17, 18, 19],
-            'torso': [0, 1, 20, 2, 3],
-            'hands_l': [4, 5, 6, 7, 21, 22],
-            'hands_r': [8, 9, 10, 11, 23, 24]
-        }
-    else:
-        raise ValueError(f"Unrecognized body model: {body_model}. Supported models: 'hdm05', 'pku-mmd'")
-
 def split_motion_data(input_file, output_dir, body_model):
-    """
-    Split motion data into body parts and save as .data and .npz files.
+    """Split motion data into body parts and save as .data and .npz files."""
     
-    Args:
-        input_file: Path to input .data file
-        output_dir: Directory where .data files will be saved
-        body_model: Body model type ('hdm05' or 'pku-mmd')
-    """
-    # Convert to Path objects
     input_file = Path(input_file)
     output_dir = Path(output_dir)
     
-    # Validate input file
     if not input_file.exists():
         raise FileNotFoundError(f"Input file not found: {input_file}")
     
-    # Check if file has .data extension or .data-cv-* pattern
-    valid_patterns = ['.data', '.data-cv-train', '.data-cs-train']
-    is_valid = any(input_file.name.endswith(pattern) for pattern in valid_patterns)
-    
-    if not is_valid:
-        raise ValueError(f"Input file must be a .data file (or .data-cv-train/test), got: {input_file.name}")
-    
-    # Create output directory
     output_dir.mkdir(parents=True, exist_ok=True)
     
-    # Load data
+    # Load data (sequences are of variable length at this point)
     print(f"Loading data from {input_file.name}...")
     sample_ids, subsequences = load_from_data_file(input_file)
     num_sequences = len(sample_ids)
-    print(f"Loaded {num_sequences} sequences with {subsequences[0].shape[1]} joints each")
+    print(f"Loaded {num_sequences} sequences.")
     
     # Get body parts indices
     body_parts = get_body_parts_indices(body_model)
@@ -154,8 +167,9 @@ def split_motion_data(input_file, output_dir, body_model):
     print(f"Splitting sequences using {body_model} body model...")
     data_parts = {part_name: [] for part_name in body_parts.keys()}
     
-    for seq in subsequences:
+    for seq in tqdm(subsequences, desc="Splitting sequences"):
         for part_name, indices in body_parts.items():
+            # Slice the joints for the body part
             data_parts[part_name].append(seq[:, indices, :])
     
     # Save each part as .data and .npz file
@@ -165,28 +179,28 @@ def split_motion_data(input_file, output_dir, body_model):
         data_path = output_dir / f"motion_{part_name}.data"
         npz_path = output_dir / f"motion_{part_name}.npz"
         
-        # 1. Save to .data file
-        save_to_data_file(data_path, sample_ids, part_data, part_name)
+        print(f"\nProcessing {part_name}...")
         
-        # 2. Save to .npz file
+        # 1. Save to .data file (maintains variable length)
+        save_to_data_file(data_path, sample_ids, part_data)
+        print(f"  ✓ {data_path.name} [data].")
+        
+        # 2. Save to .npz file (pads/stacks to fixed length)
         save_to_npz_file(npz_path, sample_ids, part_data)
-        
-        num_joints = part_data[0].shape[1]
-        
-        # Print status
-        print(f"  ✓ {data_path.name} ({num_joints} joints) [data].")
         print(f"  ✓ {npz_path.name} [npz].")
-    
+        
+        
     print(f"\n✓ Successfully split {num_sequences} sequences into {len(body_parts)} body parts!")
+
+# --- ENTRY POINT ---
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Split motion capture data into body parts and save as .data and .npz files',
+        description='Split motion capture data into body parts and save as compatible .npz files',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
   python splitting_data.py input.data output_dir/ pku-mmd
-  python splitting_data.py data.data-cv-train parts/ hdm05
         """
     )
     parser.add_argument(
@@ -197,7 +211,7 @@ Examples:
     parser.add_argument(
         'output_dir',
         type=str,
-        help='Directory where .data files will be saved'
+        help='Directory where .data and .npz files will be saved'
     )
     parser.add_argument(
         'body_model',
