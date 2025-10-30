@@ -7,7 +7,7 @@ import re
 # --- Configuration ---
 # NOTE: Replace this with the actual base path on MetaCentrum
 BASE_PATH = Path('/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/') 
-OUTPUT_CSV_PATH = 'aggregated_metrics_summary.csv'
+OUTPUT_CSV_PATH = '/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/aggregated_metrics_summary.csv'
 
 # Regex to extract key parameters from the path structure
 # Captures: 1. Model, 2. Latent Dimension, 3. Beta, 4. Repetition number (which we will ignore here)

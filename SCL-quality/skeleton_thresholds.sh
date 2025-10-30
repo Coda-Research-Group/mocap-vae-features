@@ -23,7 +23,7 @@ conda activate "/storage/brno12-cerit/home/drking/.conda/envs/${ENV_NAME}" || {
 #         --subset-size 6000 --subset-repeats 5 --n-jobs 16 --output /storage/brno12-cerit/home/drking/data/hdm05/${FILE}.json
 # done
 
-for DATAFILE in "motion_hands_l_norm" "motion_hands_r_norm" "motion_legs_l_norm" "motion_legs_r_norm" "motion_torso_norm"; do
+for DATAFILE in "motion_hands_l" "motion_hands_r" "motion_legs_l" "motion_legs_r" "motion_torso"; do
 
     JOB_NAME="${DATAFILE}"
 
@@ -34,8 +34,8 @@ for DATAFILE in "motion_hands_l_norm" "motion_hands_r_norm" "motion_legs_l_norm"
 
 done
 
-for EXP in "cs" "cv"; do
-    python3 /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/SCL-quality/dtw_thresholds.py --input /storage/brno12-cerit/home/drking/data/pku-mmd/actions_singlesubject-segment24_shift4.8_initialshift0-coords_normPOS-fps10.data-${EXP}-train \
-        --subset-size 6000 --subset-repeats 5 --n-jobs 16 --output /storage/brno12-cerit/home/drking/data/pku-mmd/actions_singlesubject-segment24_shift4.8_initialshift0-coords_normPOS-fps10-${EXP}.json
+# for EXP in "cs" "cv"; do
+#     python3 /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/SCL-quality/dtw_thresholds.py --input /storage/brno12-cerit/home/drking/data/pku-mmd/actions_singlesubject-segment24_shift4.8_initialshift0-coords_normPOS-fps10.data-${EXP}-train \
+#         --subset-size 5000 --subset-repeats 5 --n-jobs 16 --output /storage/brno12-cerit/home/drking/data/pku-mmd/actions_singlesubject-segment24_shift4.8_initialshift0-coords_normPOS-fps10-${EXP}.json
 
-done
+# done
