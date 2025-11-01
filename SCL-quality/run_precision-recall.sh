@@ -47,7 +47,8 @@ SINGLE_PKU='/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/SCL
 # done
 
 
-for DATAFILE in "pku-mmd-handL" "pku-mmd-handR" "pku-mmd-legL" "pku-mmd-legR" "pku-mmd-torso"; do
+# for DATAFILE in "pku-mmd-handL" "pku-mmd-handR" "pku-mmd-legL" "pku-mmd-legR" "pku-mmd-torso"; do
+for DATAFILE in "pku-mmd-handR" "pku-mmd-legL" "pku-mmd-legR"; do
     for BETA in "0.1" "1" "10"; do 
         for DIM in "64" "32" "16" "8" "4"; do 
             for ITER in "1" "2" "3" "4" "5"; do
@@ -67,25 +68,25 @@ for DATAFILE in "pku-mmd-handL" "pku-mmd-handR" "pku-mmd-legL" "pku-mmd-legR" "p
     done
 done
 
-for DATAFILE in "pku-mmd"; do
-    for BETA in "0.1" "1" "10"; do 
-        for DIM in "256" "128" "64" "32" "16" "8" "4"; do
-            for ITER in "1" "2" "3" "4" "5"; do
-                for SETUP in "cs" "cv"; do
+# for DATAFILE in "pku-mmd"; do
+#     for BETA in "0.1" "1" "10"; do 
+#         for DIM in "256" "128" "64" "32" "16" "8" "4"; do
+#             for ITER in "1" "2" "3" "4" "5"; do
+#                 for SETUP in "cs" "cv"; do
 
-                    JOB_NAME="vae_${DATAFILE}_${DIM}_${BETA}_${ITER}_${SETUP}"
+#                     JOB_NAME="vae_${DATAFILE}_${DIM}_${BETA}_${ITER}_${SETUP}"
 
-                    qsub \
-                        -N "${JOB_NAME}" \
-                        -v "ITERATION=${ITER},DIMENSION=${DIM},BETA=${BETA},DATAFILE=${DATAFILE},SETUP=${SETUP}" \
-                        "${SINGLE_PKU}"
-                    sleep 0.2
+#                     qsub \
+#                         -N "${JOB_NAME}" \
+#                         -v "ITERATION=${ITER},DIMENSION=${DIM},BETA=${BETA},DATAFILE=${DATAFILE},SETUP=${SETUP}" \
+#                         "${SINGLE_PKU}"
+#                     sleep 0.2
 
-                done
-            done
-        done
-    done
-done
+#                 done
+#             done
+#         done
+#     done
+# done
 
 
 
