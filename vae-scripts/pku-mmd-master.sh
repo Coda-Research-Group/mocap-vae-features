@@ -19,7 +19,7 @@ for EXP in "${EXPS[@]}"; do
         for BETA in "${BETAS[@]}"; do
             for MOD in "${MODELS[@]}"; do 
 
-                JOB_NAME="vae_pku-mmd_${EXP}_${DIM}_${BETA}_${MOD}"
+                JOB_NAME="train_vae_pku-mmd_${EXP}_${DIM}_${BETA}_${MOD}"
 
                 qsub \
                     -N "${JOB_NAME}" \
