@@ -18,11 +18,11 @@ DATAFILE=${DATAFILE}
 SETUP=${SETUP}
 
 case "$DATAFILE" in
-  "pku-mmd-handL") PATH_PART="parts/${SETUP}/motion_hands_l" ;;
-  "pku-mmd-handR") PATH_PART="parts/${SETUP}/motion_hands" ;;
-  "pku-mmd-legL")  PATH_PART="parts/${SETUP}/motion_legs" ;;
-  "pku-mmd-legR")  PATH_PART="parts/${SETUP}/motion_legs" ;;
-  "pku-mmd-torso") PATH_PART="parts/${SETUP}/motion_torso" ;;
+  "pku-mmd-handL") PATH_PART="normilized/${SETUP}/motion_hands_l_norm" ;;
+  "pku-mmd-handR") PATH_PART="normilized/${SETUP}/motion_hands_norm" ;;
+  "pku-mmd-legL")  PATH_PART="normilized/${SETUP}/motion_legs_norm" ;;
+  "pku-mmd-legR")  PATH_PART="normilized/${SETUP}/motion_legs_norm" ;;
+  "pku-mmd-torso") PATH_PART="normilized/${SETUP}/motion_torso_norm" ;;
   "pku-mmd")       PATH_PART="actions_singlesubject-segment24_shift4.8_initialshift0-coords_normPOS-fps10" ;;
   *)
     echo "Unknown DATAFILE: $DATAFILE"
