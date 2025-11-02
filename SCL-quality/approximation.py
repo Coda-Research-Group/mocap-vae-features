@@ -6,8 +6,8 @@ import re
 
 # --- Configuration ---
 # NOTE: Replace this with the actual base path on MetaCentrum
-BASE_PATH = Path('/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/') 
-OUTPUT_CSV_PATH = '/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/aggregated_metrics_summary.csv'
+BASE_PATH = Path('/storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/cv/') 
+OUTPUT_CSV_PATH = '/storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/cv/aggregated_metrics_summary.csv'
 
 # Regex to extract key parameters from the path structure
 # Captures: 1. Model, 2. Latent Dimension, 3. Beta, 4. Repetition number (which we will ignore here)
@@ -98,4 +98,12 @@ def aggregate_metrics_summary(base_path: Path, output_csv_path: str, target_metr
     print(f"\n✅ Successfully aggregated {len(data_rows)} unique configurations into {output_csv_path}")
 
 # Run the function
+BASE_PATH = Path('/storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/cv/') 
+OUTPUT_CSV_PATH = '/storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/cv/aggregated_metrics_summary.csv'
+
+aggregate_metrics_summary(BASE_PATH, OUTPUT_CSV_PATH, TARGET_METRICS)
+
+BASE_PATH = Path('/storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/cs/') 
+OUTPUT_CSV_PATH = '/storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/cs/aggregated_metrics_summary.csv'
+
 aggregate_metrics_summary(BASE_PATH, OUTPUT_CSV_PATH, TARGET_METRICS)
