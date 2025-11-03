@@ -1,10 +1,5 @@
 #!/bin/bash
 
-
-
-DIMS=("64" "32" "16" "8" "4")
-BETAS=("0.1" "1" "10")
-
 # PATHS to scripts
 WHOLE_SCRIPT_PATH="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/scripts/cluster-scl-hdm05-full.sh"
 PARTS_SCRIPT_PATH="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/scripts/cluster-scl-hdm05-parts.sh"
@@ -39,18 +34,14 @@ echo "Starting submission process..."
 
 echo "Halfway there"
 
-# for K in 2 3 4 5 6 7 8 9 10 20 50 100 150 200 250 300 350 400 500 750 1000 1250 1500 1750 2000 2250; do
-#     for ITER in 1 2 3 4 5; do
-for K in 350; do
-    for ITER in 1; do
+for ITER in 1 2 3 4 5; do
 
-        JOB_NAME="clustering_full_hdm05_it${ITER}_${K}"
+    JOB_NAME="clustering_full_hdm05_iter_${ITER}"
 
-        qsub \
-            -N "${JOB_NAME}" \
-            -v "PASSED_K=${K},PASSED_ITER=${ITER}" \
-            "${WHOLE_SCRIPT_PATH}"
-    done
+    qsub \
+        -N "${JOB_NAME}" \
+        -v "PASSED_ITER=${ITER}" \
+        "${WHOLE_SCRIPT_PATH}"
 done
 
 echo "Job finished."
