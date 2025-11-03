@@ -8,8 +8,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-CURRENT_DIM=${PASSED_DIM}
-CURRENT_BETA=${PASSED_BETA}
+K=${PASSED_K}
 ITER=${PASSED_ITER}
 
 ##########################################
@@ -223,15 +222,16 @@ function createCompositeMWClusteringELKI() {
 ## Composite MW clustering using MESSIF
 function createCompositeMWClusteringMessif() {
 
+    
     ALGORITHM='messif.pivotselection.KMeansPivotChooser'
     MEDOIDS_JAR_PATH='/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/medoids_new.jar'
     EXTRACTED_MEDOIDS_FILE='medoids.txt'
 
 
-    ALGORITHM_PARAMS="-kmeans.k 350"
+    ALGORITHM_PARAMS="-kmeans.k ${K}"
 
-    DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=hdm05_lat-dim=64_beta=0.1/1"
-    ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/clusters/hdm05/all/hdm05/1"
+    DATASET_PATH='/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/'
+    ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/clusters/hdm05/full/${ITER}/${K}/"
 
 
     DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVectorCosine"
@@ -249,7 +249,7 @@ ${JDK_PATH} \
 -sf ${DATASET_PATH} \
 -cls ${DISTANCE_FUNCTION} \
 -pc ${ALGORITHM} \
--np 350 \
+-np ${K} \
 "
     echo "${COMMAND}"
 
