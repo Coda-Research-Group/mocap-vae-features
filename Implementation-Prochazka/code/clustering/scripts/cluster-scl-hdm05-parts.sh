@@ -1,6 +1,6 @@
 #!/bin/bash
-#PBS -l walltime=24:0:0
-#PBS -l select=1:ncpus=4:mem=32gb:scratch_local=50gb
+#PBS -l walltime=12:0:0
+#PBS -l select=1:ncpus=2:mem=16gb:scratch_local=16gb
 #PBS -o /dev/null
 #PBS -e /dev/null
 
@@ -8,8 +8,8 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-CURRENT_DIM=${PASSED_DIM}
-CURRENT_BETA=${PASSED_BETA}
+ITER=${PASSED_ITER}
+PART=${PASSED_PART}
 
 ##########################################
 
@@ -53,25 +53,6 @@ EXTRACTED_MEDOIDS_FILE='medoids.txt'
 # 3. Run the script as follows:
 # nohup ./cluster.sh &> <output>.txt &
 
-##########################################
-
-# Defaults
-
-#ROOT_FOLDER_FOR_RESULTS=${ROOT_FOLDER_FOR_RESULTS:-'/home/drking/Documents/bakalarka/mocap-vae-features/data/clustering/results'}
-#DATASET_PATH=${DATASET_PATH:-'/home/drking/Documents/bakalarka/mocap-vae-features/data/hdm05/2version/elki-class130-actions-segment80_shift16-coords_normPOS-fps12.data'}
-#DISTANCE_FUNCTION=${DISTANCE_FUNCTION:-'clustering.distance.SequenceMocapPoseCoordsL2DTW'}
-#ALGORITHM=${ALGORITHM:-'clustering.kmeans.KMedoidsFastPAM'}
-#ALGORITHM_PARAMS=${ALGORITHM_PARAMS:-'-kmeans.k 3'}
-#ELKI_JAR_PATH=${ELKI_JAR_PATH:-'/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/elki-with-distances.jar'}
-#CONVERTOR_JAR_PATH=${CONVERTOR_JAR_PATH:-'/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/convertor.jar'}
-#JDK_PATH=${JDK_PATH:-'/usr/bin/java'}
-#CLUSTER_SUBFOLDER=${CLUSTER_SUBFOLDER:-'cluster'}
-#ELKI_FORMAT_CLUSTER_SUBFOLDER=${ELKI_FORMAT_CLUSTER_SUBFOLDER:-'clusters-elki-format'}
-#KMEDOIDS_CLUSTER_SUBFOLDER=${KMEDOIDS_CLUSTER_SUBFOLDER:-'kmedoids-clusters'}
-#EXTRACTED_MEDOIDS_FILE=${EXTRACTED_MEDOIDS_FILE:-'medoids.txt'}
-
-# The core functionality of this script
-
 function formatResultFolderName() {
     # Remove the algorithm prefix
     ALGORITHM_NAME="${ALGORITHM##*.}"
@@ -80,227 +61,43 @@ function formatResultFolderName() {
 	RESULT_FOLDER_NAME="${ROOT_FOLDER_FOR_RESULTS}/${ALGORITHM_NAME}-${ESCAPED_ALGORITHM_PARAMS}"
 }
 
-function createClusters() {
-    echo 'createClusters'
-
-    formatResultFolderName
-
-    COMMAND="\
-${JDK_PATH} \
--jar ${ELKI_JAR_PATH} \
-KDDCLIApplication \
--verbose \
--dbc.in ${DATASET_PATH} \
--time \
--algorithm ${ALGORITHM} \
--algorithm.distancefunction ${DISTANCE_FUNCTION} \
-${ALGORITHM_PARAMS} \
--resulthandler ResultWriter \
--out ${RESULT_FOLDER_NAME}/${CLUSTER_SUBFOLDER}\
-"
-
-    echo "${COMMAND}"
-
-    eval "${COMMAND}"
-
-    # Stores the run command alongside the results.
-    echo "${COMMAND}" >"${RESULT_FOLDER_NAME}/${CLUSTER_SUBFOLDER}/clustering-command.txt"
-}
-
-function convertElkiClusteringFormatToElkiFormat() {
-    echo 'convertElkiClusteringFormatToElkiFormat'
-
-    formatResultFolderName
-
-    mkdir -p "${RESULT_FOLDER_NAME}"/"${ELKI_FORMAT_CLUSTER_SUBFOLDER}"
-
-    for CLUSTER_PATH in "${RESULT_FOLDER_NAME}"/"${CLUSTER_SUBFOLDER}"/cluster_*; do
-        # Parses the filename (the string after the last "/")
-        CLUSTER_FILENAME=$(basename "${CLUSTER_PATH}")
-
-        COMMAND="\
-${JDK_PATH} \
--jar ${CONVERTOR_JAR_PATH} \
---convert-elki-clustering-file-to-elki-format \
---elki-clustering-file=${RESULT_FOLDER_NAME}/${CLUSTER_SUBFOLDER}/${CLUSTER_FILENAME} \
-"
-
-        echo "${COMMAND}"
-
-        echo "${RESULT_FOLDER_NAME}/${ELKI_FORMAT_CLUSTER_SUBFOLDER}/${CLUSTER_FILENAME}"
-
-        eval "${COMMAND}" >"${RESULT_FOLDER_NAME}/${ELKI_FORMAT_CLUSTER_SUBFOLDER}/${CLUSTER_FILENAME}"
-    done
-}
-
-function runKMedoidsClusteringOnEveryCluster() {
-    echo 'runKMedoidsClusteringOnEveryCluster'
-
-    formatResultFolderName
-
-    for CLUSTER_PATH in "${RESULT_FOLDER_NAME}"/"${ELKI_FORMAT_CLUSTER_SUBFOLDER}"/cluster_*; do
-        # Parses the filename (the string after the last "/") and removes the file extension
-        CLUSTER_FILENAME=$(basename "${CLUSTER_PATH%.*}")
-
-        NUMBER_OF_OBJECTS_IN_CLUSTER=$(wc -l "${CLUSTER_PATH}" | awk -F " " '{print $1}')
-
-        # if CLUSTER_PATH contains only one object use this object as the medoid/pivot
-        if [[ "${NUMBER_OF_OBJECTS_IN_CLUSTER}" == '1' ]]; then
-            mkdir -p "${RESULT_FOLDER_NAME}/${KMEDOIDS_CLUSTER_SUBFOLDER}/${CLUSTER_FILENAME}"
-
-            # Remove commas
-            ELKI_RESULT=$(sed 's/,//g' "${CLUSTER_PATH}")
-
-            echo -e "# Cluster: Cluster\n\
-# Cluster name: Cluster\n\
-# Cluster noise flag: false\n\
-# Cluster size: 1\n\
-# Model class: de.lmu.ifi.dbs.elki.data.model.MedoidModel\n\
-# Cluster Medoid: 1\n\
-ID=1 ${ELKI_RESULT}" >"${RESULT_FOLDER_NAME}/${KMEDOIDS_CLUSTER_SUBFOLDER}/${CLUSTER_FILENAME}/cluster.txt"
-        else
-            COMMAND="\
-${JDK_PATH} \
--jar ${ELKI_JAR_PATH} \
-KDDCLIApplication \
--verbose \
--dbc.in ${CLUSTER_PATH} \
--time \
--algorithm clustering.kmeans.KMedoidsFastPAM \
--algorithm.distancefunction ${DISTANCE_FUNCTION} \
-${DISTANCE_FUNCTION_PARAMS} \
--kmeans.k 1 \
--resulthandler ResultWriter \
--out ${RESULT_FOLDER_NAME}/${KMEDOIDS_CLUSTER_SUBFOLDER}/${CLUSTER_FILENAME} \
-"
-            echo "${COMMAND}"
-
-            eval "${COMMAND}"
-
-            # Stores the run command alongside the results.
-            echo "${COMMAND}" >"${RESULT_FOLDER_NAME}/${KMEDOIDS_CLUSTER_SUBFOLDER}/${CLUSTER_FILENAME}/clustering-command.txt"
-        fi
-    done
-
-}
-
-function extractClusterMedoids() {
-    echo 'extractClusterMedoids'
-
-    formatResultFolderName
-
-    for CLUSTER_FOLDER_PATH in "${RESULT_FOLDER_NAME}"/"${KMEDOIDS_CLUSTER_SUBFOLDER}"/cluster_*; do
-        COMMAND="\
-${JDK_PATH} \
--jar ${CONVERTOR_JAR_PATH} \
---parse-medoids-from-elki-clustering-folder \
---elki-clustering-folder=${CLUSTER_FOLDER_PATH} \
---vector-dim=${CURRENT_DIM}
-"
-        echo "${COMMAND}"
-
-        # Executes the medoid extraction. The results are appended to a single file in MESSIF format.
-        eval "${COMMAND}" >>"${RESULT_FOLDER_NAME}/${EXTRACTED_MEDOIDS_FILE}"
-    done
-}
-
-# The actual clustering - combines the core functionality to produce the clustering
-
-## Composite MW clustering using ELKI
-function createCompositeMWClusteringELKI() {
-  	for MODEL in "hdm05-torso" "hdm05-handL" "hdm05-handR" "hdm05-legL" "hdm05-legR"; do
-    	DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/elki-predictions_segmented_model=${MODEL}.data"
-    	ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${MODEL}"
-
-      	createClusters
-      	convertElkiClusteringFormatToElkiFormat
-      	runKMedoidsClusteringOnEveryCluster
-      	extractClusterMedoids
-	done
-}
-
 ## Composite MW clustering using MESSIF
 function createCompositeMWClusteringMessif() {
 
-    ALGORITHM='messif.pivotselection.KMeansPivotChooser'
-    MEDOIDS_JAR_PATH='/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/medoids_new.jar'
-
-    for FOLD in '0'; do # HDM05-130 folds
-        # for FOLD in '0,1,2,3,4,5,6,7,8' '0,1,2,3,4,5,6,7,9' '0,1,2,3,4,5,6,8,9' '0,1,2,3,4,5,7,8,9' '0,1,2,3,4,6,7,8,9' '0,1,2,3,5,6,7,8,9' '0,1,2,4,5,6,7,8,9' '0,1,3,4,5,6,7,8,9' '0,2,3,4,5,6,7,8,9' '1,2,3,4,5,6,7,8,9'; do # HDM05-65 folds
-
-        for K in '3000'; do
-
-            for FUNC in 'Cosine'; do
-
-                ALGORITHM_PARAMS="-kmeans.k ${K}"
+    for K in 10 20 35 50 60 80 100 150 200 250 300 350 400 500 750 1000 1250 1500 1750 2000 2500; do
+        ALGORITHM='messif.pivotselection.KMeansPivotChooser'
+        MEDOIDS_JAR_PATH='/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/medoids_new.jar'
+        EXTRACTED_MEDOIDS_FILE='medoids.txt'
 
 
-                # SELECT DATASET_PATH AND ROOT_FOLDER_FOR_RESULTS:
+        ALGORITHM_PARAMS="-kmeans.k ${K}"
 
-                # HDM05-130 - 2-fold cross validation - folds: '0' '1'
-#                DATASET_PATH="/home/drking/Documents/bakalarka/data/SCL/cluster_test/predictions_segmented_model=hdm05.data"
-#                ROOT_FOLDER_FOR_RESULTS="/home/drking/Documents/bakalarka/data/SCL/cluster_test/results/Cosine/"
-
-                # HDM05-65 - 10-fold cross validation - folds: '0,1,2,3,4,5,6,7,8' '0,1,2,3,4,5,6,7,9' '0,1,2,3,4,5,6,8,9' '0,1,2,3,4,5,7,8,9' '0,1,2,3,4,6,7,8,9' '0,1,2,3,5,6,7,8,9' '0,1,2,4,5,6,7,8,9' '0,1,3,4,5,6,7,8,9' '0,2,3,4,5,6,7,8,9' '1,2,3,4,5,6,7,8,9'
-                # DATASET_PATH="/home/xprocha6/cybela1-storage/folds-cluster/hdm05/65/class130-actions-segment80_shift16-coords_normPOS-fps12.data-cho2014-split${SPLIT}-fold${FOLD}"
-                # ROOT_FOLDER_FOR_RESULTS="/home/xprocha6/cybela1-storage/folds-cluster-results/hdm05/65/split${SPLIT}-fold${FOLD}"
-
-                # PKU-MMD CS - no folds or splits
-#                 DATASET_PATH='/home/xprocha6/cybela1-storage/folds-cluster/pku/actions_singlesubject-segment24_shift4.8_initialshift0-coords_normPOS-fps10.data-cs-train'
-#                 ROOT_FOLDER_FOR_RESULTS='/home/xprocha6/cybela1-storage/folds-cluster-results/pku/cs'
-
-                # PKU-MMD CV - no folds or splits
-                 DATASET_PATH="/home/drking/Documents/bakalarka/data/SCL/cluster_test/predictions_segmented_model=pku-mmd.data-cv-test"
-                 ROOT_FOLDER_FOR_RESULTS="/home/drking/Documents/bakalarka/data/SCL/cluster_test/results/Cosine/test"
+        DATASET_PATH="/storage/brno12-cerit/home/drking/SCL-non-norm/hdm05/all/model\=hdm05-${PART}_lat-dim\=8_beta\=0.1/${ITER}/predictions_segmented.data.gz"
+        ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/clusters/hdm05/${PART}/${ITER}/${K}/"
 
 
-                # SELECT JOINTS_IDS:
+        DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVectorCosine"
 
-                # HDM05 - body parts
+        formatResultFolderName
 
-                    # HDM05 - relations consisting of RH (28,29,30,31), LH (21,22,23,24), and HEAD (16,17)
-                    # for JOINT_IDS in '28,29,30,31,21,22,23,24' '16,17,28,29,30,31' '16,17,21,22,23,24'; do
-                    #  1. RH + LH
-                    # for JOINT_IDS in '28,29,30,31,21,22,23,24'; do
-                    #  2. HEAD + RH
-                    # for JOINT_IDS in '16,17,28,29,30,31'; do
-                    #  3. HEAD + LH
-                    # for JOINT_IDS in '16,17,21,22,23,24'; do
+        mkdir -p "${RESULT_FOLDER_NAME}"
 
-                    # PKU-MMD - body parts
-                    # for JOINT_IDS in '2,3,4,21' '5,6,7,8,22,23' '9,10,11,12,24,25' '13,14,15,16' '17,18,19,20'; do
-
-                    # PKU-MMD - relations consisting of RH (11,12,24,25), LH (7,8,22,23), and HEAD (3,4)
-                    #  1. RH + LH
-                    # for JOINT_IDS in '11,12,24,25,7,8,22,23'; do
-                    #  2. HEAD + RH
-                    # for JOINT_IDS in '3,4,11,12,24,25'; do
-                    #  3. HEAD + LH
-                    # for JOINT_IDS in '3,4,7,8,22,23'; do
-
-                DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVector${FUNC}"
-
-                formatResultFolderName
-
-                mkdir -p "${RESULT_FOLDER_NAME}"
-
-                COMMAND="\
+        COMMAND="\
 ${JDK_PATH} \
 -jar ${MEDOIDS_JAR_PATH} \
 1 \
 -pcuseall \
+-kmeans-max-iters 50 \
 -sf ${DATASET_PATH} \
 -cls ${DISTANCE_FUNCTION} \
 -pc ${ALGORITHM} \
 -np ${K} \
 "
-                echo "${COMMAND}"
+        echo "${COMMAND}"
 
-                eval "${COMMAND}" >"${RESULT_FOLDER_NAME}/${EXTRACTED_MEDOIDS_FILE}" 2>"${RESULT_FOLDER_NAME}/log.txt"
-
-            done
-        done
+        eval "${COMMAND}" >"${RESULT_FOLDER_NAME}/${EXTRACTED_MEDOIDS_FILE}" 2>"${RESULT_FOLDER_NAME}/log.txt"
     done
+
 }
 
 
@@ -313,12 +110,12 @@ ${JDK_PATH} \
 #     sleep 10
 # done
 
- for K in 1500 2000 2500 3000; do
-     ALGORITHM_PARAMS="-kmeans.k ${K}"
-     createCompositeMWClusteringELKI
-     sleep 10
- done
+#  for K in 50 100 200 350 500; do
+#      ALGORITHM_PARAMS="-kmeans.k ${K}"
+#      createCompositeMWClusteringELKI
+#      sleep 1
+#  done
 
 
 # MESSIF clustering:
-#createCompositeMWClusteringMessif
+createCompositeMWClusteringMessif
