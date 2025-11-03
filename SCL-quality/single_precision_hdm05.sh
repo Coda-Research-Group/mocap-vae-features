@@ -17,11 +17,11 @@ BETA=${BETA}
 DATAFILE=${DATAFILE}
 
 case "$DATAFILE" in
-  "hdm05-handL") PATH_PART="parts_norm/motion_hands_l_norm" ;;
-  "hdm05-handR") PATH_PART="parts_norm/motion_hands_r_norm" ;;
-  "hdm05-legL")  PATH_PART="parts_norm/motion_legs_l_norm" ;;
-  "hdm05-legR")  PATH_PART="parts_norm/motion_legs_r_norm" ;;
-  "hdm05-torso") PATH_PART="parts_norm/motion_torso_norm" ;;
+  "hdm05-handL") PATH_PART="parts_norm/motion_hands_l" ;;
+  "hdm05-handR") PATH_PART="parts_norm/motion_hands_r" ;;
+  "hdm05-legL")  PATH_PART="parts_norm/motion_legs_l" ;;
+  "hdm05-legR")  PATH_PART="parts_norm/motion_legs_r" ;;
+  "hdm05-torso") PATH_PART="parts_norm/motion_torso" ;;
   "hdm05")       PATH_PART="class130-actions-segment80_shift16-coords_normPOS-fps12" ;;
   *)
     echo "Unknown DATAFILE: $DATAFILE"
@@ -34,15 +34,15 @@ conda activate "/storage/brno12-cerit/home/drking/.conda/envs/${ENV_NAME}" || {
     exit 8
 }
 
-python3 /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/SCL-quality/scl_thresholds.py \
-    /storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz \
+python3 /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/SCL-non-norm-quality/scl_thresholds.py \
+    /storage/brno12-cerit/home/drking/experiments/SCL-non-norm/hdm05/all/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz \
     --subset-size 30000 \
-    --output /storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/scl.json
+    --output /storage/brno12-cerit/home/drking/experiments/SCL-non-norm/hdm05/all/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/scl.json
 
-python3 /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/SCL-quality/precision-recall.py \
+python3 /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/SCL-non-norm-quality/precision-recall.py \
     /storage/brno12-cerit/home/drking/data/hdm05/${PATH_PART}.npz \
-    /storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz \
+    /storage/brno12-cerit/home/drking/experiments/SCL-non-norm/hdm05/all/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz \
     /storage/brno12-cerit/home/drking/data/hdm05/${PATH_PART}.json \
-    /storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/scl.json \
-    --dataset hdm05 --n-subsets 5 --subset-size 6000 --n-jobs 10 \
-    --output /storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/metrics.json
+    /storage/brno12-cerit/home/drking/experiments/SCL-non-norm/hdm05/all/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/scl.json \
+    --dataset hdm05 --n-subsets 5 --subset-size 5000 --n-jobs 10 \
+    --output /storage/brno12-cerit/home/drking/experiments/SCL-non-norm/hdm05/all/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/metrics.json

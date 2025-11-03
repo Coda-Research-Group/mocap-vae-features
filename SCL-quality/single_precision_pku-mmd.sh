@@ -18,11 +18,11 @@ DATAFILE=${DATAFILE}
 SETUP=${SETUP}
 
 case "$DATAFILE" in
-  "pku-mmd-handL") PATH_PART="normilized/${SETUP}/motion_hands_l_norm" ;;
-  "pku-mmd-handR") PATH_PART="normilized/${SETUP}/motion_hands_r_norm" ;;
-  "pku-mmd-legL")  PATH_PART="normilized/${SETUP}/motion_legs_l_norm" ;;
-  "pku-mmd-legR")  PATH_PART="normilized/${SETUP}/motion_legs_r_norm" ;;
-  "pku-mmd-torso") PATH_PART="normilized/${SETUP}/motion_torso_norm" ;;
+  "pku-mmd-handL") PATH_PART="parts/${SETUP}/motion_hands_l" ;;
+  "pku-mmd-handR") PATH_PART="parts/${SETUP}/motion_hands_r" ;;
+  "pku-mmd-legL")  PATH_PART="parts/${SETUP}/motion_legs_l" ;;
+  "pku-mmd-legR")  PATH_PART="parts/${SETUP}/motion_legs_r" ;;
+  "pku-mmd-torso") PATH_PART="parts/${SETUP}/motion_torso" ;;
   "pku-mmd")       PATH_PART="actions_singlesubject-segment24_shift4.8_initialshift0-coords_normPOS-fps10" ;;
   *)
     echo "Unknown DATAFILE: $DATAFILE"
@@ -37,19 +37,19 @@ conda activate "/storage/brno12-cerit/home/drking/.conda/envs/${ENV_NAME}" || {
 
 python3 /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/data-splitting-scripts/train-test-splitting.py \
     /storage/brno12-cerit/home/drking/data/pku-mmd/splits/${SETUP}_train_objects_messif-lines.txt \
-    /storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz \
-    /storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data-train
+    /storage/brno12-cerit/home/drking/experiments/SCL-non-norm/pku-mmd/${SETUP}/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz \
+    /storage/brno12-cerit/home/drking/experiments/SCL-non-norm/pku-mmd/${SETUP}/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data-train
 
 
-python3 /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/SCL-quality/scl_thresholds.py \
-    /storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data-train \
+python3 /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/SCL-non-norm-quality/scl_thresholds.py \
+    /storage/brno12-cerit/home/drking/experiments/SCL-non-norm/pku-mmd/${SETUP}/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data-train \
     --subset-size 30000 --runs 5 \
-    --output /storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/scl.json
+    --output /storage/brno12-cerit/home/drking/experiments/SCL-non-norm/pku-mmd/${SETUP}/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/scl.json
 
-python3 /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/SCL-quality/precision-recall.py \
+python3 /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/SCL-non-norm-quality/precision-recall.py \
     /storage/brno12-cerit/home/drking/data/pku-mmd/${PATH_PART}.data-train \
-    /storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data-train \
+    /storage/brno12-cerit/home/drking/experiments/SCL-non-norm/pku-mmd/${SETUP}/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data-train \
     /storage/brno12-cerit/home/drking/data/pku-mmd/${PATH_PART}.json \
-    /storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/scl.json \
+    /storage/brno12-cerit/home/drking/experiments/SCL-non-norm/pku-mmd/${SETUP}/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/scl.json \
     --dataset pku-mmd --n-subsets 5 --subset-size 5000 --n-jobs 10 \
-    --output /storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/metrics.json
+    --output /storage/brno12-cerit/home/drking/experiments/SCL-non-norm/pku-mmd/${SETUP}/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/metrics.json

@@ -228,10 +228,10 @@ function createCompositeMWClusteringMessif() {
     EXTRACTED_MEDOIDS_FILE='medoids.txt'
 
 
-    ALGORITHM_PARAMS="-kmeans.k ${CURRENT_K}"
+    ALGORITHM_PARAMS="-kmeans.k 350"
 
-    DATASET_PATH=${CURRENT_DATA}
-    ROOT_FOLDER_FOR_RESULTS=${CURRENT_ROOT}
+    DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=hdm05_lat-dim=64_beta=0.1/1"
+    ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/clusters/hdm05/all/hdm05/1"
 
 
     DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVectorCosine"
@@ -249,7 +249,7 @@ ${JDK_PATH} \
 -sf ${DATASET_PATH} \
 -cls ${DISTANCE_FUNCTION} \
 -pc ${ALGORITHM} \
--np ${CURRENT_K} \
+-np 350 \
 "
     echo "${COMMAND}"
 
