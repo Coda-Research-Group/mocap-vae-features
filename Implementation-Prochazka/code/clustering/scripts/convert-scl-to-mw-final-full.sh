@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #PBS -l walltime=24:0:0
-#PBS -l select=1:ncpus=4:mem=16gb
+#PBS -l select=1:ncpus=2:mem=8gb
 #PBS -o /dev/null
 #PBS -e /dev/null
 
@@ -11,8 +11,8 @@ IFS=$'\n\t'
 
 cd /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/motionvocabulary/dist/lib || exit
 
-DIM=${PASSED_DIM}
-BETA=${PASSED_BETA}
+DIM=32
+BETA=0.1
 PART=${PASSED_MODEL}
 DATA=${PASSED_DATA}
 
@@ -87,42 +87,42 @@ function convert() {
 # done
 
 #HDM
-for K in "50" "100" "200" "500" "650"; do
+for K in 10 20 35 50 60 80 100 150 200 250 300 350 400 500 750 1000 1250 1500 1750 2000 2500; do
 	echo "${PART}"
 
-	    DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=hdm05.data"
-	    OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/MWs-full-MO/KMeansPivotChooser--kmeans.k_${K}"
-	    CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/clusters-${PART}/KMeansPivotChooser--kmeans.k_${K}"
+	    DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=hdm05_lat-dim=32_beta=0.1/${ITER}/predictions_segmented.data.gz"
+	    OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/MWs/hdm05/full/lat_dim=32_beta=0.1/single/KMeansPivotChooser--kmeans.k_${K}"
+	    CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/clusters/hdm05/full/${ITER}}/${K}/KMeansPivotChooser--kmeans.k_${K}"
 
     [ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
 	convert
 
 done
 #CV
-for K in "50" "100" "200" "500" "650"; do
-	echo "${PART}"
+# for K in "50" "100" "200" "500" "650"; do
+# 	echo "${PART}"
 
-	    DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=pku-mmd.data"
-	    OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}/MWs-full-MO/KMeansPivotChooser--kmeans.k_${K}"
-	    CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}/clusters-${PART}/KMeansPivotChooser--kmeans.k_${K}"
+# 	    DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=pku-mmd.data"
+# 	    OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}/MWs-full-MO/KMeansPivotChooser--kmeans.k_${K}"
+# 	    CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}/clusters-${PART}/KMeansPivotChooser--kmeans.k_${K}"
 
-    [ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
-	convert
+#     [ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
+# 	convert
 
-done
+# done
 
-#CS
-for K in "50" "100" "200" "500" "650"; do
-	echo "${PART}"
+# #CS
+# for K in "50" "100" "200" "500" "650"; do
+# 	echo "${PART}"
 
-	    DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=pku-mmd.data"
-	    OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/MWs-full-MO/KMeansPivotChooser--kmeans.k_${K}"
-	    CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/clusters-${PART}/KMeansPivotChooser--kmeans.k_${K}"
+# 	    DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=pku-mmd.data"
+# 	    OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/MWs-full-MO/KMeansPivotChooser--kmeans.k_${K}"
+# 	    CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/clusters-${PART}/KMeansPivotChooser--kmeans.k_${K}"
 
-    [ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
-	convert
+#     [ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
+# 	convert
 
-done
+# done
 
 # #=======  SOFT ASSIGNMENT  =========
 # SOFTASSIGNPARAM="D0K1"

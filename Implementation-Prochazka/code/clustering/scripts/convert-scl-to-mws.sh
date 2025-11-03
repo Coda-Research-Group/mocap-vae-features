@@ -101,8 +101,8 @@ function convertBodyPartsCli() {
 }
 
 # HDM05-130 - 2-fold cross validation - folds: '0' '1'
- for K in '350'; do
-     for SPLIT in '0' '1' '2' '3' '4'; do
+for K in 10 20 35 50 60 80 100 150 200 250 300 350 400 500 750 1000 1250 1500 1750 2000 2500; do
+     for SPLIT in '1' '2' '3' '4' "5"; do
 #          for SPLIT in '4'; do
 
          ## Training data for fold 0:
@@ -111,26 +111,26 @@ function convertBodyPartsCli() {
          OUTPUT_ROOT_PATH="/home/drking/Documents/bakalarka/data/SCL/folds-MW/split${SPLIT}-fold0/KMeansPivotChooser--kmeans.k_${K}-train"
          convertBodyParts
 
-         ## Testing data for fold 0:
-         DATAFILE="/home/drking/Documents/bakalarka/data/SCL/folds-cluster/predictions_segmented_dim=256_beta=1_modelhdm05.data-split${SPLIT}-fold1"
-         CLUSTERS_ROOT_PATH="/home/drking/Documents/bakalarka/data/SCL-clustering/KMedoidsFastPAM--kmeans.k_${K}"
-         OUTPUT_ROOT_PATH="/home/drking/Documents/bakalarka/data/SCL/folds-MW/split${SPLIT}-fold0/KMeansPivotChooser--kmeans.k_${K}-test"
-         convertBodyParts
-
-         ## Training data for fold 1:
-         DATAFILE="/home/drking/Documents/bakalarka/data/SCL/folds-cluster/predictions_segmented_dim=256_beta=1_modelhdm05.data-split${SPLIT}-fold1"
-         CLUSTERS_ROOT_PATH="/home/drking/Documents/bakalarka/data/SCL-clustering/KMedoidsFastPAM--kmeans.k_${K}"
-         OUTPUT_ROOT_PATH="/home/drking/Documents/bakalarka/data/SCL/folds-MW/split${SPLIT}-fold1/KMeansPivotChooser--kmeans.k_${K}-train"
-         convertBodyParts
-
-         ## Testing data for fold 1:
-         DATAFILE="/home/drking/Documents/bakalarka/data/SCL/folds-cluster/predictions_segmented_dim=256_beta=1_modelhdm05.data-split${SPLIT}-fold0"
-         CLUSTERS_ROOT_PATH="/home/drking/Documents/bakalarka/data/SCL-clustering/KMedoidsFastPAM--kmeans.k_${K}"
-         OUTPUT_ROOT_PATH="/home/drking/Documents/bakalarka/data/SCL/folds-MW/split${SPLIT}-fold1/KMeansPivotChooser--kmeans.k_${K}-test"
-         convertBodyParts
+#         ## Testing data for fold 0:
+#         DATAFILE="/home/drking/Documents/bakalarka/data/SCL/folds-cluster/predictions_segmented_dim=256_beta=1_modelhdm05.data-split${SPLIT}-fold1"
+#         CLUSTERS_ROOT_PATH="/home/drking/Documents/bakalarka/data/SCL-clustering/KMedoidsFastPAM--kmeans.k_${K}"
+#         OUTPUT_ROOT_PATH="/home/drking/Documents/bakalarka/data/SCL/folds-MW/split${SPLIT}-fold0/KMeansPivotChooser--kmeans.k_${K}-test"
+#         convertBodyParts
+#
+#         ## Training data for fold 1:
+#         DATAFILE="/home/drking/Documents/bakalarka/data/SCL/folds-cluster/predictions_segmented_dim=256_beta=1_modelhdm05.data-split${SPLIT}-fold1"
+#         CLUSTERS_ROOT_PATH="/home/drking/Documents/bakalarka/data/SCL-clustering/KMedoidsFastPAM--kmeans.k_${K}"
+#         OUTPUT_ROOT_PATH="/home/drking/Documents/bakalarka/data/SCL/folds-MW/split${SPLIT}-fold1/KMeansPivotChooser--kmeans.k_${K}-train"
+#         convertBodyParts
+#
+#         ## Testing data for fold 1:
+#         DATAFILE="/home/drking/Documents/bakalarka/data/SCL/folds-cluster/predictions_segmented_dim=256_beta=1_modelhdm05.data-split${SPLIT}-fold0"
+#         CLUSTERS_ROOT_PATH="/home/drking/Documents/bakalarka/data/SCL-clustering/KMedoidsFastPAM--kmeans.k_${K}"
+#         OUTPUT_ROOT_PATH="/home/drking/Documents/bakalarka/data/SCL/folds-MW/split${SPLIT}-fold1/KMeansPivotChooser--kmeans.k_${K}-test"
+#         convertBodyParts
 
      done
- done
+done
 
 # HDM05-65 - 10-fold cross validation - folds: '0,1,2,3,4,5,6,7,8' '0,1,2,3,4,5,6,7,9' '0,1,2,3,4,5,6,8,9' '0,1,2,3,4,5,7,8,9' '0,1,2,3,4,6,7,8,9' '0,1,2,3,5,6,7,8,9' '0,1,2,4,5,6,7,8,9' '0,1,3,4,5,6,7,8,9' '0,2,3,4,5,6,7,8,9' '1,2,3,4,5,6,7,8,9'
 #for K in '250' '300'; do

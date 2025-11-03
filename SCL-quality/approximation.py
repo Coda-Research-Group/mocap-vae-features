@@ -107,3 +107,8 @@ BASE_PATH = Path('/storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/cs/'
 OUTPUT_CSV_PATH = '/storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/cs/aggregated_metrics_summary.csv'
 
 aggregate_metrics_summary(BASE_PATH, OUTPUT_CSV_PATH, TARGET_METRICS)
+
+BASE_PATH = Path('/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/') 
+OUTPUT_CSV_PATH = '/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/aggregated_metrics_summary.csv'
+
+aggregate_metrics_summary(BASE_PATH, OUTPUT_CSV_PATH, TARGET_METRICS)
