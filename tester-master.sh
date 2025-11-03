@@ -37,34 +37,34 @@ WORKER_SCRIPT_PATH_BASE="/storage/brno12-cerit/home/drking/experiments/mocap-vae
 #     done
 # done
 
-# for EXP in "cs" ; do
-#     for DIM in "256" "128" "64" "32" "16" "8" ; do
-#         for BETA in "0.1" "1" "10"; do
+for EXP in "all"; do
+    for DIM in "32"; do
+        for ITER in "0.1"; do
 
-#             JOB_NAME="evaluation_${EXP}_${DIM}_${BETA}_all"
-#             echo "Submitting job for EXP=all, DIM=${DIM}, BETA=${BETA}"
-#             qsub \
-#                 -N "${JOB_NAME}" \
-#                 -v "PASSED_EXP=all,PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
-#                 "${WORKER_SCRIPT_PATH_MO}"
+            JOB_NAME="evaluation_${EXP}_${DIM}_${BETA}_all"
+            echo "Submitting job for EXP=all, DIM=${DIM}, BETA=${BETA}"
+            qsub \
+                -N "${JOB_NAME}" \
+                -v "PASSED_ITER=${ITER}" \
+                "${WORKER_SCRIPT_PATH}"
 
-#             JOB_NAME="evaluation_${EXP}_${DIM}_${BETA}_cv"
-#             echo "Submitting job for EXP=cv, DIM=${DIM}, BETA=${BETA}"
-#             qsub \
-#                 -N "${JOB_NAME}" \
-#                 -v "PASSED_EXP=cv,PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
-#                 "${WORKER_SCRIPT_PATH_MO_PKU}"
+            # JOB_NAME="evaluation_${EXP}_${DIM}_${BETA}_cv"
+            # echo "Submitting job for EXP=cv, DIM=${DIM}, BETA=${BETA}"
+            # qsub \
+            #     -N "${JOB_NAME}" \
+            #     -v "PASSED_EXP=cv,PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
+            #     "${WORKER_SCRIPT_PATH_MO_PKU}"
 
-#             JOB_NAME="evaluation_${EXP}_${DIM}_${BETA}_cs"
-#             echo "Submitting job for EXP=cs, DIM=${DIM}, BETA=${BETA}"
-#             qsub \
-#                 -N "${JOB_NAME}" \
-#                 -v "PASSED_EXP=cs,PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
-#                 "${WORKER_SCRIPT_PATH_MO_PKU}"
+            # JOB_NAME="evaluation_${EXP}_${DIM}_${BETA}_cs"
+            # echo "Submitting job for EXP=cs, DIM=${DIM}, BETA=${BETA}"
+            # qsub \
+            #     -N "${JOB_NAME}" \
+            #     -v "PASSED_EXP=cs,PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
+            #     "${WORKER_SCRIPT_PATH_MO_PKU}"
 
-#         done
-#     done
-# done
+        done
+    done
+done
 
 # for EXP in "hdm05/all" "pku-mmd/cv" "pku-mmd/cs"; do
     # for DIM in "256" "128" "64" "32" "16" "8" ; do
@@ -91,14 +91,14 @@ WORKER_SCRIPT_PATH_BASE="/storage/brno12-cerit/home/drking/experiments/mocap-vae
 # done
 
 
-    qsub \
-        "${WORKER_SCRIPT_PATH_BASE}"
+#     qsub \
+#         "${WORKER_SCRIPT_PATH_BASE}"
 
 
-for EXP in "cs" "cv"; do
-    qsub \
-        -v "PASSED_EXP=${EXP}" \
-        "${WORKER_SCRIPT_PATH_MO_PKU}"
+# for EXP in "cs" "cv"; do
+#     qsub \
+#         -v "PASSED_EXP=${EXP}" \
+#         "${WORKER_SCRIPT_PATH_MO_PKU}"
 
 
-done
+# done

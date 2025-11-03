@@ -7,9 +7,7 @@
 
 JDK_PATH='/storage/brno12-cerit/home/drking/jdk-21.0.7/bin/java'
 
-DIM=${PASSED_DIM}
-BETA=${PASSED_BETA}
-EXP=${PASSED_EXP}
+ITER=${PASSED_ITER}
 
 
 
@@ -28,14 +26,14 @@ EXP=${PASSED_EXP}
 # done
 
 
-for K in "350" "1000"; do
+for K in 10 20 35 50 60 80 100 150 200 250 300 350 400 500 750 1000 1250 1500 1750 2000 2500; do
 
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${DIM}_beta=${BETA}/MWs-full-MO/KMeansPivotChooser--kmeans.k_${K}.composite \
+-fp /storage/brno12-cerit/home/drking/experiments/MWs/hdm05/full/lat_dim=32_beta=0.1/${ITER}/KMeansPivotChooser--kmeans.k_${K}/full.D0K1 \
 -dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
 "
     echo "${COMMAND}"
-    mkdir -p "/storage/brno12-cerit/home/drking/experiments/results/hdm05/all/lat_dim=${DIM}_beta=${BETA}"
-    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/hdm05/all/lat_dim=${DIM}_beta=${BETA}/results-MO-1.txt"
+    mkdir -p "/storage/brno12-cerit/home/drking/experiments/results/hdm05/full/lat_dim=32_beta=0.1/${ITER}/"
+    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/hdm05/full/lat_dim=32_beta=0.1/${K}/results-${ITER}.txt"
 
 done
