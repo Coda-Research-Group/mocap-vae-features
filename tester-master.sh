@@ -39,10 +39,9 @@ WORKER_SCRIPT_PATH_BASE="/storage/brno12-cerit/home/drking/experiments/mocap-vae
 
 for EXP in "all"; do
     for DIM in "32"; do
-        for ITER in "0.1"; do
+        for ITER in 1 2 3 4 5; do
 
-            JOB_NAME="evaluation_${EXP}_${DIM}_${BETA}_all"
-            echo "Submitting job for EXP=all, DIM=${DIM}, BETA=${BETA}"
+            JOB_NAME="evaluation_${EXP}_${ITER}_all"
             qsub \
                 -N "${JOB_NAME}" \
                 -v "PASSED_ITER=${ITER}" \
