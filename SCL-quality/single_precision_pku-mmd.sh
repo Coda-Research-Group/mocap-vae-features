@@ -41,12 +41,12 @@ python3 /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/data-sp
     /storage/brno12-cerit/home/drking/experiments/SCL-non-norm/pku-mmd/${SETUP}/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data-train
 
 
-python3 /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/SCL-non-norm-quality/scl_thresholds.py \
+python3 /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/SCL-quality/scl_thresholds.py \
     /storage/brno12-cerit/home/drking/experiments/SCL-non-norm/pku-mmd/${SETUP}/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data-train \
     --subset-size 30000 --runs 5 \
     --output /storage/brno12-cerit/home/drking/experiments/SCL-non-norm/pku-mmd/${SETUP}/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/scl.json
 
-python3 /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/SCL-non-norm-quality/precision-recall.py \
+python3 /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/SCL-quality/precision-recall.py \
     /storage/brno12-cerit/home/drking/data/pku-mmd/${PATH_PART}.data-train \
     /storage/brno12-cerit/home/drking/experiments/SCL-non-norm/pku-mmd/${SETUP}/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data-train \
     /storage/brno12-cerit/home/drking/data/pku-mmd/${PATH_PART}.json \

@@ -8,29 +8,26 @@ PARTS_SCRIPT_PATH_NORM="/storage/brno12-cerit/home/drking/experiments/mocap-vae-
 
 echo "Starting submission process..."
 
-# for DIM in "${DIMS[@]}"; do
-#     for BETA in "${BETAS[@]}"; do
+for PART in "handR" "handL" "legR" "legL" "torso"; do
+    for ITER in 1 2 3 4 5; do
 
-#         JOB_NAME="clustering_${DIM}_${BETA}_part_hdm05"
+        JOB_NAME="clustering_full_hdm05-${PARD}_iter_${ITER}"
 
-#         echo "Submitting job for body part DIM=${DIM}, BETA=${BETA}"
+        qsub \
+            -N "${JOB_NAME}" \
+            -v "PASSED_ITER=${ITER}, PASSED_PART=${PART}" \
+            "${PARTS_SCRIPT_PATH}"
 
-#         qsub \
-#             -N "${JOB_NAME}" \
-#             -v "PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
-#             "${PARTS_SCRIPT_PATH}"
+        JOB_NAME="clustering_full_hdm05-${PARD}_iter_${ITER}_norm"
 
-#         JOB_NAME="clustering_${DIM}_${BETA}_part_hdm05_norm"
 
-#         echo "Submitting job for body part DIM=${DIM}, BETA=${BETA}"
+        qsub \
+            -N "${JOB_NAME}" \
+            -v "PASSED_ITER=${ITER}, PASSED_PART=${PART}" \
+            "${PARTS_SCRIPT_PATH_NORM}"
 
-#         qsub \
-#             -N "${JOB_NAME}" \
-#             -v "PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
-#             "${PARTS_SCRIPT_PATH_NORM}"
-
-#     done
-# done
+    done
+done
 
 echo "Halfway there"
 
