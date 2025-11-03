@@ -58,7 +58,7 @@ for DATAFILE in "pku-mmd-handL" "pku-mmd-handR" "pku-mmd-legL" "pku-mmd-legR" "p
                         -N "${JOB_NAME}" \
                         -v "ITERATION=${ITER},DIMENSION=${DIM},BETA=${BETA},DATAFILE=${DATAFILE},SETUP=${SETUP}" \
                         "${SINGLE_PKU}"
-                        
+
                     sleep 0.2
 
                 done

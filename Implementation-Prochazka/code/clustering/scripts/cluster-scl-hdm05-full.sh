@@ -71,7 +71,7 @@ function createCompositeMWClusteringMessif() {
 
         ALGORITHM_PARAMS="-kmeans.k ${K}"
 
-        DATASET_PATH="/storage/brno12-cerit/home/drking/SCL/hdm05/all/model\=hdm05_lat-dim\=32_beta\=0.1/${ITER}/predictions_segmented.data.gz"
+        DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model\=hdm05_lat-dim\=32_beta\=0.1/${ITER}/predictions_segmented.data.gz"
         ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/clusters/hdm05/full/${ITER}/${K}/"
 
 
@@ -86,7 +86,7 @@ ${JDK_PATH} \
 -jar ${MEDOIDS_JAR_PATH} \
 1 \
 -pcuseall \
--kmeans-max-iters 50 \
+-kmeans-max-iters 20 \
 -sf ${DATASET_PATH} \
 -cls ${DISTANCE_FUNCTION} \
 -pc ${ALGORITHM} \

@@ -72,7 +72,7 @@ function createCompositeMWClusteringMessif() {
 
         ALGORITHM_PARAMS="-kmeans.k ${K}"
 
-        DATASET_PATH="/storage/brno12-cerit/home/drking/SCL-non-norm/hdm05/all/model\=hdm05-${PART}_lat-dim\=8_beta\=0.1/${ITER}/predictions_segmented.data.gz"
+        DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-non-norm/hdm05/all/model\=hdm05-${PART}_lat-dim\=8_beta\=0.1/${ITER}/predictions_segmented.data.gz"
         ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/clusters/hdm05/${PART}/${ITER}/${K}/"
 
 

@@ -11,19 +11,19 @@ echo "Starting submission process..."
 for PART in "handR" "handL" "legR" "legL" "torso"; do
     for ITER in 1 2 3 4 5; do
 
-        JOB_NAME="clustering_full_hdm05-${PARD}_iter_${ITER}"
+        JOB_NAME="clustering_hdm05-${PART}_iter_${ITER}"
 
         qsub \
             -N "${JOB_NAME}" \
-            -v "PASSED_ITER=${ITER}, PASSED_PART=${PART}" \
+            -v "PASSED_ITER=${ITER},PASSED_PART=${PART}" \
             "${PARTS_SCRIPT_PATH}"
 
-        JOB_NAME="clustering_full_hdm05-${PARD}_iter_${ITER}_norm"
+        JOB_NAME="clustering_hdm05-${PART}_iter_${ITER}_norm"
 
 
         qsub \
             -N "${JOB_NAME}" \
-            -v "PASSED_ITER=${ITER}, PASSED_PART=${PART}" \
+            -v "PASSED_ITER=${ITER},PASSED_PART=${PART}" \
             "${PARTS_SCRIPT_PATH_NORM}"
 
     done
