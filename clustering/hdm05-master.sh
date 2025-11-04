@@ -33,7 +33,7 @@ echo "Halfway there"
 
 
 # for ITER in 1 2 3 4 5; do
-for ITER in 1; do
+for ITER in 3; do
     for BETA in "0.1" "1" "10"; do 
         for DIM in 32 64; do 
 
