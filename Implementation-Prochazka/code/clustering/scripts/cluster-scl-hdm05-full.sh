@@ -9,6 +9,8 @@ set -euo pipefail
 IFS=$'\n\t'
 
 ITER=${PASSED_ITER}
+BETA=${PASSED_BETA}
+DIM=${PASSED_DIM}
 
 ##########################################
 
@@ -71,8 +73,8 @@ function createCompositeMWClusteringMessif() {
 
         ALGORITHM_PARAMS="-kmeans.k ${K}"
 
-        DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model\=hdm05_lat-dim\=32_beta\=1/${ITER}/predictions_segmented.data.gz"
-        ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/clusters/hdm05/full/${ITER}/${K}/"
+        DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model\=hdm05_lat-dim\=${DIM}_beta\=${BETA}/${ITER}/predictions_segmented.data.gz"
+        ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/clusters/hdm05/full/model\=hdm05_lat-dim\=${DIM}_beta\=${BETA}/${ITER}/${K}/"
 
 
         DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVectorCosine"
