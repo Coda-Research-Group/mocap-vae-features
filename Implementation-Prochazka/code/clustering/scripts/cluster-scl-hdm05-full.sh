@@ -74,7 +74,7 @@ function createCompositeMWClusteringMessif() {
         ALGORITHM_PARAMS="-kmeans.k ${K}"
 
         DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model\=hdm05_lat-dim\=${DIM}_beta\=${BETA}/${ITER}/predictions_segmented.data.gz"
-        ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/clusters/hdm05/full/model\=hdm05_lat-dim\=${DIM}_beta\=${BETA}/${ITER}/${K}/"
+        ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/clusters/hdm05/full/model\=hdm05_lat-dim\=${DIM}_beta\=${BETA}/${ITER}/"
 
 
         DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVectorCosine"
