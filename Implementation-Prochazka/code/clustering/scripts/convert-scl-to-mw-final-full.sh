@@ -94,7 +94,7 @@ for K in 10 20 35 50 60 80 100 150 200 250 300 350 400 500 750 1000 1250 1500 17
 	            echo "${PART}"
 
 	                DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=hdm05_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz"
-	                OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/MWs/hdm05/all/model=hdm05_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMeansPivotChooser--kmeans.k_${K}"
+	                OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/MWs/hdm05/full/model=hdm05_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMeansPivotChooser--kmeans.k_${K}"
 	                CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/clusters/hdm05/full/model\=hdm05_lat-dim\=${DIM}_beta\=${BETA}/${ITER}/KMeansPivotChooser--kmeans.k_${K}"
 
                 [ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
