@@ -11,7 +11,7 @@ OUTPUT_CSV_PATH = '/storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/cv/
 
 # Regex to extract key parameters from the path structure
 # Captures: 1. Model, 2. Latent Dimension, 3. Beta, 4. Repetition number (which we will ignore here)
-PATH_PATTERN = re.compile(r'/([^/]+)/model=([^/]+)_lat-dim=(\d+)_beta=([\d\.]+)/(\d+)/metrics\.json$')
+PATH_PATTERN = re.compile(r'/model=([^/]+)_lat-dim=(\d+)_beta=([\d\.]+)/(\d+)/metrics\.json$')
 
 # --- Metrics to Extract ---
 TARGET_METRICS = ['precision', 'recall', 'F025', 'F1', 'accuracy']
@@ -41,7 +41,7 @@ def aggregate_metrics_summary(base_path: Path, output_csv_path: str, target_metr
             if not match:
                 continue
 
-            _, model_name, lat_dim, beta_value, repetition = match.groups()
+            model_name, lat_dim, beta_value, repetition = match.groups()
             
             # Create a unique key for the configuration (ignoring the repetition number)
             config_key = (model_name, lat_dim, beta_value)
@@ -95,9 +95,8 @@ def aggregate_metrics_summary(base_path: Path, output_csv_path: str, target_metr
         writer.writeheader()
         writer.writerows(data_rows)
 
-    print(f"\n✅ Successfully aggregated {len(data_rows)} unique configurations into {output_csv_path}")
+    print(f"Successfully aggregated {len(data_rows)} unique configurations into {output_csv_path}")
 
-# Run the function
 BASE_PATH = Path('/storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/cv/') 
 OUTPUT_CSV_PATH = '/storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/cv/aggregated_metrics_summary.csv'
 

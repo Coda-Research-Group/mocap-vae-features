@@ -38,29 +38,31 @@ WORKER_SCRIPT_PATH_BASE="/storage/brno12-cerit/home/drking/experiments/mocap-vae
 # done
 
 for EXP in "all"; do
-    for DIM in "32"; do
-        for ITER in 1 2 3 4 5; do
+    for DIM in "32" "64"; do
+        for BETA in "0.1" "1" "10"; do
+            for ITER in 3; do
 
-            JOB_NAME="evaluation_${EXP}_${ITER}_all"
-            qsub \
-                -N "${JOB_NAME}" \
-                -v "PASSED_ITER=${ITER}" \
-                "${WORKER_SCRIPT_PATH}"
+                JOB_NAME="evaluation_${EXP}_${ITER}_all"
+                qsub \
+                    -N "${JOB_NAME}" \
+                    -v "PASSED_ITER=${ITER},PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
+                    "${WORKER_SCRIPT_PATH}"
 
-            # JOB_NAME="evaluation_${EXP}_${DIM}_${BETA}_cv"
-            # echo "Submitting job for EXP=cv, DIM=${DIM}, BETA=${BETA}"
-            # qsub \
-            #     -N "${JOB_NAME}" \
-            #     -v "PASSED_EXP=cv,PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
-            #     "${WORKER_SCRIPT_PATH_MO_PKU}"
+                # JOB_NAME="evaluation_${EXP}_${DIM}_${BETA}_cv"
+                # echo "Submitting job for EXP=cv, DIM=${DIM}, BETA=${BETA}"
+                # qsub \
+                #     -N "${JOB_NAME}" \
+                #     -v "PASSED_EXP=cv,PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
+                #     "${WORKER_SCRIPT_PATH_MO_PKU}"
 
-            # JOB_NAME="evaluation_${EXP}_${DIM}_${BETA}_cs"
-            # echo "Submitting job for EXP=cs, DIM=${DIM}, BETA=${BETA}"
-            # qsub \
-            #     -N "${JOB_NAME}" \
-            #     -v "PASSED_EXP=cs,PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
-            #     "${WORKER_SCRIPT_PATH_MO_PKU}"
+                # JOB_NAME="evaluation_${EXP}_${DIM}_${BETA}_cs"
+                # echo "Submitting job for EXP=cs, DIM=${DIM}, BETA=${BETA}"
+                # qsub \
+                #     -N "${JOB_NAME}" \
+                #     -v "PASSED_EXP=cs,PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
+                #     "${WORKER_SCRIPT_PATH_MO_PKU}"
 
+            done 
         done
     done
 done
