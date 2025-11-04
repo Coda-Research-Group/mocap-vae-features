@@ -33,7 +33,7 @@ for K in 10 20 35 50 60 80 100 150 200 250 300 350 400 500 750 1000 1250 1500 17
 -dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
 "
     echo "${COMMAND}"
-    mkdir -p "/storage/brno12-cerit/home/drking/experiments/results/hdm05/full/lat_dim=32_beta=0.1/${ITER}/"
+    mkdir -p "/storage/brno12-cerit/home/drking/experiments/results/hdm05/full/lat_dim=32_beta=0.1/${K}/"
     eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/hdm05/full/lat_dim=32_beta=0.1/${K}/results-${ITER}.txt"
 
 done
