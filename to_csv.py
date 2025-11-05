@@ -9,6 +9,7 @@ from glob import glob
 BASE_DIR = "/storage/brno12-cerit/home/drking/experiments/results/hdm05/full/"
 OUTPUT_CSV = "/storage/brno12-cerit/home/drking/experiments/results/hdm05/full/experiment_results_summary.csv"
 
+
 # --- Regex Patterns for Extraction ---
 # Pattern 1: Extracts the first float after 'precision over objects and categories:' (kNN Search Precision)
 KNN_PRECISION_PATTERN = re.compile(r"precision over objects and categories:\s*(\d+\.\d+)")
@@ -18,7 +19,8 @@ CLASSIFICATION_PRECISION_PATTERN = re.compile(r"classification precision over ob
 
 # Pattern 3: Extracts parameters from the file path structure
 # Looks for: .../lat_dim=${DIM}_beta=${BETA}/${K}/results-${ITER}.txt
-PATH_PARAM_PATTERN = re.compile(r"/lat_dim=(\d+)_beta=(\d+)/(\d+)/results-(\d+)\.txt$")
+# Updated: BETA parameter (\d+\.?\d*) now accepts floating-point numbers like 0.1
+PATH_PARAM_PATTERN = re.compile(r"/lat_dim=(\d+)_beta=(\d+\.?\d*)/(\d+)/results-(\d+)\.txt$")
 
 
 def parse_log_file(filepath):
