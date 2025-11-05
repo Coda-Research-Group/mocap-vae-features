@@ -25,14 +25,15 @@ PATH_PARAM_PATTERN = re.compile(r"/lat_dim=(\d+)_beta=(\d+\.?\d*)/(\d+)/results-
 
 def parse_log_file(filepath):
     """
-    Reads a single log file and extracts the kNN and Classification precision values.
-    Returns a dictionary of extracted values.
+    Reads a single log file and extracts:
+      - kNN_Precision from the FIRST run (k=4)
+      - Classification_Precision from the SECOND run (adaptive)
     """
     results = {
         "kNN_Precision": "N/A",
         "Classification_Precision": "N/A",
     }
-    
+
     try:
         with open(filepath, 'r') as f:
             content = f.read()
@@ -40,17 +41,28 @@ def parse_log_file(filepath):
         print(f"Error reading file {filepath}: {e}")
         return results
 
-    # 1. Extract kNN Precision (from the line that only contains "precision over objects and categories:")
-    match_knn = KNN_PRECISION_PATTERN.search(content)
-    if match_knn:
-        results["kNN_Precision"] = match_knn.group(1)
+    # Split the file into two runs by '===== GLOBAL PARAMS ====='
+    runs = content.split("===== GLOBAL PARAMS =====")
+    if len(runs) < 3:
+        # Only one or invalid run found
+        return results
 
-    # 2. Extract Classification Precision (from the line that contains "classification precision...")
-    match_class = CLASSIFICATION_PRECISION_PATTERN.search(content)
-    if match_class:
-        results["Classification_Precision"] = match_class.group(1)
+    # --- FIRST RUN (k=4) ---
+    first_run = runs[1]
+    class_prec_matches = re.findall(
+        r"classification precision over objects and categories:\s*([\d.]+)", first_run)
+    if class_prec_matches:
+        results["Classification_Precision"] = class_prec_matches[0]
+
+    # --- SECOND RUN (adaptive) ---
+    second_run = runs[2]
+    knn_prec_matches = re.findall(
+        r"precision over objects and categories:\s*([\d.]+)", second_run)
+    if knn_prec_matches:
+        results["kNN_Precision"] = knn_prec_matches[0]
 
     return results
+
 
 
 def main():
