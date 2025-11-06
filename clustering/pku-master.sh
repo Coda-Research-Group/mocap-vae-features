@@ -1,58 +1,50 @@
 #!/bin/bash
-#PBS -l walltime=24:0:0
-#PBS -l select=1:ncpus=4:mem=32gb:scratch_local=50gb
+#PBS -l walltime=2:0:0
+#PBS -l select=1:ncpus=1:mem=2gb
+
+WHOLE_SCRIPT_PATH="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/scripts/cluster-scl-pku-full.sh"
+PARTS_SCRIPT_PATH="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/scripts/cluster-scl-pku-parts.sh"
+PARTS_SCRIPT_PATH_NORM="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/scripts/cluster-scl-pku-parts-norm.sh"
+
+for ITER in 3; do
+    for BETA in "0.1" "1"; do 
+        for DIM in 32 64; do 
+            for SETUP in "cv" "cs"; do
+
+                JOB_NAME="clustering_full_hdm05_${ITER}__${DIM}_${BETA}_${SETUP}"
+
+                qsub \
+                    -N "${JOB_NAME}" \
+                    -v "PASSED_ITER=${ITER},PASSED_BETA=${BETA},PASSED_DIM=${DIM},SETUP=${SETUP}" \
+                    "${WHOLE_SCRIPT_PATH}"
+            done
+        done
+    done
+done
 
 
-DIMS=("64" "32" "16" "8" "4")
-BETAS=("0.1" "1" "10")
-MODELS=("pku-mmd-torso" "pku-mmd-handL" "pku-mmd-handR" "pku-mmd-legL" "pku-mmd-legR")
+for ITER in 3; do
+    for BETA in "0.1" "1"; do 
+        for DIM in 8 16; do 
+            for SETUP in "cv" "cs"; do
+                for PART in "pku-mmd-torso" "pku-mmd-handL" "pku-mmd-handR" "pku-mmd-legL" "pku-mmd-legR"; do
 
+                    JOB_NAME="clustering_full_hdm05_${ITER}__${DIM}_${BETA}_${SETUP}"
+    
+                    qsub \
+                        -N "${JOB_NAME}" \
+                        -v "PASSED_ITER=${ITER},PASSED_BETA=${BETA},PASSED_DIM=${DIM},SETUP=${SETUP},PART=${PART}" \
+                        "${PARTS_SCRIPT_PATH}"
+    
+    
+                    qsub \
+                        -N "${JOB_NAME}_norm" \
+                        -v "PASSED_ITER=${ITER},PASSED_BETA=${BETA},PASSED_DIM=${DIM},SETUP=${SETUP},PART=${PART}" \
+                        "${PARTS_SCRIPT_PATH_NORM}"
 
-
-PBS_LOG_BASE_DIR="/storage/brno12-cerit/home/drking/experiments/pbs"
-mkdir -p "${PBS_LOG_BASE_DIR}"
-
-echo "Starting unzip process..."
-
-# for DIM in "${DIMS[@]}"; do
-#     for BETA in "${BETAS[@]}"; do
-#       	for MODEL in "${MODELS[@]}"; do
-
-#         	FILE_TO_CONVERT="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions-norm/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model_norm=${MODEL}.data"
-# 			gunzip -k "${FILE_TO_CONVERT}.gz"
-
-# 		done
-#     done
-# done
-
-
-echo "Start creating train splits..."
-
-# python /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/scripts/create-n-fold-cross-validation-data-pku-full.py
-python /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/scripts/create-n-fold-cross-validation-data-pku-parts.py
-
-echo "Start clustering parts..."
-# PARTS_SCRIPT_PATH="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/scripts/cluster-scl-remote-pku-parts.sh"
-PARTS_SCRIPT_PATH2="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/scripts/cluster-scl-remote-pku-full.sh"
-DIMS=("64" "32" "16" "8" "4")
-
-for DIM in "${DIMS[@]}"; do
-    for BETA in "${BETAS[@]}"; do
-
-        JOB_NAME="clustering_${DIM}_${BETA}_parts"
-
-        echo "Submitting job for body part DIM=${DIM}, BETA=${BETA}"
-
-        # qsub \
-        #     -N "${JOB_NAME}-cs" \
-        #     -v "PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
-        #     "${PARTS_SCRIPT_PATH}"
-
-        qsub \
-            -N "${JOB_NAME}-cv" \
-            -v "PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
-            "${PARTS_SCRIPT_PATH2}"
-
+                done
+            done
+        done
     done
 done
 

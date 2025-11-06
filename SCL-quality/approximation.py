@@ -111,3 +111,18 @@ BASE_PATH = Path('/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/')
 OUTPUT_CSV_PATH = '/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/aggregated_metrics_summary.csv'
 
 aggregate_metrics_summary(BASE_PATH, OUTPUT_CSV_PATH, TARGET_METRICS)
+
+BASE_PATH = Path('/storage/brno12-cerit/home/drking/experiments/SCL-non-norm/hdm05/') 
+OUTPUT_CSV_PATH = '/storage/brno12-cerit/home/drking/experiments/SCL-non-norm/hdm05/aggregated_metrics_summary.csv'
+
+aggregate_metrics_summary(BASE_PATH, OUTPUT_CSV_PATH, TARGET_METRICS)
+
+BASE_PATH = Path('/storage/brno12-cerit/home/drking/experiments/SCL-non-norm/pku-mmd/cv/') 
+OUTPUT_CSV_PATH = '/storage/brno12-cerit/home/drking/experiments/SCL-non-norm/pku-mmd/cv/aggregated_metrics_summary.csv'
+
+aggregate_metrics_summary(BASE_PATH, OUTPUT_CSV_PATH, TARGET_METRICS)
+
+BASE_PATH = Path('/storage/brno12-cerit/home/drking/experiments/SCL-non-norm/pku-mmd/cs/') 
+OUTPUT_CSV_PATH = '/storage/brno12-cerit/home/drking/experiments/SCL-non-norm/pku-mmd/cs/aggregated_metrics_summary.csv'
+
+aggregate_metrics_summary(BASE_PATH, OUTPUT_CSV_PATH, TARGET_METRICS)

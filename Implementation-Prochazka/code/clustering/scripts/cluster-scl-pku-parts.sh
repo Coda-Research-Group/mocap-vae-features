@@ -8,8 +8,12 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-CURRENT_DIM=${PASSED_DIM}
-CURRENT_BETA=${PASSED_BETA}
+ITER=${PASSED_ITER}
+BETA=${PASSED_BETA}
+DIM=${PASSED_DIM}
+SETUP=${SETUP}
+PART=${PART}
+
 
 JDK_PATH='/storage/brno12-cerit/home/drking/jdk-21.0.7/bin/java'
 
