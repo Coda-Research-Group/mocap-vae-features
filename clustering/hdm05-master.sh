@@ -38,8 +38,8 @@ echo "Halfway there"
 
 
 for ITER in 1 2 3 4 5; do
-    for BETA in "0.1" "1"; do 
-        for DIM in 16 32 64; do 
+    for BETA in "0.1" "1"; do
+        for DIM in 32 64; do
 
             JOB_NAME="clustering_full_hdm05_${ITER}__${DIM}_${BETA}"
 

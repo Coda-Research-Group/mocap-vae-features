@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -l walltime=12:0:0
+#PBS -l walltime=24:0:0
 #PBS -l select=1:ncpus=2:mem=16gb:scratch_local=16gb
 #PBS -o /dev/null
 #PBS -e /dev/null
@@ -76,7 +76,7 @@ ${JDK_PATH} \
 -jar ${MEDOIDS_JAR_PATH} \
 1 \
 -pcuseall \
--kmeans-max-iters 20 \
+-kmeans-max-iters 15 \
 -sf ${DATASET_PATH} \
 -cls ${DISTANCE_FUNCTION} \
 -pc ${ALGORITHM} \
