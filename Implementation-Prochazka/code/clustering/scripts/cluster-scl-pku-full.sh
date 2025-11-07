@@ -11,7 +11,7 @@ IFS=$'\n\t'
 ITER=${PASSED_ITER}
 BETA=${PASSED_BETA}
 DIM=${PASSED_DIM}
-SETUP=${SETUP}
+SETUP=${PASSED_SETUP}
 
 # Path to a dataset in ELKI format
 #DATASET_PATH='/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/elki-predictions_segmented_model=hdm05.data'
@@ -60,7 +60,7 @@ function createCompositeMWClusteringMessif() {
 
         ALGORITHM_PARAMS="-kmeans.k ${K}"
 
-        DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model\=pku-mmd_lat-dim\=${DIM}_beta\=${BETA}/${ITER}/predictions_segmented.data.gz"
+        DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model\=pku-mmd_lat-dim\=${DIM}_beta\=${BETA}/${ITER}/predictions_segmented.data-train"
         ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/clusters/pku-mmd/${SETUP}/model=pku-mmd_lat-dim=${DIM}_beta=${BETA}/${ITER}/"
 
 
