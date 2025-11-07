@@ -14,8 +14,8 @@ cd "${REPO_DIR}" || {
 }
 
 
-for MOD in "hdm05-torso" "hdm05-handL" "hdm05-handR" "hdm05-legL" "hdm05-legR"; do
-    for ITER in "1" "2" "3" "4" "5"; do
+for MOD in "hdm05"; do
+    for ITER in "1"; do
         JOB_NAME="training_VAE_on_${MOD}-iteration-${ITER}"
         echo "Submitting job for MODEL = ${MOD}, ITERATION = ${ITER}"
 

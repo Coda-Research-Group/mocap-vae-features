@@ -33,8 +33,10 @@ conda activate "/storage/brno12-cerit/home/drking/.conda/envs/${ENV_NAME}" || {
 
 if [ "${MOD}" == "hdm05" ]; then
 
-    for DIM in "256" "128" "64" "32" "16" "8" "4"; do
-        for BETA in "0.1" "1" "10"; do
+    # for DIM in "256" "128" "64" "32" "16" "8" "4"; do
+    #     for BETA in "0.1" "1" "10"; do
+    for DIM in 32; do
+        for BETA in 1; do
             python /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/train.py --multirun exp=hdm05/all \
                 latent_dim=${DIM} beta=${BETA} iteration=${ITER} body_model=${MOD} > /dev/null 2>&1
         done
