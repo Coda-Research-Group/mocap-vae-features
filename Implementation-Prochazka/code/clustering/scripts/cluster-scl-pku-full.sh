@@ -12,6 +12,7 @@ ITER=${PASSED_ITER}
 BETA=${PASSED_BETA}
 DIM=${PASSED_DIM}
 SETUP=${SETUP}
+
 # Path to a dataset in ELKI format
 #DATASET_PATH='/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/elki-predictions_segmented_model=hdm05.data'
 DISTANCE_FUNCTION='de.lmu.ifi.dbs.elki.distance.distancefunction.CosineDistanceFunction'
@@ -51,7 +52,7 @@ function formatResultFolderName() {
 ## Composite MW clustering using MESSIF
 function createCompositeMWClusteringMessif() {
 
-    for K in 10 20 35 50 60 80 100 150 200 250 300 350 400 500 750 1000 1250 1500 1750 2000 2500; do
+    for K in 100 150 200 250 300 350 400 500 750 1000 1250 1500 1750 2000 2500 3500 5000 7500 10000 15000; do
         ALGORITHM='messif.pivotselection.KMeansPivotChooser'
         MEDOIDS_JAR_PATH='/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/medoids_new.jar'
         EXTRACTED_MEDOIDS_FILE='medoids.txt'
@@ -59,8 +60,8 @@ function createCompositeMWClusteringMessif() {
 
         ALGORITHM_PARAMS="-kmeans.k ${K}"
 
-        DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model\=hdm05_lat-dim\=${DIM}_beta\=${BETA}/${ITER}/predictions_segmented.data.gz"
-        ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/clusters/hdm05/full/model=hdm05_lat-dim=${DIM}_beta=${BETA}/${ITER}/"
+        DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model\=pku-mmd_lat-dim\=${DIM}_beta\=${BETA}/${ITER}/predictions_segmented.data.gz"
+        ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/clusters/pku-mmd/${SETUP}/model=pku-mmd_lat-dim=${DIM}_beta=${BETA}/${ITER}/"
 
 
         DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVectorCosine"

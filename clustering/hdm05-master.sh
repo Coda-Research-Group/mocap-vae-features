@@ -9,23 +9,23 @@ PARTS_SCRIPT_PATH_NORM="/storage/brno12-cerit/home/drking/experiments/mocap-vae-
 echo "Starting submission process..."
 
 for PART in "hdm05-handR" "hdm05-handL" "hdm05-legR" "hdm05-legL" "hdm05-torso"; do
-    for BETA in "0.1" "1" "10"; do 
-        for DIM in 32 64; do 
+    for BETA in "0.1" "1"; do 
+        for DIM in 8 16; do 
             for ITER in 3; do
 
-                JOB_NAME="clustering_hdm05-${PART}_iter_${ITER}"
+                JOB_NAME="clustering_${PART}_${ITER}_${DIM}_${BETA}"
 
                 qsub \
                     -N "${JOB_NAME}" \
-                    -v "PASSED_ITER=${ITER},PASSED_BETA=${BETA},PASSED_DIM=${DIM},SETUP=${SETUP},PART=${PART}" \
+                    -v "PASSED_ITER=${ITER},PASSED_BETA=${BETA},PASSED_DIM=${DIM},PART=${PART}" \
                     "${PARTS_SCRIPT_PATH}"
 
-                JOB_NAME="clustering_hdm05-${PART}_iter_${ITER}_norm"
+                JOB_NAME="clustering_${PART}_norm-${ITER}_${DIM}_${BETA}"
 
 
                 qsub \
                     -N "${JOB_NAME}" \
-                    -v "PASSED_ITER=${ITER},PASSED_BETA=${BETA},PASSED_DIM=${DIM},SETUP=${SETUP},PART=${PART}" \
+                    -v "PASSED_ITER=${ITER},PASSED_BETA=${BETA},PASSED_DIM=${DIM},PART=${PART}" \
                     "${PARTS_SCRIPT_PATH_NORM}"
 
 
@@ -37,10 +37,9 @@ done
 echo "Halfway there"
 
 
-# for ITER in 1 2 3 4 5; do
-for ITER in 3; do
-    for BETA in "0.1" "1" "10"; do 
-        for DIM in 32 64; do 
+for ITER in 1 2 3 4 5; do
+    for BETA in "0.1" "1"; do 
+        for DIM in 16 32 64; do 
 
             JOB_NAME="clustering_full_hdm05_${ITER}__${DIM}_${BETA}"
 

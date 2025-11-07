@@ -9,22 +9,10 @@ set -euo pipefail
 IFS=$'\n\t'
 
 ITER=${PASSED_ITER}
+BETA=${PASSED_BETA}
+DIM=${PASSED_DIM}
 PART=${PASSED_PART}
 
-##########################################
-
-# Script for running ELKI clustering on ELKI formatted dataset.
-# The final result of the clustering is a file (${EXTRACTED_MEDOIDS_FILE})
-# containing list of medoids (one for each created cluster) in MESSIF format.
-#
-# The resulting files are placed into a folder into ${ROOT_FOLDER_FOR_RESULTS}.
-# See formatResultFolderName function for the folder name.
-#
-# See README.md for the project terminology and the pipline stages.
-
-# 1. Insert your custom values (see defaults for inspiration)
-
-#ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters"
 # Path to a dataset in ELKI format
 #DATASET_PATH='/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/elki-predictions_segmented_model=hdm05.data'
 DISTANCE_FUNCTION='de.lmu.ifi.dbs.elki.distance.distancefunction.CosineDistanceFunction'
@@ -72,8 +60,8 @@ function createCompositeMWClusteringMessif() {
 
         ALGORITHM_PARAMS="-kmeans.k ${K}"
 
-        DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-non-norm/hdm05/all/model\=hdm05-${PART}_lat-dim\=8_beta\=0.1/${ITER}/predictions_segmented.data.gz"
-        ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/clusters/hdm05/${PART}/${ITER}/${K}/"
+        DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-non-norm/hdm05/all/model\=${PART}_lat-dim\=${DIM}_beta\=${BETA}/${ITER}/predictions_segmented.data.gz"
+        ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/clusters/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}_non-norm/"
 
 
         DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVectorCosine"
@@ -87,7 +75,7 @@ ${JDK_PATH} \
 -jar ${MEDOIDS_JAR_PATH} \
 1 \
 -pcuseall \
--kmeans-max-iters 50 \
+-kmeans-max-iters 20 \
 -sf ${DATASET_PATH} \
 -cls ${DISTANCE_FUNCTION} \
 -pc ${ALGORITHM} \
@@ -99,22 +87,6 @@ ${JDK_PATH} \
     done
 
 }
-
-
-##########################################
-
-# ELKI clustering:
-# for K in 2 3 4 5 6 7 8 9 10 20 50 100 150 200 250 300 350 400 500 750 1000 1250 1500 1750 2000 2250; do
-#     ALGORITHM_PARAMS="-kmeans.k ${K}"
-#     createCompositeMWClusteringELKI
-#     sleep 10
-# done
-
-#  for K in 50 100 200 350 500; do
-#      ALGORITHM_PARAMS="-kmeans.k ${K}"
-#      createCompositeMWClusteringELKI
-#      sleep 1
-#  done
 
 
 # MESSIF clustering:

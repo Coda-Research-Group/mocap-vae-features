@@ -1,6 +1,6 @@
 #!/bin/bash
-#PBS -l walltime=48:0:0
-#PBS -l select=1:ncpus=8:mem=8gb:scratch_local=50gb
+#PBS -l walltime=12:0:0
+#PBS -l select=1:ncpus=2:mem=16gb:scratch_local=16gb
 #PBS -o /dev/null
 #PBS -e /dev/null
 
@@ -11,12 +11,36 @@ IFS=$'\n\t'
 ITER=${PASSED_ITER}
 BETA=${PASSED_BETA}
 DIM=${PASSED_DIM}
-SETUP=${SETUP}
-PART=${PART}
+PART=${PASSED_PART}
+SETUP=${PASSED_SETUP}
 
+# Path to a dataset in ELKI format
+#DATASET_PATH='/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/hdm05/all/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/elki-predictions_segmented_model=hdm05.data'
+DISTANCE_FUNCTION='de.lmu.ifi.dbs.elki.distance.distancefunction.CosineDistanceFunction'
+DISTANCE_FUNCTION_PARAMS=""
+ALGORITHM='clustering.kmeans.KMedoidsFastPAM'
+#ALGORITHM_PARAMS='-kmeans.k 3'
+# JAR of the "clustering" project with "ELKIWithDistances" as the main class
+ELKI_JAR_PATH='/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/elki-with-distances.jar'
+# JAR of the "clustering" project with "Convertor" as the main class
+#CONVERTOR_JAR_PATH='/home/drking/Documents/bakalarka/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/convertor_old.jar'
+# My edited convertor.
+CONVERTOR_JAR_PATH='/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/convertor.jar'
 
 JDK_PATH='/storage/brno12-cerit/home/drking/jdk-21.0.7/bin/java'
+# Subfolder name for the result of createClusters function
+CLUSTER_SUBFOLDER='cluster'
+# Subfolder name for the result of convertElkiClusteringFormatToElkiFormat function
+ELKI_FORMAT_CLUSTER_SUBFOLDER='clusters-elki-format'
+# Subfolder name for the result of runKMedoidsClusteringOnEveryCluster function
+KMEDOIDS_CLUSTER_SUBFOLDER='kmedoids-clusters'
+# File name for the result of extractClusterMedoids function
+EXTRACTED_MEDOIDS_FILE='medoids.txt'
 
+# 2. Uncomment desired functions at the bottom of the file in the Main section
+
+# 3. Run the script as follows:
+# nohup ./cluster.sh &> <output>.txt &
 
 function formatResultFolderName() {
     # Remove the algorithm prefix
@@ -25,54 +49,46 @@ function formatResultFolderName() {
     ESCAPED_ALGORITHM_PARAMS=${ALGORITHM_PARAMS//' '/'_'}
 	RESULT_FOLDER_NAME="${ROOT_FOLDER_FOR_RESULTS}/${ALGORITHM_NAME}-${ESCAPED_ALGORITHM_PARAMS}"
 }
-# The actual clustering - combines the core functionality to produce the clustering
 
 ## Composite MW clustering using MESSIF
 function createCompositeMWClusteringMessif() {
 
-    ALGORITHM='messif.pivotselection.KMeansPivotChooser'
-    MEDOIDS_JAR_PATH='/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/medoids_new.jar'
-    EXTRACTED_MEDOIDS_FILE='medoids.txt'
+    for K in 100 150 200 250 300 350 400 500 750 1000 1250 1500 1750 2000 2500 3500 5000 7500 10000 15000; do
+        ALGORITHM='messif.pivotselection.KMeansPivotChooser'
+        MEDOIDS_JAR_PATH='/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/medoids_new.jar'
+        EXTRACTED_MEDOIDS_FILE='medoids.txt'
 
 
-	for K in "20" "50" "100" "150" "200" "250" "300" "350" "400" "500" "600" "750"; do
+        ALGORITHM_PARAMS="-kmeans.k ${K}"
 
-    	for model in "pku-mmd-torso" "pku-mmd-handL" "pku-mmd-handR" "pku-mmd-legL" "pku-mmd-legR"; do
-
-            for FUNC in 'Cosine'; do
-
-                ALGORITHM_PARAMS="-kmeans.k ${K}"
-
-                # PKU-MMD CV - no folds or splits
-                DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions-norm/pku-mmd/cs/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/predictions_segmented_model_norm=${model}.data-cs-train"
-                ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions-norm/pku-mmd/cs/lat_dim=${CURRENT_DIM}_beta=${CURRENT_BETA}/clusters-${model}"
+        DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-non-norm/pku-mmd/${SETUP}/model\=${PART}_lat-dim\=${DIM}_beta\=${BETA}/${ITER}/predictions_segmented.data.gz"
+        ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/clusters/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}_non-norm/"
 
 
-                DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVector${FUNC}"
+        DISTANCE_FUNCTION="messif.objects.impl.ObjectFloatVectorCosine"
 
-                formatResultFolderName
+        formatResultFolderName
 
-                mkdir -p "${RESULT_FOLDER_NAME}"
+        mkdir -p "${RESULT_FOLDER_NAME}"
 
-                COMMAND="\
+        COMMAND="\
 ${JDK_PATH} \
 -jar ${MEDOIDS_JAR_PATH} \
 1 \
 -pcuseall \
+-kmeans-max-iters 20 \
 -sf ${DATASET_PATH} \
 -cls ${DISTANCE_FUNCTION} \
 -pc ${ALGORITHM} \
 -np ${K} \
 "
-                echo "${COMMAND}"
+        echo "${COMMAND}"
 
-                eval "${COMMAND}" >"${RESULT_FOLDER_NAME}/${EXTRACTED_MEDOIDS_FILE}" 2>"${RESULT_FOLDER_NAME}/log.txt"
-
-            done
-        done
+        eval "${COMMAND}" >"${RESULT_FOLDER_NAME}/${EXTRACTED_MEDOIDS_FILE}" 2>"${RESULT_FOLDER_NAME}/log.txt"
     done
+
 }
 
-##########################################
 
+# MESSIF clustering:
 createCompositeMWClusteringMessif
