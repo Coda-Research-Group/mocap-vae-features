@@ -63,10 +63,12 @@ for K in 10 20 35 50 60 80 100 150 200 250 300 350 400 500 750 1000 1250 1500 17
                 PART="hdm05"
 	            echo "${PART}"
 
-	                DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=hdm05_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz"
-	                OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/MWs/hdm05/all/model=hdm05_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMeansPivotChooser--kmeans.k_${K}"
-                    CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/clusters/hdm05/all/model=hdm05_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMeansPivotChooser--kmeans.k_${K}"
-
+	            DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=hdm05_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz"
+	            OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/MWs/hdm05/all/model=hdm05_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMeansPivotChooser--kmeans.k_${K}"
+                CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/clusters/hdm05/all/model=hdm05_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMeansPivotChooser--kmeans.k_${K}"
+                if [[ ! -f "$DATAFILE" ]]; then
+                    continue 
+                fi
                 [ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
 	            convert
 
@@ -86,7 +88,9 @@ for K in 10 20 35 50 60 80 100 150 200 250 300 350 400 500 750 1000 1250 1500 17
 	                DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz"
 	                OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/MWs/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/KMeansPivotChooser--kmeans.k_${K}"
                     CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/clusters/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/KMeansPivotChooser--kmeans.k_${K}"
-
+                    if [[ ! -f "$DATAFILE" ]]; then
+                        continue 
+                    fi
                     [ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
 	                convert
 
@@ -95,7 +99,9 @@ for K in 10 20 35 50 60 80 100 150 200 250 300 350 400 500 750 1000 1250 1500 17
 	                DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL-non-norm/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz"
 	                OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/MWs/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}_non-norm/KMeansPivotChooser--kmeans.k_${K}"
                     CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/clusters/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}_non-norm/KMeansPivotChooser--kmeans.k_${K}"
-
+                    if [[ ! -f "$DATAFILE" ]]; then
+                        continue 
+                    fi
                     [ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
 	                convert
 
@@ -118,6 +124,10 @@ for SETUP in "cs" "cv"; do
     	                OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/MWs/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMeansPivotChooser--kmeans.k_${K}"
                         CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/clusters/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMeansPivotChooser--kmeans.k_${K}"
 
+                    if [[ ! -f "$DATAFILE" ]]; then
+                        continue 
+                    fi
+
                     [ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
     	            convert
 
@@ -135,7 +145,9 @@ for SETUP in "cs" "cv"; do
     	                DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz"
     	                OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/MWs/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/KMeansPivotChooser--kmeans.k_${K}"
                         CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/clusters/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/KMeansPivotChooser--kmeans.k_${K}"
-
+                        if [[ ! -f "$DATAFILE" ]]; then
+                            continue 
+                        fi
                         [ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
     	                convert
 
@@ -144,6 +156,10 @@ for SETUP in "cs" "cv"; do
     	                DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL-non-norm/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz"
     	                OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/MWs/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}_non-norm/KMeansPivotChooser--kmeans.k_${K}"
                         CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/clusters/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}_non-norm/KMeansPivotChooser--kmeans.k_${K}"
+
+                        if [[ ! -f "$DATAFILE" ]]; then
+                            continue 
+                        fi
 
                         [ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
     	                convert
@@ -154,49 +170,6 @@ for SETUP in "cs" "cv"; do
         done
     done
 done
-
-
-
-#CV
-# for K in "50" "100" "200" "500" "650"; do
-# 	echo "${PART}"
-
-# 	    DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=pku-mmd.data"
-# 	    OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}/MWs-full-MO/KMeansPivotChooser--kmeans.k_${K}"
-# 	    CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cv/lat_dim=${DIM}_beta=${BETA}/clusters-${PART}/KMeansPivotChooser--kmeans.k_${K}"
-
-#     [ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
-# 	convert
-
-# done
-
-# #CS
-# for K in "50" "100" "200" "500" "650"; do
-# 	echo "${PART}"
-
-# 	    DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=pku-mmd.data"
-# 	    OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/MWs-full-MO/KMeansPivotChooser--kmeans.k_${K}"
-# 	    CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/clusters-${PART}/KMeansPivotChooser--kmeans.k_${K}"
-
-#     [ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
-# 	convert
-
-# done
-
-# #=======  SOFT ASSIGNMENT  =========
-# SOFTASSIGNPARAM="D0K1"
-# DIM="256"
-# BETA="1"
-# PART="hdm05"
-# DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/predictions_segmented_model=pku-mmd.data"
-# OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/MWs-full-MO/KMeansPivotChooser--kmeans.k_${K}"
-# CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/SCL-segmented-actions/pku-mmd/cs/lat_dim=${DIM}_beta=${BETA}/clusters-${PART}/KMeansPivotChooser--kmeans.k_${K}"
-
-# [ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
-# convert
-# #----------------------------------------------
-
-
 
 
 
