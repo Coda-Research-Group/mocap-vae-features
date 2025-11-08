@@ -68,75 +68,44 @@ WORKER_SCRIPT_PATH_BASE="/storage/brno12-cerit/home/drking/experiments/mocap-vae
 #     done
 # done
 
-# for ITER in 1 2 3 4 5; do 
-#     for BETA in "0.1" "1"; do 
-#         for DIM in 32 64; do 
+for ITER in 1 2 3 4 5; do 
+    for BETA in "0.1" "1"; do 
+        for DIM in 32 64 128; do 
 
-#             JOB_NAME="evaluation_${DIM}_${BETA}_${ITER}_all"
+            JOB_NAME="evaluation_${DIM}_${BETA}_${ITER}_all"
 
-#             qsub \
-#                 -N "${JOB_NAME}" \
-#                 -v "PASSED_ITER=${ITER},PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
-#                 "${WORKER_SCRIPT_PATH_FULL}"
+            qsub \
+                -N "${JOB_NAME}" \
+                -v "PASSED_ITER=${ITER},PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
+                "${WORKER_SCRIPT_PATH_FULL}"
 
-#         done
-#     done   
-# done
-
-# for ITER in 3; do 
-#     for BETA in "0.1" "1"; do 
-#         for DIM in 8 16; do
-#             for PART in "hdm05-handR" "hdm05-handL" "hdm05-legR" "hdm05-legL" "hdm05-torso"; do
-
-#                 JOB_NAME="evaluation_${DIM}_${BETA}_${ITER}_${PART}"
-
-#                 qsub \
-#                     -N "${JOB_NAME}" \
-#                     -v "PASSED_ITER=${ITER},PASSED_DIM=${DIM},PASSED_BETA=${BETA},PASSED_PART=${PART}" \
-#                     "${WORKER_SCRIPT_PATH_PART}"
-
-#             done
-#         done
-#     done   
-# done
-
-
-
-
-# for EXP in "hdm05/all" "pku-mmd/cv" "pku-mmd/cs"; do
-    # for DIM in "256" "128" "64" "32" "16" "8" ; do
-    #     for BETA in "0.1" "1" "10"; do
-
-    #         JOB_NAME="evaluation_${DIM}_${BETA}_scl"
-    #         echo "Submitting job for DIM=${DIM}, BETA=${BETA}"
-    #         qsub \
-    #             -N "${JOB_NAME}" \
-    #             -v "PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
-    #             "${WORKER_SCRIPT_PATH_SCL}"
-
-    #     done
-    # done
-# done
-
-# for SET in "all" "cv" "cs" "alln" "cvn" "csn" ; do
-#     JOB_NAME="evaluation_base_${SET}"
-
-#     qsub \
-#         -N "${JOB_NAME}" \
-#         -v "PASSED_SET=${SET}" \
-#         "${WORKER_SCRIPT_PATH_BASE}"
-# done
-
-
-#     qsub \
-#         "${WORKER_SCRIPT_PATH_BASE}"
-
-
-for BETA in "0.1" "1"; do
-    for DIM in 8 16; do
-        qsub \
-            -v "DIM=${DIM},BETA=${BETA}" \
-            "${WORKER_SCRIPT_PATH_MO}"
-
+        done
     done
 done
+
+for ITER in 3; do 
+    for BETA in "0.1" "1"; do 
+        for DIM in 8 16 64; do
+            for PART in "hdm05-handR" "hdm05-handL" "hdm05-legR" "hdm05-legL" "hdm05-torso"; do
+
+                JOB_NAME="evaluation_${DIM}_${BETA}_${ITER}_${PART}"
+
+                qsub \
+                    -N "${JOB_NAME}" \
+                    -v "PASSED_ITER=${ITER},PASSED_DIM=${DIM},PASSED_BETA=${BETA},PASSED_PART=${PART}" \
+                    "${WORKER_SCRIPT_PATH_PART}"
+
+            done
+        done
+    done
+done
+
+
+# for BETA in "0.1" "1"; do
+#     for DIM in 8 16; do
+#         qsub \
+#             -v "DIM=${DIM},BETA=${BETA}" \
+#             "${WORKER_SCRIPT_PATH_MO}"
+
+#     done
+# done

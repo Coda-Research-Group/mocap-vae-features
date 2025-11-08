@@ -9,7 +9,6 @@ JDK_PATH='/storage/brno12-cerit/home/drking/jdk-21.0.7/bin/java'
 
 DIM=${PASSED_DIM}
 BETA=${PASSED_BETA}
-EXP=${PASSED_EXP}
 PART=${PASSED_PART}
 
 
