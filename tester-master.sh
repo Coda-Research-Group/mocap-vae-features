@@ -76,29 +76,29 @@ for ITER in 1 2 3 4 5; do
 
             qsub \
                 -N "${JOB_NAME}" \
-                -v "PASSED_ITER=${ITER},PASSED_DIM=${DIM},PASSED_BETA=${BETA},PASSED_PART=hdm05" \
+                -v "PASSED_ITER=${ITER},PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
                 "${WORKER_SCRIPT_PATH_FULL}"
 
         done
     done   
 done
 
-for ITER in 3; do 
-    for BETA in "0.1" "1"; do 
-        for DIM in 8 16; do
-            for PART in "hdm05-handR" "hdm05-handL" "hdm05-legR" "hdm05-legL" "hdm05-torso"; do
+# for ITER in 3; do 
+#     for BETA in "0.1" "1"; do 
+#         for DIM in 8 16; do
+#             for PART in "hdm05-handR" "hdm05-handL" "hdm05-legR" "hdm05-legL" "hdm05-torso"; do
 
-                JOB_NAME="evaluation_${DIM}_${BETA}_${ITER}_${part}"
+#                 JOB_NAME="evaluation_${DIM}_${BETA}_${ITER}_${PART}"
 
-                qsub \
-                    -N "${JOB_NAME}" \
-                    -v "PASSED_ITER=${ITER},PASSED_DIM=${DIM},PASSED_BETA=${BETA},PASSED_PART=${PART}" \
-                    "${WORKER_SCRIPT_PATH_PART}"
+#                 qsub \
+#                     -N "${JOB_NAME}" \
+#                     -v "PASSED_ITER=${ITER},PASSED_DIM=${DIM},PASSED_BETA=${BETA},PASSED_PART=${PART}" \
+#                     "${WORKER_SCRIPT_PATH_PART}"
 
-            done
-        done
-    done   
-done
+#             done
+#         done
+#     done   
+# done
 
 
 
