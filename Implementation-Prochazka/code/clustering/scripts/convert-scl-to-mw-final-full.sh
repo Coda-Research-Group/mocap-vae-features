@@ -56,67 +56,68 @@ function convert() {
 
 
 #HDM
-for K in 10 20 35 50 60 80 100 150 200 250 300 350 400 500 750 1000 1250 1500 1750 2000 2500; do
-    for ITER in 1 2 3 4 5; do 
-        for BETA in "0.1" "1"; do 
-            for DIM in 32 64; do 
-                PART="hdm05"
-	            echo "${PART}"
+# for K in 10 20 35 50 60 80 100 150 200 250 300 350 400 500 750 1000 1250 1500 1750 2000 2500; do
+#     for ITER in 1 2 3 4 5; do 
+#         for BETA in "0.1" "1"; do 
+#             for DIM in 32 64; do 
+#                 PART="hdm05"
+# 	            echo "${PART}"
 
-	            DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=hdm05_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz"
-	            OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/MWs/hdm05/all/model=hdm05_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMeansPivotChooser--kmeans.k_${K}"
-                CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/clusters/hdm05/all/model=hdm05_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMeansPivotChooser--kmeans.k_${K}"
-                if [[ ! -f "$DATAFILE" ]]; then
-                    continue 
-                fi
-                [ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
-	            convert
+# 	            DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=hdm05_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz"
+# 	            OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/MWs/hdm05/all/model=hdm05_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMeansPivotChooser--kmeans.k_${K}"
+#                 CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/clusters/hdm05/all/model=hdm05_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMeansPivotChooser--kmeans.k_${K}"
+#                 if [[ ! -f "$DATAFILE" ]]; then
+#                     continue 
+#                 fi
+#                 [ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
+# 	            convert
 
-            done
-        done   
-    done
-done
+#             done
+#         done   
+#     done
+# done
 
-for K in 10 20 35 50 60 80 100 150 200 250 300 350 400 500 750 1000 1250 1500 1750 2000 2500; do
-    for ITER in 3; do 
-        for BETA in "0.1" "1"; do 
-            for DIM in 8 16; do
-                for PART in "hdm05-handR" "hdm05-handL" "hdm05-legR" "hdm05-legL" "hdm05-torso"; do
+# for K in 10 20 35 50 60 80 100 150 200 250 300 350 400 500 750 1000 1250 1500 1750 2000 2500; do
+#     for ITER in 3; do 
+#         for BETA in "0.1" "1"; do 
+#             for DIM in 8 16; do
+#                 for PART in "hdm05-handR" "hdm05-handL" "hdm05-legR" "hdm05-legL" "hdm05-torso"; do
 
-	                echo "${PART}"
+# 	                echo "${PART}"
 
-	                DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz"
-	                OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/MWs/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/KMeansPivotChooser--kmeans.k_${K}"
-                    CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/clusters/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/KMeansPivotChooser--kmeans.k_${K}"
-                    if [[ ! -f "$DATAFILE" ]]; then
-                        continue 
-                    fi
-                    [ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
-	                convert
+# 	                DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz"
+# 	                OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/MWs/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/KMeansPivotChooser--kmeans.k_${K}"
+#                     CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/clusters/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/KMeansPivotChooser--kmeans.k_${K}"
+#                     if [[ ! -f "$DATAFILE" ]]; then
+#                         continue 
+#                     fi
+#                     [ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
+# 	                convert
 
 
 
-	                DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL-non-norm/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz"
-	                OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/MWs/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}_non-norm/KMeansPivotChooser--kmeans.k_${K}"
-                    CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/clusters/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}_non-norm/KMeansPivotChooser--kmeans.k_${K}"
-                    if [[ ! -f "$DATAFILE" ]]; then
-                        continue 
-                    fi
-                    [ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
-	                convert
+# 	                DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL-non-norm/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz"
+# 	                OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/MWs/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}_non-norm/KMeansPivotChooser--kmeans.k_${K}"
+#                     CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/clusters/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}_non-norm/KMeansPivotChooser--kmeans.k_${K}"
+#                     if [[ ! -f "$DATAFILE" ]]; then
+#                         continue 
+#                     fi
+#                     [ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
+# 	                convert
 
-                done
-            done
-        done   
-    done
-done
+#                 done
+#             done
+#         done   
+#     done
+# done
 
 #pku
 for SETUP in "cs" "cv"; do 
-    for K in 100 150 200 250 300 350 400 500 750 1000 1250 1500 1750 2000 2500 3500 5000 7500 10000 15000; do
+    for K in 2000 2500 3500 5000 7500 10000 15000; do
+    # for K in 100 150 200 250 300 350 400 500 750 1000 1250 1500 1750 2000 2500 3500 5000 7500 10000 15000; do
         for ITER in 1 2 3 4 5; do 
-            for BETA in "0.1" "1"; do 
-                for DIM in 8 16 64; do 
+            for BETA in "0.1" "1"; do
+                for DIM in 16 64; do
                     PART="pku-mmd"
     	            echo "${PART}"
 
@@ -137,7 +138,7 @@ for SETUP in "cs" "cv"; do
 
         for ITER in 3; do 
             for BETA in "0.1" "1"; do 
-                for DIM in 8 16; do
+                for DIM in 8; do
                     for PART in "pku-mmd-handR" "pku-mmd-handL" "pku-mmd-legR" "pku-mmd-legL" "pku-mmd-torso"; do
 
     	                echo "${PART}"
