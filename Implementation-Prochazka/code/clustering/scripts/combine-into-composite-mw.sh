@@ -31,10 +31,10 @@ for BETA in "0.1" "1"; do
     for DIM in 8 16; do 
         for K in 10 20 35 50 60 80 100 150 200 250 300 350 400 500 750 1000 1250 1500 1750 2000 2500; do
         
-            BODY_PART_MWS_FOLDER="/storage/brno12-cerit/home/drking/experiments/MWs/hdm05/all/grouped/group_lat-dim=${DIM}_beta=${BETA}_k=${K}"
-            combineBodyPartsIntoCompositeMW
+            # BODY_PART_MWS_FOLDER="/storage/brno12-cerit/home/drking/experiments/MWs/hdm05/all/grouped/group_lat-dim=${DIM}_beta=${BETA}_k=${K}"
+            # combineBodyPartsIntoCompositeMW
 
-            BODY_PART_MWS_FOLDER="/storage/brno12-cerit/home/drking/experiments/MWs/hdm05/all/grouped/group_lat-dim=${DIM}_beta=${BETA}_k=${K}_non_norm"
+            BODY_PART_MWS_FOLDER="/storage/brno12-cerit/home/drking/experiments/MWs/hdm05/all/grouped/group_lat-dim=${DIM}_beta=${BETA}_k=${K}_non-norm"
             combineBodyPartsIntoCompositeMW
 
         done
