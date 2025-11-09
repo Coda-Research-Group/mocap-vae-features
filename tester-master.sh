@@ -68,20 +68,20 @@ WORKER_SCRIPT_PATH_BASE="/storage/brno12-cerit/home/drking/experiments/mocap-vae
 #     done
 # done
 
-for ITER in 3; do 
-    for BETA in "0.1" "1"; do 
-        for DIM in 32 64 128; do 
+# for ITER in 3; do 
+#     for BETA in "0.1" "1"; do 
+#         for DIM in 32 64 128; do 
 
-            JOB_NAME="evaluation_${DIM}_${BETA}_${ITER}_all"
+#             JOB_NAME="evaluation_${DIM}_${BETA}_${ITER}_all"
 
-            qsub \
-                -N "${JOB_NAME}" \
-                -v "PASSED_ITER=${ITER},PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
-                "${WORKER_SCRIPT_PATH_FULL}"
+#             qsub \
+#                 -N "${JOB_NAME}" \
+#                 -v "PASSED_ITER=${ITER},PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
+#                 "${WORKER_SCRIPT_PATH_FULL}"
 
-        done
-    done
-done
+#         done
+#     done
+# done
 
 # for ITER in 3; do 
 #     for BETA in "0.1" "1"; do 
@@ -101,11 +101,11 @@ done
 # done
 
 
-# for BETA in "0.1" "1"; do
-#     for DIM in 8 16; do
-#         qsub \
-#             -v "DIM=${DIM},BETA=${BETA}" \
-#             "${WORKER_SCRIPT_PATH_MO}"
+for BETA in "0.1" "1"; do
+    for DIM in 32 64 128; do
+        qsub \
+            -v "DIM=${DIM},BETA=${BETA}" \
+            "${WORKER_SCRIPT_PATH_MO}"
 
-#     done
-# done
+    done
+done
