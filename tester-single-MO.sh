@@ -14,51 +14,71 @@ BETA=${BETA}
 
 for K in 10 20 35 50 60 80 100 150 200 250 300 350 400 500 750 1000 1250 1500 1750 2000 2500; do
 
+# # Precision
+
+#     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
+# -fp /storage/brno12-cerit/home/drking/experiments/MWs/hdm05/all/grouped/group_lat-dim=${DIM}_beta=${BETA}_k=${K}_non-norm.composite \
+# --nmatches 2 \
+# -k 4 \
+# -dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
+# "
+#     echo "${COMMAND}"
+#     mkdir -p "/storage/brno12-cerit/home/drking/experiments/results/hdm05/Multi-Overlay/"
+#     eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/hdm05/Multi-Overlay/parts/dim=${DIM}_beta=${BETA}_${K}_non-norm.txt"
+
+# # recall
+# #---------------------------------------------------
+#     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
+# -fp /storage/brno12-cerit/home/drking/experiments/MWs/hdm05/all/grouped/group_lat-dim=${DIM}_beta=${BETA}_k=${K}_non-norm.composite \
+# --nmatches 2 \
+# -dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
+# "
+#     echo "${COMMAND}"
+#     eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/hdm05/Multi-Overlay/parts/dim=${DIM}_beta=${BETA}_${K}_non-norm.txt"
+
+
+# # Normed
+# # Precision
+
+#     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
+# -fp /storage/brno12-cerit/home/drking/experiments/MWs/hdm05/all/grouped/group_lat-dim=${DIM}_beta=${BETA}_k=${K}.composite \
+# --nmatches 2 \
+# -k 4 \
+# -dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
+# "
+#     echo "${COMMAND}"
+#     eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/hdm05/Multi-Overlay/parts/dim=${DIM}_beta=${BETA}_${K}.txt"
+
+# # recall
+# #---------------------------------------------------
+#     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
+# -fp /storage/brno12-cerit/home/drking/experiments/MWs/hdm05/all/grouped/group_lat-dim=${DIM}_beta=${BETA}_k=${K}.composite \
+# --nmatches 2 \
+# -dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
+# "
+#     echo "${COMMAND}"
+#     eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/hdm05/Multi-Overlay/parts/dim=${DIM}_beta=${BETA}_${K}.txt"
+
+
 # Precision
 
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/experiments/MWs/hdm05/all/grouped/group_lat-dim=${DIM}_beta=${BETA}_k=${K}_non-norm.composite \
+-fp /storage/brno12-cerit/home/drking/experiments/MWs/hdm05/all/grouped/model=hdm05_lat-dim=${DIM}_beta=${BETA}_k=${K}.composite \
 --nmatches 2 \
 -k 4 \
 -dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
 "
     echo "${COMMAND}"
-    mkdir -p "/storage/brno12-cerit/home/drking/experiments/results/hdm05/Multi-Overlay/"
-    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/hdm05/Multi-Overlay/dim=${DIM}_beta=${BETA}_${K}_non-norm.txt"
+    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/hdm05/Multi-Overlay/full/dim=${DIM}_beta=${BETA}_${K}.txt"
 
 # recall
 #---------------------------------------------------
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/experiments/MWs/hdm05/all/grouped/group_lat-dim=${DIM}_beta=${BETA}_k=${K}_non-norm.composite \
+-fp /storage/brno12-cerit/home/drking/experiments/MWs/hdm05/all/grouped/model=hdm05_lat-dim=${DIM}_beta=${BETA}_k=${K}.composite \
 --nmatches 2 \
 -dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
 "
     echo "${COMMAND}"
-    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/hdm05/Multi-Overlay/dim=${DIM}_beta=${BETA}_${K}_non-norm.txt"
-
-
-# Normed
-# Precision
-
-    COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/experiments/MWs/hdm05/all/grouped/group_lat-dim=${DIM}_beta=${BETA}_k=${K}.composite \
---nmatches 2 \
--k 4 \
--dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
-"
-    echo "${COMMAND}"
-    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/hdm05/Multi-Overlay/dim=${DIM}_beta=${BETA}_${K}.txt"
-
-# recall
-#---------------------------------------------------
-    COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/experiments/MWs/hdm05/all/grouped/group_lat-dim=${DIM}_beta=${BETA}_k=${K}.composite \
---nmatches 2 \
--dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
-"
-    echo "${COMMAND}"
-    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/hdm05/Multi-Overlay/dim=${DIM}_beta=${BETA}_${K}.txt"
-
-
+    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/hdm05/Multi-Overlay/full/dim=${DIM}_beta=${BETA}_${K}.txt"
 done
 
