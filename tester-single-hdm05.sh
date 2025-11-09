@@ -22,12 +22,12 @@ for K in 10 20 35 50 60 80 100 150 200 250 300 350 400 500 750 1000 1250 1500 17
 -k 4 \
 "
     mkdir -p "/storage/brno12-cerit/home/drking/experiments/results/hdm05/all/${PART}_lat_dim=${DIM}_beta=${BETA}/${K}/"
-    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/hdm05/all/${PART}_lat_dim=${DIM}_beta=${BETA}/${K}/results-${ITER}.txt"
+    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/hdm05/all/hdm05_lat_dim=${DIM}_beta=${BETA}/${K}/results-${ITER}.txt"
 
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
 -fp /storage/brno12-cerit/home/drking/experiments/MWs/hdm05/all/model=hdm05_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMeansPivotChooser--kmeans.k_${K} \
 -dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
 "
-    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/hdm05/all/${PART}_lat_dim=${DIM}_beta=${BETA}/${K}/results-${ITER}.txt"
+    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/results/hdm05/all/hdm05_lat_dim=${DIM}_beta=${BETA}/${K}/results-${ITER}.txt"
 
 done

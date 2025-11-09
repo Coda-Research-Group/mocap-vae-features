@@ -6,8 +6,8 @@ from glob import glob
 # --- Configuration ---
 # Set the base directory for your experiments.
 # The script will start searching from here.
-BASE_DIR = "/storage/brno12-cerit/home/drking/experiments/results/hdm05/full/"
-OUTPUT_CSV = "/storage/brno12-cerit/home/drking/experiments/results/hdm05/full/experiment_results_summary.csv"
+BASE_DIR = "/storage/brno12-cerit/home/drking/experiments/results/hdm05/all/"
+OUTPUT_CSV = "/storage/brno12-cerit/home/drking/experiments/results/hdm05/all/experiment_results_summary.csv"
 
 
 # --- Regex Patterns for Extraction ---
