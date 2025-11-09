@@ -55,7 +55,7 @@ function convert() {
 
 
 
-HDM
+# HDM
 for K in 10 20 35 50 60 80 100 150 200 250 300 350 400 500 750 1000 1250 1500 1750 2000 2500; do
     for ITER in 1 2 3 4 5; do 
         for BETA in "0.1" "1"; do 
