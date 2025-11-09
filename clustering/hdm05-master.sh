@@ -37,9 +37,9 @@ echo "Starting submission process..."
 echo "Halfway there"
 
 
-for ITER in 1 2 3 4 5; do
+for ITER in 3 ; do
     for BETA in "0.1" "1"; do
-        for DIM in 128; do
+        for DIM in 256; do
 
             JOB_NAME="clustering_full_hdm05_${ITER}__${DIM}_${BETA}"
 
