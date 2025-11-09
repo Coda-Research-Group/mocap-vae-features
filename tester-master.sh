@@ -105,7 +105,7 @@ for BETA in "0.1" "1"; do
     for DIM in 256; do
         qsub \
             -v "DIM=${DIM},BETA=${BETA}" \
-            "${WORKER_SCRIPT_PATH_MO}"
+            "${WORKER_SCRIPT_PATH_FULL}"
 
     done
 done
