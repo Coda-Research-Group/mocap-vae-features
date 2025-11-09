@@ -70,7 +70,7 @@ WORKER_SCRIPT_PATH_BASE="/storage/brno12-cerit/home/drking/experiments/mocap-vae
 
 for ITER in 1 2 3 4 5; do 
     for BETA in "0.1" "1"; do 
-        for DIM in 32 64 128; do 
+        for DIM in 32 64; do 
 
             JOB_NAME="evaluation_${DIM}_${BETA}_${ITER}_all"
 
@@ -85,7 +85,7 @@ done
 
 for ITER in 3; do 
     for BETA in "0.1" "1"; do 
-        for DIM in 8 16 64; do
+        for DIM in 8 16; do
             for PART in "hdm05-handR" "hdm05-handL" "hdm05-legR" "hdm05-legL" "hdm05-torso"; do
 
                 JOB_NAME="evaluation_${DIM}_${BETA}_${ITER}_${PART}"
