@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from collections import defaultdict
 import statistics
 import os
@@ -10,10 +11,21 @@ OUTPUT_CSV = "/storage/brno12-cerit/home/drking/experiments/results/hdm05/all/ex
 
 # Flexible pattern:
 # - optional model prefix like "hdm05" or "pku-mmd-handR" (anything before "_lat_dim=")
-# - or no prefix at all (start with "lat_dim=")
-# Captures: model (optional), lat_dim, beta, k_dir, iter
+# - captures: optional model, lat_dim, beta, k_dir
+# - DOES NOT include iteration in the grouping key (we will aggregate across all iteration files)
+# Example matched path:
+#  .../hdm05_lat_dim=64_beta=0.1/5/results-1.txt
 PATH_PARAM_PATTERN = re.compile(
-    r"/(?:(?P<model>[^/]+?)_)?lat_dim=(?P<lat>\d+)_beta=(?P<beta>[\d.]+)/(?P<k>\d+)/results-(?P<iter>\d+)\.txt$"
+    r"""
+    /                                   # path separator before the parameters
+    (?:(?P<model>[^/]+?)_)?              # optional model prefix followed by underscore (non-greedy)
+    lat[_-]?dim=?(?P<lat>\d+)            # lat dimension (accept lat_dim or lat-dim or latdim)
+    [_-]?beta=?(?P<beta>[\d.eE+\-]+)     # beta (floats allowed, scientific)
+    .*?                                  # any chars (non-greedy) until the k dir portion
+    /(?P<k>\d+)                          # k directory (a number folder)
+    /results-[0-9]+\.txt$                # file name results-<iter>.txt (we don't capture iter)
+    """,
+    re.VERBOSE,
 )
 
 def parse_log_file(filepath):
@@ -27,18 +39,25 @@ def parse_log_file(filepath):
         return results
 
     runs = content.split("===== GLOBAL PARAMS =====")
-    if len(runs) < 3:
-        return results
+    # If file format is different, try to still extract values by searching entire file.
+    if len(runs) >= 3:
+        # FIRST RUN: classification precision (runs[1])
+        m = re.search(r"classification precision over objects and categories:\s*([\d.]+)", runs[1], re.IGNORECASE)
+        if m:
+            results["Classification_Precision"] = float(m.group(1))
 
-    # FIRST RUN: classification precision
-    m = re.search(r"classification precision over objects and categories:\s*([\d.]+)", runs[1])
-    if m:
-        results["Classification_Precision"] = float(m.group(1))
-
-    # SECOND RUN: kNN precision
-    m = re.search(r"precision over objects and categories:\s*([\d.]+)", runs[2])
-    if m:
-        results["kNN_Precision"] = float(m.group(1))
+        # SECOND RUN: kNN precision (runs[2])
+        m = re.search(r"precision over objects and categories:\s*([\d.]+)", runs[2], re.IGNORECASE)
+        if m:
+            results["kNN_Precision"] = float(m.group(1))
+    else:
+        # fallback: search whole file for typical lines
+        m = re.search(r"classification precision over objects and categories:\s*([\d.]+)", content, re.IGNORECASE)
+        if m:
+            results["Classification_Precision"] = float(m.group(1))
+        m = re.search(r"precision over objects and categories:\s*([\d.]+)", content, re.IGNORECASE)
+        if m:
+            results["kNN_Precision"] = float(m.group(1))
 
     return results
 
@@ -61,20 +80,20 @@ def main():
         abs_path = os.path.abspath(filepath)
         m = PATH_PARAM_PATTERN.search(abs_path)
         if not m:
-            # optional: show a few unmatched paths to help debugging
+            # show some unmatched paths to help debugging (but keep output short)
             print(f"Skipping unmatched path: {filepath}")
             continue
 
-        model = m.group("model") or "base"   # "base" for directories that start with lat_dim=
+        model = m.group("model") or "base"   # "base" for directories that start with lat_dim=...
         lat_dim = m.group("lat")
         beta = m.group("beta")
         k_dir = m.group("k")
-        # iter_ = m.group("iter")   # if you need iter later you can use it
+        # intentionally DO NOT extract or use iteration here; we will aggregate across all iterations
 
         key = (model, lat_dim, beta, k_dir)
         grouped[key].append(filepath)
 
-    print(f"Detected {len(grouped)} experiment groups.\n")
+    print(f"Detected {len(grouped)} experiment groups (model,lat,beta,k).\n")
 
     fieldnames = [
         "MODEL", "LAT_DIM", "BETA", "K_DIR",
@@ -84,7 +103,7 @@ def main():
     ]
     all_data = []
 
-    for (model, lat_dim, beta, k_dir), files in grouped.items():
+    for (model, lat_dim, beta, k_dir), files in sorted(grouped.items()):
         knn_vals, class_vals = [], []
         for f in files:
             parsed = parse_log_file(f)
@@ -114,7 +133,7 @@ def main():
             writer.writeheader()
             writer.writerows(all_data)
         print(f"\n✅ Saved summary CSV to: {OUTPUT_CSV}")
-        print(f"→ Aggregated {len(all_data)} groups.")
+        print(f"→ Aggregated {len(all_data)} groups (iteration files combined per group).")
     except Exception as e:
         print(f"Error writing CSV: {e}")
 
