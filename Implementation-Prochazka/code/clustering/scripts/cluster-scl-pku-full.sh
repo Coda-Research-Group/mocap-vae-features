@@ -52,7 +52,7 @@ function formatResultFolderName() {
 ## Composite MW clustering using MESSIF
 function createCompositeMWClusteringMessif() {
 
-    for K in 100 150 200 250 300 350 400 500 750 1000 1250 1500 1750 2000 2500 3500 5000 7500 10000 15000; do
+    for K in 100 200 350 500 1000 1500 2500 5000 10000 15000; do
         ALGORITHM='messif.pivotselection.KMeansPivotChooser'
         MEDOIDS_JAR_PATH='/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/jars/medoids_new.jar'
         EXTRACTED_MEDOIDS_FILE='medoids.txt'

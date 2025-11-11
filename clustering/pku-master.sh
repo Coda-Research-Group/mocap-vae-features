@@ -8,7 +8,7 @@ PARTS_SCRIPT_PATH_NORM="/storage/brno12-cerit/home/drking/experiments/mocap-vae-
 
 for ITER in 1 2 3 4 5; do
     for BETA in "0.1" "1"; do 
-        for DIM in 8 16 64; do 
+        for DIM in 8 16 32 64 128 256; do
             for SETUP in "cv" "cs"; do
 
                 JOB_NAME="clustering_full_pku_${ITER}__${DIM}_${BETA}_${SETUP}"
@@ -23,30 +23,30 @@ for ITER in 1 2 3 4 5; do
 done
 
 
-for ITER in 3; do
-    for BETA in "0.1" "1"; do 
-        for DIM in 8 16; do 
-            for SETUP in "cv" "cs"; do
-                for PART in "pku-mmd-torso" "pku-mmd-handL" "pku-mmd-handR" "pku-mmd-legL" "pku-mmd-legR"; do
+# for ITER in 3; do
+#     for BETA in "0.1" "1"; do 
+#         for DIM in 8 16; do 
+#             for SETUP in "cv" "cs"; do
+#                 for PART in "pku-mmd-torso" "pku-mmd-handL" "pku-mmd-handR" "pku-mmd-legL" "pku-mmd-legR"; do
 
-                    JOB_NAME="clustering_full_pku_${ITER}__${DIM}_${BETA}_${SETUP}"
+#                     JOB_NAME="clustering_full_pku_${ITER}__${DIM}_${BETA}_${SETUP}"
     
-                    qsub \
-                        -N "${JOB_NAME}" \
-                        -v "PASSED_ITER=${ITER},PASSED_BETA=${BETA},PASSED_DIM=${DIM},PASSED_SETUP=${SETUP},PASSED_PART=${PART}" \
-                        "${PARTS_SCRIPT_PATH}"
+#                     qsub \
+#                         -N "${JOB_NAME}" \
+#                         -v "PASSED_ITER=${ITER},PASSED_BETA=${BETA},PASSED_DIM=${DIM},PASSED_SETUP=${SETUP},PASSED_PART=${PART}" \
+#                         "${PARTS_SCRIPT_PATH}"
     
     
-                    qsub \
-                        -N "${JOB_NAME}_norm" \
-                        -v "PASSED_ITER=${ITER},PASSED_BETA=${BETA},PASSED_DIM=${DIM},PASSED_SETUP=${SETUP},PASSED_PART=${PART}" \
-                        "${PARTS_SCRIPT_PATH_NORM}"
+#                     qsub \
+#                         -N "${JOB_NAME}_norm" \
+#                         -v "PASSED_ITER=${ITER},PASSED_BETA=${BETA},PASSED_DIM=${DIM},PASSED_SETUP=${SETUP},PASSED_PART=${PART}" \
+#                         "${PARTS_SCRIPT_PATH_NORM}"
 
-                done
-            done
-        done
-    done
-done
+#                 done
+#             done
+#         done
+#     done
+# done
 
 
 echo "Job finished."
