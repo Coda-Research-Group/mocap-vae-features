@@ -11,7 +11,7 @@ for ITER in 1 2 3 4 5; do
         for DIM in 8 16 32 64 128 256; do
             for SETUP in "cv" "cs"; do
 
-                JOB_NAME="clustering_full_pku_${ITER}__${DIM}_${BETA}_${SETUP}"
+                JOB_NAME="clustering_full_pku_${ITER}_${DIM}_${BETA}_${SETUP}"
 
                 qsub \
                     -N "${JOB_NAME}" \

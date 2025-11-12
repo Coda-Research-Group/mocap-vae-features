@@ -83,7 +83,7 @@ def stream_sample_objects(file_path, valid_prefixes, subset_size, seed=None):
 # ---------------------
 # Computation and Plotting
 # ---------------------
-def compute_percentiles(vectors, metric="cosine", percentiles=(0.5, 40), return_dists=False):
+def compute_percentiles(vectors, metric="cosine", percentiles=(2, 40), return_dists=False):
     """Compute pairwise distance percentiles and optionally returns the distance array."""
 
     dists = pdist(vectors, metric=metric)

@@ -44,5 +44,5 @@ python3 /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/SCL-qua
     /storage/brno12-cerit/home/drking/experiments/SCL-non-norm/hdm05/all/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz \
     /storage/brno12-cerit/home/drking/data/hdm05/${PATH_PART}.json \
     /storage/brno12-cerit/home/drking/experiments/SCL-non-norm/hdm05/all/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/scl.json \
-    --dataset hdm05 --n-subsets 5 --subset-size 5000 --n-jobs 10 \
+    --dataset hdm05 --n-subsets 5 --subset-size 2000 --n-jobs 10 \
     --output /storage/brno12-cerit/home/drking/experiments/SCL-non-norm/hdm05/all/model=${DATAFILE}_lat-dim=${DIM}_beta=${BETA}/${ITER}/metrics.json

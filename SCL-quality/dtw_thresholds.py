@@ -155,7 +155,7 @@ def compute_subset_percentiles(
         dists = [dtw_distance(subset[a], subset[b], metric=metric, normalize=True) for a, b in pairs]
 
     dvals = np.array(dists, dtype=np.float64)
-    p0_5, p40 = np.percentile(dvals, [0.5, 40])
+    p0_5, p40 = np.percentile(dvals, [2, 40])
     # p0_5, p40 = np.percentile(dvals, [2, 60])
     if return_all:
         return p0_5, p40, dvals
