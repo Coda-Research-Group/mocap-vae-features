@@ -2,9 +2,20 @@
 
 WHOLE_SCRIPT_PATH="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/quantization/hdm05-full.sh"
 
+PART="hdm05"
+
 for ITER in 3 4 5; do
     for BETA in "0.1" "1" "10"; do
         for DIM in 256; do
+
+            gunzip -kf "$/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz"
+            
+            # aby se smazal v pripade 2. pokusu ten predchozi.
+            rm -f /storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/elki-predictions_segmented.data
+            
+            perl /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/scripts/convert-from-messif.pl "${DATASET_PATH}" >> "/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/elki-predictions_segmented.data"
+
+
             for K in 10 25 50 100 200 400 800 1600 3200;do 
 
                 JOB_NAME="quantization_hdm05_${DIM}_${BETA}_${ITER}_${K}"
