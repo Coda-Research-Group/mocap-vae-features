@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Base directory
+# Base directories
 BASE_DIR="/storage/brno12-cerit/home/drking/experiments/MWs/hdm05/all"
-OUTPUT_CSV="$BASE_DIR/all_results.csv"
-
-# Write CSV header
-echo "dim,beta,iter,K,source_file,content" > "$OUTPUT_CSV"
+OUTPUT_DIR="$BASE_DIR/grouped"
+mkdir -p "$OUTPUT_DIR"
 
 # Only process global models (ignore body-part models)
 for model_dir in "$BASE_DIR"/model=hdm05_lat-dim=*; do
@@ -26,21 +24,23 @@ for model_dir in "$BASE_DIR"/model=hdm05_lat-dim=*; do
         # KMeans subfolders inside iteration folder
         for k_dir in "$iter_dir"/KMeansPivotChooser--kmeans.k_*; do
             [[ -d "$k_dir" ]] || continue
+
             K=$(basename "$k_dir" | sed -E 's/.*k_([0-9]+).*/\1/')
 
-            for csv_file in "$k_dir"/*.csv; do
-                [[ -f "$csv_file" ]] || continue
+            # Target folder for grouped results
+            target_dir="$OUTPUT_DIR/model=hdm05_lat-dim=${dim}_beta=${beta}_k=${K}"
+            mkdir -p "$target_dir"
 
-                echo "→ Adding $csv_file"
+            echo "→ Grouping iteration ${iter_name} into $target_dir"
 
-                # Add each line of CSV, prefixing with metadata
-                tail -n +2 "$csv_file" | \
-                    awk -v dim="$dim" -v beta="$beta" -v iter="$iter_name" -v K="$K" -v file="$(basename "$csv_file")" \
-                        -F, '{print dim "," beta "," iter "," K "," file "," $0}' \
-                    >> "$OUTPUT_CSV"
+            # Symlink files (prefix with iteration number)
+            for file in "$k_dir"/*; do
+                [[ -e "$file" ]] || continue
+                base=$(basename "$file")
+                ln -sf "$(realpath "$file")" "$target_dir/${iter_name}_${base}"
             done
         done
     done
 done
 
-echo "✅ Combined CSV created at: $OUTPUT_CSV"
+echo "✅ Grouping complete. Output in: $OUTPUT_DIR"
