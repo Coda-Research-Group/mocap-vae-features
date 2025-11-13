@@ -1,7 +1,7 @@
 #!/bin/bash
 
 WHOLE_SCRIPT_PATH_HDM05="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/quantization/hdm05-full.sh"
-WHOLE_SCRIPT_PATH_PKU-MMD="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/quantization/pku-mmd-full.sh"
+WHOLE_SCRIPT_PATH_PKU_MMD="/storage/brno12-cerit/home/drking/experiments/mocap-vae-features/quantization/pku-mmd-full.sh"
 
 PART="hdm05"
 
@@ -53,7 +53,7 @@ for ITER in 1 2 3 4 5; do
                     qsub \
                         -N "${JOB_NAME}" \
                         -v "ITER=${ITER},BETA=${BETA},DIM=${DIM},K=${K},SETUP=${SETUP}" \
-                        "${WHOLE_SCRIPT_PATH_PKU-MMD}"
+                        "${WHOLE_SCRIPT_PATH_PKU_MMD}"
 
                 done
             done
