@@ -1,5 +1,11 @@
 #!/bin/bash
 
+#PBS -l walltime=8:0:0
+#PBS -l select=1:ncpus=4:mem=16gb
+#PBS -o /dev/null
+#PBS -e /dev/null
+
+
 # http://redsymbol.net/articles/unofficial-bash-strict-mode/
 set -euo pipefail
 IFS=$'\n\t'
@@ -55,7 +61,6 @@ function formatResultFolderName() {
 }
 
 function createClusters() {
-    echo 'createClusters'
 
     formatResultFolderName
 
@@ -74,7 +79,6 @@ ${ALGORITHM_PARAMS} \
 -out ${RESULT_FOLDER_NAME}/${CLUSTER_SUBFOLDER}\
 "
 
-    echo "${COMMAND}"
 
     eval "${COMMAND}"
 
@@ -83,7 +87,6 @@ ${ALGORITHM_PARAMS} \
 }
 
 function convertElkiClusteringFormatToElkiFormat() {
-    echo 'convertElkiClusteringFormatToElkiFormat'
 
     formatResultFolderName
 
@@ -100,7 +103,6 @@ ${JDK_PATH} \
 --elki-clustering-file=${RESULT_FOLDER_NAME}/${CLUSTER_SUBFOLDER}/${CLUSTER_FILENAME} \
 "
 
-        echo "${COMMAND}"
 
         echo "${RESULT_FOLDER_NAME}/${ELKI_FORMAT_CLUSTER_SUBFOLDER}/${CLUSTER_FILENAME}"
 
@@ -109,7 +111,6 @@ ${JDK_PATH} \
 }
 
 function runKMedoidsClusteringOnEveryCluster() {
-    echo 'runKMedoidsClusteringOnEveryCluster'
 
     formatResultFolderName
 
@@ -148,8 +149,6 @@ ${DISTANCE_FUNCTION_PARAMS} \
 -resulthandler ResultWriter \
 -out ${RESULT_FOLDER_NAME}/${KMEDOIDS_CLUSTER_SUBFOLDER}/${CLUSTER_FILENAME} \
 "
-            echo "${COMMAND}"
-
             eval "${COMMAND}"
 
             # Stores the run command alongside the results.
@@ -160,7 +159,6 @@ ${DISTANCE_FUNCTION_PARAMS} \
 }
 
 function extractClusterMedoids() {
-    echo 'extractClusterMedoids'
 
     formatResultFolderName
 
@@ -172,7 +170,6 @@ ${JDK_PATH} \
 --elki-clustering-folder=${CLUSTER_FOLDER_PATH} \
 --vector-dim=${DIM}
 "
-        echo "${COMMAND}"
 
         # Executes the medoid extraction. The results are appended to a single file in MESSIF format.
         eval "${COMMAND}" >>"${RESULT_FOLDER_NAME}/${EXTRACTED_MEDOIDS_FILE}"
@@ -203,8 +200,6 @@ VOCTYPE='-v'
 CLASSPATH=${CLASSPATH:-'MESSIF.jar:MESSIF-Utility.jar:MotionVocabulary.jar:commons-cli-1.4.jar:smf-core-1.0.jar:smf-impl-1.0.jar:MCDR.jar:m-index.jar:trove4j-3.0.3.jar'}
 
 function convert() {
-    echo 'convertBodyPart'
-
 	CLUSTER_FOLDER_NAME=$(basename "${CLUSTER_FOLDER_PATH}")
 
     mkdir -p "${OUTPUT_ROOT_PATH}"
@@ -220,8 +215,6 @@ function convert() {
   --soft-assign ${SOFTASSIGNPARAM} \
   --output ${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM} \
   "
-
-      echo "${COMMAND}"
 
       eval "${COMMAND}"
 }
