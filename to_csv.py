@@ -6,7 +6,7 @@ import re
 import csv
 from glob import glob
 
-BASE_DIR = "/storage/brno12-cerit/home/drking/experiments/results/hdm05/all/"
+BASE_DIR = "/storage/brno12-cerit/home/drking/experiments/elki-results/hdm05/all/"
 OUTPUT_CSV = "/storage/brno12-cerit/home/drking/experiments/results/hdm05/all/experiment_results_summary.csv"
 
 # Flexible pattern:
