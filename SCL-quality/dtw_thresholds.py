@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-dtw_matcher_lowmem.py (with visualization + percentile markers)
+dtw_matcher.py (with visualization + percentile markers)
 
 Low-memory DTW matcher (NPZ version):
 - Computes DTW distance percentiles between motion sequences.
@@ -93,12 +93,6 @@ def frame_distance(a: np.ndarray, b: np.ndarray, metric: str = 'euclidean') -> f
         b = b.reshape(-1, 3)
         # Compute per-joint Euclidean distances and sum them
         return float(np.sum(np.linalg.norm(a - b, axis=1)))
-    elif metric == 'cosine':
-        na, nb = np.linalg.norm(a), np.linalg.norm(b)
-        if na == 0 or nb == 0:
-            return 0.0 if na == 0 and nb == 0 else 1.0
-        cos_sim = np.dot(a, b) / (na * nb)
-        return float(1.0 - np.clip(cos_sim, -1.0, 1.0))
     raise ValueError("Unsupported metric")
 
 
@@ -155,7 +149,7 @@ def compute_subset_percentiles(
         dists = [dtw_distance(subset[a], subset[b], metric=metric, normalize=True) for a, b in pairs]
 
     dvals = np.array(dists, dtype=np.float64)
-    p0_5, p40 = np.percentile(dvals, [2, 40])
+    p0_5, p40 = np.percentile(dvals, [0.5, 40])
     # p0_5, p40 = np.percentile(dvals, [2, 60])
     if return_all:
         return p0_5, p40, dvals
@@ -181,7 +175,7 @@ def estimate_thresholds(seqs, all_keys, subset_size, repeats, metric, n_jobs=1):
 def main():
     parser = argparse.ArgumentParser(description="Low-memory DTW matcher (NPZ version) with visualization.")
     parser.add_argument('--input', required=True, help='Path to input .npz file.')
-    parser.add_argument('--metric', choices=['euclidean', 'cosine'], default='euclidean', help='Distance metric.')
+    parser.add_argument('--metric', choices=['euclidean',], default='euclidean', help='Distance metric.')
     parser.add_argument('--subset-size', type=int, default=1000, help='Subset size.')
     parser.add_argument('--subset-repeats', type=int, default=1, help='Number of subsets.')
     parser.add_argument('--n-jobs', type=int, default=1, help='Parallel jobs.')
