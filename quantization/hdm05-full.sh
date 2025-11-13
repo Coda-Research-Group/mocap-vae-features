@@ -80,7 +80,7 @@ ${ALGORITHM_PARAMS} \
 "
 
 
-    eval "${COMMAND}"
+    eval "${COMMAND}" > /dev/null 2>&1
 
     # Stores the run command alongside the results.
     echo "${COMMAND}" >"${RESULT_FOLDER_NAME}/${CLUSTER_SUBFOLDER}/clustering-command.txt"
@@ -149,7 +149,7 @@ ${DISTANCE_FUNCTION_PARAMS} \
 -resulthandler ResultWriter \
 -out ${RESULT_FOLDER_NAME}/${KMEDOIDS_CLUSTER_SUBFOLDER}/${CLUSTER_FILENAME} \
 "
-            eval "${COMMAND}"
+            eval "${COMMAND}" > /dev/null 2>&1
 
             # Stores the run command alongside the results.
             echo "${COMMAND}" >"${RESULT_FOLDER_NAME}/${KMEDOIDS_CLUSTER_SUBFOLDER}/${CLUSTER_FILENAME}/clustering-command.txt"
@@ -216,7 +216,7 @@ function convert() {
   --output ${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM} \
   "
 
-      eval "${COMMAND}"
+      eval "${COMMAND}" > /dev/null 2>&1
 }
 
 
@@ -229,7 +229,7 @@ ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/elki-clus
 
 ALGORITHM_PARAMS="-kmeans.k ${K}"
 
-gunzip -k "${DATASET_PATH}.gz"
+gunzip -kf "${DATASET_PATH}.gz"
 
 # aby se smazal v pripade 2. pokusu ten predchozi.
 rm -f /storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/elki-predictions_segmented.data
