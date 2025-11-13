@@ -29,6 +29,3 @@ for ITER in 3 4 5; do
         done
     done
 done
-
-storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=hdm05_lat-dim=256_beta=0.1/2
-/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=hdm05_lat-dim=256_beta=0.1/2/
