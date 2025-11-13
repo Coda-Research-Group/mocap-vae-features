@@ -4,7 +4,7 @@ WHOLE_SCRIPT_PATH="/storage/brno12-cerit/home/drking/experiments/mocap-vae-featu
 
 PART="hdm05"
 
-for ITER in 3 4 5; do
+for ITER in 1 2; do
     for BETA in "0.1" "1" "10"; do
         for DIM in 256; do
 
