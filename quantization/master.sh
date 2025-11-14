@@ -38,7 +38,7 @@ for ITER in 1 2 3 4 5; do
         for DIM in 256; do
             for SETUP in "cs" "cv"; do 
 
-                python3 /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/clustering/subset-maker.py "/storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data-train" --scenario "${SETUP}" --output "/storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented_subset.data"
+                python3 /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/clustering/subset-maker.py "/storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data-train" --output "/storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented_subset.data"
 
                 # aby se smazal v pripade 2. pokusu ten predchozi.
                 rm -f /storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/elki-predictions_segmented.data
@@ -46,7 +46,7 @@ for ITER in 1 2 3 4 5; do
                 perl /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/scripts/convert-from-messif.pl "/storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented_subset.data" >> "/storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/elki-predictions_segmented.data"
 
 
-                for K in 50 100 200 400 800 1600 3200 6400 12800; do 
+                for K in 50 100 200 400 800 1600 3200; do 
 
                     JOB_NAME="quantization_pku-mmd_${SETUP}_${DIM}_${BETA}_${ITER}_${K}"
 
