@@ -14,6 +14,7 @@ DIM=${DIM}
 BETA=${BETA}
 ITER=${ITER}
 K=${K}
+PART=${PART}
 
 DISTANCE_FUNCTION='de.lmu.ifi.dbs.elki.distance.distancefunction.CosineDistanceFunction'
 DISTANCE_FUNCTION_PARAMS=""
@@ -222,7 +223,6 @@ function convert() {
 
 ##########################################
 
-PART="hdm05"
 DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/elki-predictions_segmented.data"
 ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/elki-clusters/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}"
 ALGORITHM_PARAMS="-kmeans.k ${K}"
