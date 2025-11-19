@@ -15,6 +15,7 @@ BETA=${BETA}
 ITER=${ITER}
 K=${K}
 SETUP=${SETUP}
+PART=${PART}
 
 DISTANCE_FUNCTION='de.lmu.ifi.dbs.elki.distance.distancefunction.CosineDistanceFunction'
 DISTANCE_FUNCTION_PARAMS=""
@@ -161,7 +162,8 @@ ${DISTANCE_FUNCTION_PARAMS} \
 
 function extractClusterMedoids() {
 
-    formatResultFolderName
+    formatResultFolderNameDATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/elki-predictions_segmented.data"
+
 
     for CLUSTER_FOLDER_PATH in "${RESULT_FOLDER_NAME}"/"${KMEDOIDS_CLUSTER_SUBFOLDER}"/cluster_*; do
         COMMAND="\
@@ -223,7 +225,6 @@ function convert() {
 
 ##########################################
 
-PART="pku-mmd"
 DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/elki-predictions_segmented.data"
 ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/elki-clusters/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}"
 ALGORITHM_PARAMS="-kmeans.k ${K}"
