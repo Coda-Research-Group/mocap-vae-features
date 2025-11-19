@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Base directories
-BASE_DIR="/storage/brno12-cerit/home/drking/experiments/MWs/hdm05/all"
+BASE_DIR="/storage/brno12-cerit/home/drking/experiments/elki-MWs/hdm05/all"
 OUTPUT_DIR="$BASE_DIR/grouped"
 mkdir -p "$OUTPUT_DIR"
 
