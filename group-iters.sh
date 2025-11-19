@@ -22,7 +22,7 @@ for model_dir in "$BASE_DIR"/model=hdm05_lat-dim=*; do
         iter_name=$(basename "$iter_dir")
 
         # KMeans subfolders inside iteration folder
-        for k_dir in "$iter_dir"/KMeansPivotChooser--kmeans.k_*; do
+        for k_dir in "$iter_dir"/KMedoidsFastPAM--kmeans.k_*; do
             [[ -d "$k_dir" ]] || continue
 
             K=$(basename "$k_dir" | sed -E 's/.*k_([0-9]+).*/\1/')
