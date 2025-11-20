@@ -27,9 +27,9 @@ ${JDK_PATH} \
 }
 
 # HDM05-130
-for BETA in 1; do 
+for BETA in "0.1"; do 
     for DIM in 256; do 
-        for K in 1600; do
+        for K in 100; do
         
             # BODY_PART_MWS_FOLDER="/storage/brno12-cerit/home/drking/experiments/MWs/hdm05/all/grouped/group_lat-dim=${DIM}_beta=${BETA}_k=${K}"
             # combineBodyPartsIntoCompositeMW
