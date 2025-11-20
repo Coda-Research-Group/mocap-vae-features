@@ -77,7 +77,7 @@ for K in 1600; do
 #---------------------------------------------------
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
 -fp /storage/brno12-cerit/home/drking/experiments/elki-MWs/hdm05/all/grouped/model=hdm05_lat-dim=${DIM}_beta=${BETA}_k=${K}.composite \
---nmatches 2 \
+--nmatches 1 \
 -dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
 "
     echo "${COMMAND}"
