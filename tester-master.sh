@@ -111,7 +111,7 @@ WORKER_SCRIPT_PATH_BASE="/storage/brno12-cerit/home/drking/experiments/mocap-vae
 #     done
 # done
 
-for BETA in 1; do
+for BETA in "0.1"; do
     for DIM in 256; do
             qsub \
                 -v "PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
