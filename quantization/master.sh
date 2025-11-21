@@ -73,7 +73,7 @@ for SETUP in "cs" "cv"; do
                 perl /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/clustering/scripts/convert-from-messif.pl "/storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented_subset.data" >> "/storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/elki-predictions_segmented.data"
 
 
-                for K in 25 50 100 200 400 800 1600 3200 6400; do 
+                for K in 25 50 100 200 400 800 1600 3200 6400 12800; do 
 
                     JOB_NAME="quantization_${PART}_${SETUP}_${DIM}_${BETA}_${ITER}_${K}"
 
