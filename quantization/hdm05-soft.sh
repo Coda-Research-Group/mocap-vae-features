@@ -254,6 +254,7 @@ for PART in "hdm05"; do
                     SOFTASSIGNPARAM="${PARAM}"
 
                     single
+                done
             done
         done
         BETA="0.1"
@@ -263,6 +264,7 @@ for PART in "hdm05"; do
                     SOFTASSIGNPARAM="${PARAM}"
 
                     single
+                done
             done
         done
     done
