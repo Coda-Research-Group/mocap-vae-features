@@ -1,10 +1,22 @@
 #!/bin/bash
 
-#PBS -l walltime=8:0:0
-#PBS -l select=1:ncpus=4:mem=16gb
+#PBS -l walltime=24:0:0
+#PBS -l select=1:ncpus=4:mem=20gb
 #PBS -o /dev/null
 #PBS -e /dev/null
 
+
+# http://redsymbol.net/articles/unofficial-bash-strict-mode/
+set -euo pipefail
+IFS=$'\n\t'
+
+DIM=${DIM}
+BETA=${BETA}
+ITER=${ITER}
+K=${K}
+SETUP=${SETUP}
+PART=${PART}
+ASSIGN=${ASSIGN}
 
 DISTANCE_FUNCTION='de.lmu.ifi.dbs.elki.distance.distancefunction.CosineDistanceFunction'
 DISTANCE_FUNCTION_PARAMS=""
@@ -151,7 +163,8 @@ ${DISTANCE_FUNCTION_PARAMS} \
 
 function extractClusterMedoids() {
 
-    formatResultFolderName
+    formatResultFolderNameDATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/elki-predictions_segmented.data"
+
 
     for CLUSTER_FOLDER_PATH in "${RESULT_FOLDER_NAME}"/"${KMEDOIDS_CLUSTER_SUBFOLDER}"/cluster_*; do
         COMMAND="\
@@ -184,7 +197,7 @@ cd /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementati
 CLS_OBJ="messif.objects.impl.ObjectFloatVectorCosine"
 SOFTASSIGNPARAM="D0K1"
 TOSEQ="--tosequence"   # set if you need to convert the input file of segments to motion words _and_ merge the segments back to sequences/actions
-MEMORY="8g"
+MEMORY="16g"
 VOCTYPE='-v'
 
 
@@ -211,63 +224,45 @@ function convert() {
 }
 
 
+##########################################
+
+# DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/elki-predictions_segmented.data"
+# ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/elki-clusters/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}"
+# ALGORITHM_PARAMS="-kmeans.k ${K}"
+
+# createCompositeMWClusteringELKI
+
 #######################################
-function single() {
 
-    
+DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz"
+OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/elki-MWs/pku-mmd/soft/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}"
+CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/elki-clusters/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}"
+if [[ ! -f "$DATAFILE" ]]; then
+    exit 67 
+fi
+[ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
+convert
 
-    DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz"
-    OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/elki-MWs/hdm05/soft/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}"
-    CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/elki-clusters/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}"
-    if [[ ! -f "$DATAFILE" ]]; then
-        exit 67 
-    fi
-    [ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
-    convert
+##########################################
 
-    ##########################################
+rm -f "/storage/brno12-cerit/home/drking/experiments/elki-results/soft/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${ASSIGN}.txt"
 
-    rm -f "/storage/brno12-cerit/home/drking/experiments/elki-results/hdm05/soft/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${SOFTASSIGNPARAM}.txt"
+COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
+-fp /storage/brno12-cerit/home/drking/experiments/elki-MWs/pku-mmd/soft/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K} \
+-dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
+-${SETUP} \
+--soft \
+-k 18 \
+"
+mkdir -p "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/soft/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/"
+eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/soft/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${ASSIGN}.txt"
 
-    COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
-    -fp /storage/brno12-cerit/home/drking/experiments/elki-MWs/hdm05/soft/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K} \
-    -dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
-    --soft \
-    -k 4 \
-    "
-    mkdir -p "/storage/brno12-cerit/home/drking/experiments/elki-results/hdm05/soft/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/"
-    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/elki-results/hdm05/soft/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${SOFTASSIGNPARAM}.txt"
+COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
+-fp /storage/brno12-cerit/home/drking/experiments/elki-MWs/pku-mmd/soft/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K} \
+-dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
+--soft \
+-${SETUP} \
+"
+eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/soft/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${ASSIGN}.txt"
 
-    COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
-    -fp /storage/brno12-cerit/home/drking/experiments/elki-MWs/hdm05/soft/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K} \
-    -dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
-    --soft \
-    "
-    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/elki-results/hdm05/soft/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${SOFTASSIGNPARAM}.txt"
-}
-
-for PART in "hdm05"; do
-    for ITER in 3; do
-        BETA="1"
-        for DIM in 256; do
-            for K in 100 200 400 800 1600; do 
-                for PARAM in "D0.48K6" "D0.24K6" "D0.12K6" "D0.06K6"; do 
-                    SOFTASSIGNPARAM="${PARAM}"
-
-                    single
-                done
-            done
-        done
-        BETA="0.1"
-        for DIM in 256; do
-            for K in 100 200 400 800 1600; do 
-                for PARAM in "D0.35K6" "D0.17K6" "D0.09K6" "D0.04K6"; do 
-                    SOFTASSIGNPARAM="${PARAM}"
-
-                    single
-                done
-            done
-        done
-    done
-done
 
