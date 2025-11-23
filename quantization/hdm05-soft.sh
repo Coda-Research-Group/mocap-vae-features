@@ -214,7 +214,6 @@ function convert() {
 #######################################
 function single() {
 
-    
 
     DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz"
     OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/elki-MWs/hdm05/soft/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}"
@@ -222,7 +221,8 @@ function single() {
     if [[ ! -f "$DATAFILE" ]]; then
         exit 67 
     fi
-    [ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
+    rm -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
+
     convert
 
     ##########################################
