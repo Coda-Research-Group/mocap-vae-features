@@ -10,12 +10,6 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-DIM=${DIM}
-BETA=${BETA}
-ITER=${ITER}
-K=${K}
-PART=${PART}
-
 DISTANCE_FUNCTION='de.lmu.ifi.dbs.elki.distance.distancefunction.CosineDistanceFunction'
 DISTANCE_FUNCTION_PARAMS=""
 ALGORITHM='clustering.kmeans.KMedoidsFastPAM'
