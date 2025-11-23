@@ -112,29 +112,29 @@ function convert() {
 # done
 
 # #pku
-for SETUP in "cs" "cv"; do 
-    for K in 100 200 350 500 1000 1500 2500 5000 10000 15000; do
-#     # for K in 100 150 200 250 300 350 400 500 750 1000 1250 1500 1750 2000 2500 3500 5000 7500 10000 15000; do
-        for ITER in 1; do 
-            for BETA in "0.1" "1"; do
-                for DIM in 8 16 32 64 128 256; do
-                    PART="pku-mmd"
-    	            echo "${PART}"
+# for SETUP in "cs" "cv"; do 
+#     for K in 100 200 350 500 1000 1500 2500 5000 10000 15000; do
+# #     # for K in 100 150 200 250 300 350 400 500 750 1000 1250 1500 1750 2000 2500 3500 5000 7500 10000 15000; do
+#         for ITER in 1; do 
+#             for BETA in "0.1" "1"; do
+#                 for DIM in 8 16 32 64 128 256; do
+#                     PART="pku-mmd"
+#     	            echo "${PART}"
 
-    	                DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz"
-    	                OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/MWs/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMeansPivotChooser--kmeans.k_${K}"
-                        CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/clusters/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMeansPivotChooser--kmeans.k_${K}"
+#     	                DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz"
+#     	                OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/MWs/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMeansPivotChooser--kmeans.k_${K}"
+#                         CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/clusters/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMeansPivotChooser--kmeans.k_${K}"
 
-                    if [[ ! -f "$DATAFILE" ]]; then
-                        continue 
-                    fi
+#                     if [[ ! -f "$DATAFILE" ]]; then
+#                         continue 
+#                     fi
 
-                    [ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
-    	            convert
+#                     [ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
+#     	            convert
 
-                done
-            done
-        done
+#                 done
+#             done
+#         done
 
         # for ITER in 3; do 
         #     for BETA in "0.1" "1"; do 
@@ -169,6 +169,31 @@ for SETUP in "cs" "cv"; do
         #         done
         #     done   
         # done
+#     done
+# done
+
+for K in 10 20 35 50 60 80 100 150 200 250 300 350 400 500 750 1000 1250 1500 1750 2000 2500; do
+    for ITER in 3; do 
+        for BETA in "0.1" "1"; do 
+            for DIM in 256; do 
+                for K in 10 25 50 100 200 400 800 1600 3200;do 
+
+#                 PART="hdm05"
+# 	            echo "${PART}"
+# # 
+
+#                 DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz"
+#                 OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/elki-MWs/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}"
+#                 CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/elki-clusters/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}"
+#                 if [[ ! -f "$DATAFILE" ]]; then
+#                     exit 67 
+#                 fi
+#                 [ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
+#                 convert
+
+                done
+            done
+        done   
     done
 done
 
