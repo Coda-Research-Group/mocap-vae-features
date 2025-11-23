@@ -178,18 +178,17 @@ for K in 10 20 35 50 60 80 100 150 200 250 300 350 400 500 750 1000 1250 1500 17
             for DIM in 256; do 
                 for K in 10 25 50 100 200 400 800 1600 3200;do 
 
-#                 PART="hdm05"
-# 	            echo "${PART}"
-# # 
+                    PART="hdm05"
+                    echo "${PART}"
 
-#                 DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz"
-#                 OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/elki-MWs/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}"
-#                 CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/elki-clusters/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}"
-#                 if [[ ! -f "$DATAFILE" ]]; then
-#                     exit 67 
-#                 fi
-#                 [ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
-#                 convert
+                    DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz"
+                    OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/elki-MWs/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}"
+                    CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/elki-clusters/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}"
+                    if [[ ! -f "$DATAFILE" ]]; then
+                        exit 67 
+                    fi
+                    [ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
+                    convert
 
                 done
             done
