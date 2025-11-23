@@ -16,7 +16,7 @@ ITER=${ITER}
 K=${K}
 SETUP=${SETUP}
 PART=${PART}
-ASSIGN=${ASSIGN}
+SOFTASSIGNPARAM=${ASSIGN}
 
 DISTANCE_FUNCTION='de.lmu.ifi.dbs.elki.distance.distancefunction.CosineDistanceFunction'
 DISTANCE_FUNCTION_PARAMS=""
@@ -195,7 +195,6 @@ function createCompositeMWClusteringELKI() {
 cd /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/motionvocabulary/dist/lib || exit
 
 CLS_OBJ="messif.objects.impl.ObjectFloatVectorCosine"
-SOFTASSIGNPARAM="D0K1"
 TOSEQ="--tosequence"   # set if you need to convert the input file of segments to motion words _and_ merge the segments back to sequences/actions
 MEMORY="16g"
 VOCTYPE='-v'
