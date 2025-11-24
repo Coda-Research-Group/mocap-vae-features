@@ -6,22 +6,20 @@ import re
 import csv
 from glob import glob
 
-BASE_DIR = "/storage/brno12-cerit/home/drking/experiments/elki-results/hdm05/soft/"
-OUTPUT_CSV = "/storage/brno12-cerit/home/drking/experiments/elki-results/hdm05/soft/experiment_results_summary.csv"
+BASE_DIR = "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/soft/cv/"
+OUTPUT_CSV = "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/soft/cv/experiment_results_summary.csv"
 
-# Updated Regex to handle:
-# Directory: .../model=hdm05_lat-dim=256_beta=0.1/100/
-# Filename:  results-D0.04K6.txt
+# Regex to capture Model, Lat, Beta from path AND D/K values from filename
 PATH_PARAM_PATTERN = re.compile(
     r"""
-    model=(?P<model>[^/_]+)           # Capture model (e.g., hdm05)
+    model=(?P<model>[^/_]+)           # Capture model (e.g., pku-mmd)
     .* # loose match for separators
-    lat[_-]?dim=?(?P<lat>\d+)         # Capture lat dimension (256)
-    [_-]?beta=?(?P<beta>[\d.eE+\-]+)  # Capture beta (0.1)
+    lat[_-]?dim=?(?P<lat>\d+)         # Capture lat dimension
+    [_-]?beta=?(?P<beta>[\d.eE+\-]+)  # Capture beta
     /                                 # Path separator
-    (?P<k_dir>\d+)                    # Capture the K-directory (e.g., 100)
+    (?P<k_dir>\d+)                    # Capture the K-directory
     /results-                         # Filename start
-    D(?P<d_val>[\d.]+)                # Capture D value (e.g., 0.04)
+    D(?P<d_val>[\d.]+)                # Capture D value (e.g., 0.06)
     K(?P<k_val>\d+)                   # Capture K value (e.g., 6)
     \.txt$                            # End of string
     """,
@@ -30,9 +28,9 @@ PATH_PARAM_PATTERN = re.compile(
 
 def parse_log_file(filepath):
     """
-    Parses the log file. 
-    Based on your cat output, the file has multiple '===== NEW EXPERIMENT' blocks.
-    We usually want the last valid run (likely the adaptive k or specifically the classification run).
+    Splits the file into experiment blocks.
+    - Run 1: Extracts Classification Precision.
+    - Run 2: Extracts kNN Precision.
     """
     results = {"kNN_Precision": None, "Classification_Precision": None}
     try:
@@ -42,56 +40,52 @@ def parse_log_file(filepath):
         print(f"Error reading {filepath}: {e}")
         return results
 
-    # Split by the separator to isolate runs
-    # Your file seems to restart parameters, so we split by "===== GLOBAL PARAMS ====="
-    runs = content.split("===== GLOBAL PARAMS =====")
-    
-    # If empty or just header, fallback to whole content
-    chunks_to_check = runs[1:] if len(runs) > 1 else [content]
+    # Split by the "NEW EXPERIMENT" header.
+    # content_blocks[0] is usually the first Global Params (ignore).
+    # content_blocks[1] is the FIRST Run.
+    # content_blocks[2] is the SECOND Run.
+    content_blocks = content.split("===== NEW EXPERIMENT")
 
-    # We iterate through chunks and update values; the last valid value found in the file will overwrite previous ones
-    # (This effectively grabs the last/best run if multiple exist in one file)
-    for chunk in chunks_to_check:
-        # Extract Classification Precision
-        m_class = re.search(r"classification precision over objects and categories:\s*([\d.]+)", chunk, re.IGNORECASE)
+    # Need at least 2 blocks to have the 1st run (block 0 is pre-header)
+    if len(content_blocks) > 1:
+        # --- BLOCK 1 (First Run): Extract CLASSIFICATION Precision ---
+        run1_txt = content_blocks[1]
+        m_class = re.search(r"classification precision over objects and categories:\s*([\d.]+)", run1_txt, re.IGNORECASE)
         if m_class:
             results["Classification_Precision"] = float(m_class.group(1))
 
-        # Extract kNN Precision (look for 'precision over objects' that isn't 'classification precision')
-        # The text format is "precision over objects and categories: 60.86..."
-        m_knn = re.search(r"(?<!classification )precision over objects and categories:\s*([\d.]+)", chunk, re.IGNORECASE)
+    # Need at least 3 blocks to have the 2nd run
+    if len(content_blocks) > 2:
+        # --- BLOCK 2 (Second Run): Extract kNN Precision ---
+        run2_txt = content_blocks[2]
+        # kNN precision is "precision over objects..." NOT preceded by "classification"
+        m_knn = re.search(r"(?<!classification )precision over objects and categories:\s*([\d.]+)", run2_txt, re.IGNORECASE)
         if m_knn:
             results["kNN_Precision"] = float(m_knn.group(1))
 
     return results
 
 def main():
-    # Search for results-*.txt
     search_pattern = os.path.join(os.path.expanduser(BASE_DIR), "**", "results-*.txt")
-    # Use recursive glob
     log_files = glob(search_pattern, recursive=True)
 
     print(f"Searching: {search_pattern}")
     print(f"Found {len(log_files)} result files.\n")
 
     if not log_files:
-        print("No results found. Check BASE_DIR.")
+        print("No results found.")
         return
 
-    # Dictionary Key: (model, lat, beta, k_dir, d_val, k_val)
+    # Key: (model, lat, beta, k_dir, d_val, k_val)
     grouped = defaultdict(list)
 
-    matched_count = 0
     for filepath in log_files:
         abs_path = os.path.abspath(filepath)
         m = PATH_PARAM_PATTERN.search(abs_path)
         
         if not m:
-            # Optional: print unmatched for debugging
-            # print(f"Skipping unmatched: {filepath}")
             continue
             
-        matched_count += 1
         model = m.group("model")
         lat_dim = m.group("lat")
         beta = m.group("beta")
@@ -102,10 +96,8 @@ def main():
         key = (model, lat_dim, beta, k_dir, d_val, k_val)
         grouped[key].append(filepath)
 
-    print(f"Successfully matched {matched_count} files.")
     print(f"Detected {len(grouped)} unique configurations (D/K variants).\n")
 
-    # Define CSV Columns
     fieldnames = [
         "MODEL", "LAT_DIM", "BETA", "K_DIR", "D_VAL", "K_VAL",
         "Mean_kNN_Precision", "Mean_Classification_Precision",
@@ -114,7 +106,6 @@ def main():
     ]
     all_data = []
 
-    # Process groups
     for (model, lat_dim, beta, k_dir, d_val, k_val), files in sorted(grouped.items()):
         knn_vals, class_vals = [], []
         for f in files:
@@ -124,7 +115,6 @@ def main():
             if parsed["Classification_Precision"] is not None:
                 class_vals.append(parsed["Classification_Precision"])
 
-        # Helper for formatting
         mean_or_na = lambda vals: round(statistics.mean(vals), 4) if vals else "N/A"
         std_or_na = lambda vals: round(statistics.stdev(vals), 4) if len(vals) > 1 else "N/A"
 
@@ -142,7 +132,6 @@ def main():
             "Num_Files": len(files),
         })
 
-    # Write to CSV
     try:
         with open(OUTPUT_CSV, "w", newline="") as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
