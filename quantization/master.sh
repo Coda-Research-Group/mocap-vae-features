@@ -122,32 +122,30 @@ PART="hdm05"
 PART="pku-mmd"
 for SETUP in "cv"; do 
     for ITER in 3; do
-        for BETA in "0.1" "1"; do
-            for DIM in 256; do
+        for DIM in 256; do
+            for K in 100 200 400 800 1600 3200 6400 12800; do 
                 BETA=1
-                for K in 100 200 400 800 1600 3200 6400 12800; do 
-                    for ASSIGN in "D0.63K6" "D0.31K6" "D0.16K6" "D0.08K6"; do 
 
-                        JOB_NAME="soft-test_${PART}_${SETUP}_${DIM}_${BETA}_${ASSIGN}_${K}"
+                for ASSIGN in "D0.63K6" "D0.31K6" "D0.16K6" "D0.08K6"; do 
 
-                        qsub \
-                            -N "${JOB_NAME}" \
-                            -v "ITER=${ITER},BETA=${BETA},DIM=${DIM},K=${K},SETUP=${SETUP},PART=${PART},ASSIGN=${ASSIGN}" \
-                            "${WHOLE_SCRIPT_PATH_PKU_MMD_SOFT}"
-                    done 
-                done
+                    JOB_NAME="soft-test_${PART}_${SETUP}_${DIM}_${BETA}_${ASSIGN}_${K}"
+
+                    qsub \
+                        -N "${JOB_NAME}" \
+                        -v "ITER=${ITER},BETA=${BETA},DIM=${DIM},K=${K},SETUP=${SETUP},PART=${PART},ASSIGN=${ASSIGN}" \
+                        "${WHOLE_SCRIPT_PATH_PKU_MMD_SOFT}"
+                done 
+            
                 BETA="0.1"
-                                for K in 100 200 400 800 1600 3200 6400 12800; do 
-                    for ASSIGN in "D0.44K6" "D0.22K6" "D0.11K6" "D0.06K6"; do 
+                for ASSIGN in "D0.44K6" "D0.22K6" "D0.11K6" "D0.06K6"; do 
 
-                        JOB_NAME="soft-test_${PART}_${SETUP}_${DIM}_${BETA}_${ASSIGN}_${K}"
+                    JOB_NAME="soft-test_${PART}_${SETUP}_${DIM}_${BETA}_${ASSIGN}_${K}"
 
-                        qsub \
-                            -N "${JOB_NAME}" \
-                            -v "ITER=${ITER},BETA=${BETA},DIM=${DIM},K=${K},SETUP=${SETUP},PART=${PART},ASSIGN=${ASSIGN}" \
-                            "${WHOLE_SCRIPT_PATH_PKU_MMD_SOFT}"
-                    done 
-                done
+                    qsub \
+                        -N "${JOB_NAME}" \
+                        -v "ITER=${ITER},BETA=${BETA},DIM=${DIM},K=${K},SETUP=${SETUP},PART=${PART},ASSIGN=${ASSIGN}" \
+                        "${WHOLE_SCRIPT_PATH_PKU_MMD_SOFT}"
+                done 
             done
         done
     done
@@ -155,32 +153,30 @@ done
 
 for SETUP in "cs"; do 
     for ITER in 3; do
-        for BETA in "0.1" "1"; do
-            for DIM in 256; do
+        for DIM in 256; do
+            for K in 100 200 400 800 1600 3200 6400 12800; do 
                 BETA=1
-                for K in 100 200 400 800 1600 3200 6400 12800; do 
-                    for ASSIGN in "D0.63K6" "D0.31K6" "D0.16K6" "D0.08K6"; do 
 
-                        JOB_NAME="soft-test_${PART}_${SETUP}_${DIM}_${BETA}_${ASSIGN}_${K}"
+                for ASSIGN in "D0.63K6" "D0.31K6" "D0.16K6" "D0.08K6"; do 
 
-                        qsub \
-                            -N "${JOB_NAME}" \
-                            -v "ITER=${ITER},BETA=${BETA},DIM=${DIM},K=${K},SETUP=${SETUP},PART=${PART},ASSIGN=${ASSIGN}" \
-                            "${WHOLE_SCRIPT_PATH_PKU_MMD_SOFT}"
-                    done
+                    JOB_NAME="soft-test_${PART}_${SETUP}_${DIM}_${BETA}_${ASSIGN}_${K}"
+
+                    qsub \
+                        -N "${JOB_NAME}" \
+                        -v "ITER=${ITER},BETA=${BETA},DIM=${DIM},K=${K},SETUP=${SETUP},PART=${PART},ASSIGN=${ASSIGN}" \
+                        "${WHOLE_SCRIPT_PATH_PKU_MMD_SOFT}"
                 done
+            
                 BETA="0.1"
-                for K in 100 200 400 800 1600 3200 6400 12800; do 
-                    for ASSIGN in "D0.44K6" "D0.22K6" "D0.11K6" "D0.06K6"; do 
+                for ASSIGN in "D0.44K6" "D0.22K6" "D0.11K6" "D0.06K6"; do 
 
-                        JOB_NAME="soft-test_${PART}_${SETUP}_${DIM}_${BETA}_${ASSIGN}_${K}"
+                    JOB_NAME="soft-test_${PART}_${SETUP}_${DIM}_${BETA}_${ASSIGN}_${K}"
 
-                        qsub \
-                            -N "${JOB_NAME}" \
-                            -v "ITER=${ITER},BETA=${BETA},DIM=${DIM},K=${K},SETUP=${SETUP},PART=${PART},ASSIGN=${ASSIGN}" \
-                            "${WHOLE_SCRIPT_PATH_PKU_MMD_SOFT}"
-                    done 
-                done
+                    qsub \
+                        -N "${JOB_NAME}" \
+                        -v "ITER=${ITER},BETA=${BETA},DIM=${DIM},K=${K},SETUP=${SETUP},PART=${PART},ASSIGN=${ASSIGN}" \
+                        "${WHOLE_SCRIPT_PATH_PKU_MMD_SOFT}"
+                done 
             done
         done
     done

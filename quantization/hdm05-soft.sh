@@ -253,7 +253,6 @@ for PART in "hdm05"; do
             for K in 100 200 400 800 1600; do 
                 for PARAM in "D0.48K6" "D0.24K6" "D0.12K6" "D0.06K6"; do 
                     SOFTASSIGNPARAM="${PARAM}"
-
                     single
                 done
             done
@@ -263,7 +262,6 @@ for PART in "hdm05"; do
             for K in 100 200 400 800 1600; do 
                 for PARAM in "D0.35K6" "D0.17K6" "D0.09K6" "D0.04K6"; do 
                     SOFTASSIGNPARAM="${PARAM}"
-
                     single
                 done
             done

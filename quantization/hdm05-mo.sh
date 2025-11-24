@@ -216,7 +216,7 @@ function single() {
 
 
     DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz"
-    OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/elki-MWs/hdm05/soft/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}"
+    OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/elki-MWs/hdm05/multi-overlay/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}"
     CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/elki-clusters/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}"
     if [[ ! -f "$DATAFILE" ]]; then
         exit 67 
@@ -227,23 +227,23 @@ function single() {
 
     ##########################################
 
-    rm -f "/storage/brno12-cerit/home/drking/experiments/elki-results/hdm05/soft/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${SOFTASSIGNPARAM}.txt"
+    rm -f "/storage/brno12-cerit/home/drking/experiments/elki-results/hdm05/multi-overlay/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results.txt"
 
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
-    -fp /storage/brno12-cerit/home/drking/experiments/elki-MWs/hdm05/soft/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K} \
+    -fp /storage/brno12-cerit/home/drking/experiments/elki-MWs/hdm05/multi-overlay/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K} \
     -dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
     --nmatches 2 \
     -k 4 \
     "
-    mkdir -p "/storage/brno12-cerit/home/drking/experiments/elki-results/hdm05/soft/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/"
-    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/elki-results/hdm05/soft/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${SOFTASSIGNPARAM}.txt"
+    mkdir -p "/storage/brno12-cerit/home/drking/experiments/elki-results/hdm05/multi-overlay/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/"
+    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/elki-results/hdm05/multi-overlay/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results.txt"
 
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
-    -fp /storage/brno12-cerit/home/drking/experiments/elki-MWs/hdm05/soft/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K} \
+    -fp /storage/brno12-cerit/home/drking/experiments/elki-MWs/hdm05/multi-overlay/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K} \
     -dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
     --nmatches 2 \
     "
-    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/elki-results/hdm05/soft/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${SOFTASSIGNPARAM}.txt"
+    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/elki-results/hdm05/multi-overlay/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results.txt"
 }
 
 for PART in "hdm05"; do
