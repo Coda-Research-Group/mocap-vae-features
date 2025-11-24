@@ -247,7 +247,7 @@ convert
 rm -f "/storage/brno12-cerit/home/drking/experiments/elki-results/soft/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${ASSIGN}.txt"
 
 COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/experiments/elki-MWs/pku-mmd/soft/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K} \
+-fp /storage/brno12-cerit/home/drking/experiments/elki-MWs/pku-mmd/soft/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}/${PART}.${SOFTASSIGNPARAM} \
 -dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
 -${SETUP} \
 --soft \
@@ -257,7 +257,7 @@ mkdir -p "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/sof
 eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/soft/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${ASSIGN}.txt"
 
 COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/experiments/elki-MWs/pku-mmd/soft/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K} \
+-fp /storage/brno12-cerit/home/drking/experiments/elki-MWs/pku-mmd/soft/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}/${PART}.${SOFTASSIGNPARAM} \
 -dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
 --soft \
 -${SETUP} \

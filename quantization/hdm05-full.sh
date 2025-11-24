@@ -194,7 +194,7 @@ cd /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementati
 CLS_OBJ="messif.objects.impl.ObjectFloatVectorCosine"
 SOFTASSIGNPARAM="D0K1"
 TOSEQ="--tosequence"   # set if you need to convert the input file of segments to motion words _and_ merge the segments back to sequences/actions
-MEMORY="8g"
+MEMORY="12g"
 VOCTYPE='-v'
 
 
@@ -223,17 +223,17 @@ function convert() {
 
 ##########################################
 
-DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/elki-predictions_segmented.data"
-ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/elki-clusters/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}"
+DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL_non-norm/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/elki-predictions_segmented.data"
+ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/elki-clusters_non-norm/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}"
 ALGORITHM_PARAMS="-kmeans.k ${K}"
 
 createCompositeMWClusteringELKI
 
 #######################################
 
-DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz"
-OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/elki-MWs/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}"
-CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/elki-clusters/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}"
+DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL_non-norm/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz"
+OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/elki-MWs_non-norm/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}"
+CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/elki-clusters_non-norm/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}"
 if [[ ! -f "$DATAFILE" ]]; then
     exit 67 
 fi
@@ -242,20 +242,20 @@ convert
 
 ##########################################
 
-rm -f "/storage/brno12-cerit/home/drking/experiments/elki-results/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${ITER}.txt"
+rm -f "/storage/brno12-cerit/home/drking/experiments/elki-results/hdm05/non-norm/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${ITER}.txt"
 
 COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/experiments/elki-MWs/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K} \
+-fp /storage/brno12-cerit/home/drking/experiments/elki-MWs_non-norm/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K} \
 -dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
 -k 4 \
 "
-mkdir -p "/storage/brno12-cerit/home/drking/experiments/elki-results/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/"
-eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/elki-results/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${ITER}.txt"
+mkdir -p "/storage/brno12-cerit/home/drking/experiments/elki-results/hdm05/non-norm/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/"
+eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/elki-results/hdm05/non-norm/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${ITER}.txt"
 
 COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/experiments/elki-MWs/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K} \
+-fp /storage/brno12-cerit/home/drking/experiments/elki-MWs_non-norm/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K} \
 -dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
 "
-eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/elki-results/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${ITER}.txt"
+eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/elki-results/hdm05/non-norm/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${ITER}.txt"
 
 

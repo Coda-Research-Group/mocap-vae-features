@@ -191,75 +191,75 @@ function createCompositeMWClusteringELKI() {
 
 ###########################################
 
-# cd /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/motionvocabulary/dist/lib || exit
+cd /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/motionvocabulary/dist/lib || exit
 
-# CLS_OBJ="messif.objects.impl.ObjectFloatVectorCosine"
-# SOFTASSIGNPARAM="D0K1"
-# TOSEQ="--tosequence"   # set if you need to convert the input file of segments to motion words _and_ merge the segments back to sequences/actions
-# MEMORY="16g"
-# VOCTYPE='-v'
-
-
-# CLASSPATH=${CLASSPATH:-'MESSIF.jar:MESSIF-Utility.jar:MotionVocabulary.jar:commons-cli-1.4.jar:smf-core-1.0.jar:smf-impl-1.0.jar:MCDR.jar:m-index.jar:trove4j-3.0.3.jar'}
-
-# function convert() {
-# 	CLUSTER_FOLDER_NAME=$(basename "${CLUSTER_FOLDER_PATH}")
-
-#     mkdir -p "${OUTPUT_ROOT_PATH}"
-
-#       COMMAND="\
-#   ${JDK_PATH} \
-#   -Xmx${MEMORY} \
-#   -cp ${CLASSPATH} \
-#   messif.motionvocabulary.MotionVocabulary \
-#   -d ${DATAFILE} \
-#   -c ${CLS_OBJ} \
-#   --quantize ${TOSEQ} ${VOCTYPE} ${CLUSTER_FOLDER_PATH}/medoids.txt \
-#   --soft-assign ${SOFTASSIGNPARAM} \
-#   --output ${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM} \
-#   "
-
-#       eval "${COMMAND}" > /dev/null 2>&1
-# }
+CLS_OBJ="messif.objects.impl.ObjectFloatVectorCosine"
+SOFTASSIGNPARAM="D0K1"
+TOSEQ="--tosequence"   # set if you need to convert the input file of segments to motion words _and_ merge the segments back to sequences/actions
+MEMORY="16g"
+VOCTYPE='-v'
 
 
-# ##########################################
+CLASSPATH=${CLASSPATH:-'MESSIF.jar:MESSIF-Utility.jar:MotionVocabulary.jar:commons-cli-1.4.jar:smf-core-1.0.jar:smf-impl-1.0.jar:MCDR.jar:m-index.jar:trove4j-3.0.3.jar'}
 
-# DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/elki-predictions_segmented.data"
-# ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/elki-clusters/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}"
-# ALGORITHM_PARAMS="-kmeans.k ${K}"
+function convert() {
+	CLUSTER_FOLDER_NAME=$(basename "${CLUSTER_FOLDER_PATH}")
 
-# createCompositeMWClusteringELKI
+    mkdir -p "${OUTPUT_ROOT_PATH}"
 
-# #######################################
+      COMMAND="\
+  ${JDK_PATH} \
+  -Xmx${MEMORY} \
+  -cp ${CLASSPATH} \
+  messif.motionvocabulary.MotionVocabulary \
+  -d ${DATAFILE} \
+  -c ${CLS_OBJ} \
+  --quantize ${TOSEQ} ${VOCTYPE} ${CLUSTER_FOLDER_PATH}/medoids.txt \
+  --soft-assign ${SOFTASSIGNPARAM} \
+  --output ${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM} \
+  "
 
-# DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz"
-# OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/elki-MWs/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}"
-# CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/elki-clusters/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}"
-# if [[ ! -f "$DATAFILE" ]]; then
-#     exit 67 
-# fi
-# [ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
-# convert
+      eval "${COMMAND}" > /dev/null 2>&1
+}
+
 
 ##########################################
 
-rm -f "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${ITER}.txt"
+DATASET_PATH="/storage/brno12-cerit/home/drking/experiments/SCL_non-norm/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/elki-predictions_segmented.data"
+ROOT_FOLDER_FOR_RESULTS="/storage/brno12-cerit/home/drking/experiments/elki-clusters_non-norm/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}"
+ALGORITHM_PARAMS="-kmeans.k ${K}"
+
+createCompositeMWClusteringELKI
+
+#######################################
+
+DATAFILE="/storage/brno12-cerit/home/drking/experiments/SCL_non-norm/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz"
+OUTPUT_ROOT_PATH="/storage/brno12-cerit/home/drking/experiments/elki-MWs_non-norm/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}"
+CLUSTER_FOLDER_PATH="/storage/brno12-cerit/home/drking/experiments/elki-clusters_non-norm/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}"
+if [[ ! -f "$DATAFILE" ]]; then
+    exit 67 
+fi
+[ -f "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}" ] && rm "${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM}"
+convert
+
+##########################################
+
+rm -f "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/non-norm/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${ITER}.txt"
 
 COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/experiments/elki-MWs/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K} \
+-fp /storage/brno12-cerit/home/drking/experiments/elki-MWs_non-norm/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K} \
 -dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
 -${SETUP} \
 -k 18 \
 "
-mkdir -p "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/"
-eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${ITER}.txt"
+mkdir -p "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/non-norm/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/"
+eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/non-norm/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${ITER}.txt"
 
 COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/experiments/elki-MWs/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K} \
+-fp /storage/brno12-cerit/home/drking/experiments/elki-MWs_non-norm/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K} \
 -dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
 -${SETUP} \
 "
-eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${ITER}.txt"
+eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/non-norm/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${ITER}.txt"
 
 

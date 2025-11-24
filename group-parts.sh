@@ -2,7 +2,7 @@
 set -e
 
 # Base directory (current dir by default)
-BASE_DIR="/storage/brno12-cerit/home/drking/experiments/MWs/hdm05/all"
+BASE_DIR="/storage/brno12-cerit/home/drking/experiments/elki-MWs/hdm05/all"
 
 # Output directory for grouped results
 OUTPUT_DIR="$BASE_DIR/grouped"

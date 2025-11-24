@@ -182,9 +182,8 @@ function createCompositeMWClusteringELKI() {
 cd /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/Implementation-Prochazka/code/motionvocabulary/dist/lib || exit
 
 CLS_OBJ="messif.objects.impl.ObjectFloatVectorCosine"
-SOFTASSIGNPARAM="D0K1"
 TOSEQ="--tosequence"   # set if you need to convert the input file of segments to motion words _and_ merge the segments back to sequences/actions
-MEMORY="8g"
+MEMORY="12g"
 VOCTYPE='-v'
 
 
@@ -230,7 +229,7 @@ function single() {
     rm -f "/storage/brno12-cerit/home/drking/experiments/elki-results/hdm05/soft/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${SOFTASSIGNPARAM}.txt"
 
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
-    -fp /storage/brno12-cerit/home/drking/experiments/elki-MWs/hdm05/soft/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K} \
+    -fp /storage/brno12-cerit/home/drking/experiments/elki-MWs/hdm05/soft/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}/${PART}.${SOFTASSIGNPARAM} \
     -dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
     --soft \
     -k 4 \
@@ -239,7 +238,7 @@ function single() {
     eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/elki-results/hdm05/soft/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${SOFTASSIGNPARAM}.txt"
 
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
-    -fp /storage/brno12-cerit/home/drking/experiments/elki-MWs/hdm05/soft/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K} \
+    -fp /storage/brno12-cerit/home/drking/experiments/elki-MWs/hdm05/soft/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}/${PART}.${SOFTASSIGNPARAM} \
     -dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
     --soft \
     "
