@@ -2,12 +2,12 @@
 set -euo pipefail
 
 # Base directories
-BASE_DIR="/storage/brno12-cerit/home/drking/experiments/elki-MWs/hdm05/all"
+BASE_DIR="/storage/brno12-cerit/home/drking/experiments/elki-MWs/pku-mmd/cs"
 OUTPUT_DIR="$BASE_DIR/grouped"
 mkdir -p "$OUTPUT_DIR"
 
 # Only process global models (ignore body-part models)
-for model_dir in "$BASE_DIR"/model=hdm05_lat-dim=*; do
+for model_dir in "$BASE_DIR"/model=pku-mmd_lat-dim=*; do
     [[ -d "$model_dir" ]] || continue
 
     model_name=$(basename "$model_dir")
@@ -28,7 +28,7 @@ for model_dir in "$BASE_DIR"/model=hdm05_lat-dim=*; do
             K=$(basename "$k_dir" | sed -E 's/.*k_([0-9]+).*/\1/')
 
             # Target folder for grouped results
-            target_dir="$OUTPUT_DIR/model=hdm05_lat-dim=${dim}_beta=${beta}_k=${K}"
+            target_dir="$OUTPUT_DIR/model=pku-mmd_lat-dim=${dim}_beta=${beta}_k=${K}"
             mkdir -p "$target_dir"
 
             echo "→ Grouping iteration ${iter_name} into $target_dir"
