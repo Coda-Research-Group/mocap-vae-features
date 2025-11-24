@@ -5,6 +5,11 @@
 #PBS -o /dev/null
 #PBS -e /dev/null
 
+DIM=${DIM}
+BETA=${BETA}
+K=${K}
+SETUP=${SETUP}
+
 #######################################
 function single() {
 
@@ -30,14 +35,8 @@ function single() {
 }
 
 for PART in "pku-mmd"; do
-    for BETA in "0.1" "1"; do
-        for DIM in 256; do
-            for SETUP in "cs" "cv"; do
-                for K in 100 200 400 800 1600; do 
-                    single
-                done 
-            done
-        done
-    done
+
+    single
+
 done
 
