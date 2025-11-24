@@ -63,7 +63,7 @@ def parse_log_file(filepath):
     return results
 
 def main():
-    search_pattern = os.path.join(os.path.expanduser(BASE_DIR), "**", "results-*.txt")
+    search_pattern = os.path.join(os.path.expanduser(BASE_DIR), "**", "results.txt")
     log_files = glob(search_pattern, recursive=True)
 
     print(f"Searching: {search_pattern}")
