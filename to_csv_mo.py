@@ -102,7 +102,7 @@ def main():
     ]
     all_data = []
 
-    for (model, lat_dim, beta, k_dir, d_val, k_val), files in sorted(grouped.items()):
+    for (model, lat_dim, beta, k_dir), files in sorted(grouped.items()):
         knn_vals, class_vals = [], []
         for f in files:
             parsed = parse_log_file(f)
