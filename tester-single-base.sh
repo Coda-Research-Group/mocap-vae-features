@@ -34,7 +34,7 @@ JDK_PATH='/storage/brno12-cerit/home/drking/jdk-21.0.7/bin/java'
 #     echo "${COMMAND}"
 #     mkdir -p "/storage/brno12-cerit/home/drking/experiments/baseline-skeleton/all"
 #     eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/baseline-skeleton/all/results-4.txt"
-# fi                    
+# fi
 # if [[ "${SET}" == "cv" ]]; then
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
 -fp /storage/brno12-cerit/home/drking/data/pku-mmd/actions-single-subject-all-POS-fps10.data \
