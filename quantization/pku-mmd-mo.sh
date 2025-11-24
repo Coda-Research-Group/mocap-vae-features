@@ -9,6 +9,7 @@ DIM=${DIM}
 BETA=${BETA}
 K=${K}
 SETUP=${SETUP}
+JDK_PATH="/storage/brno12-cerit/home/drking/jdk-21.0.7/bin/java"
 
 #######################################
 function single() {

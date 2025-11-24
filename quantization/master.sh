@@ -188,7 +188,7 @@ for BETA in "0.1" "1"; do
     for DIM in 256; do
         for SETUP in "cs" "cv"; do
             for K in 100 200 400 800 1600; do 
-                JOB_NAME="soft-test_${PART}_${SETUP}_${DIM}_${BETA}_${K}"
+                JOB_NAME="mo-test_${PART}_${SETUP}_${DIM}_${BETA}_${K}"
 
                 qsub \
                     -N "${JOB_NAME}" \
