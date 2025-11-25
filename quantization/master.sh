@@ -89,7 +89,7 @@ PART="hdm05"
 #         done
 #     done
 # done
-
+7
 for PART in "pku-mmd-handR" "pku-mmd-handL" "pku-mmd-legR" "pku-mmd-legL" "pku-mmd-torso"; do
     for SETUP in "cs" "cv"; do 
         for ITER in 3; do
