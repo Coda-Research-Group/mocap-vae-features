@@ -115,7 +115,7 @@ for BETA in "0.1" "1"; do
     for DIM in 256; do
         for ITER in 1 2 3 4 5; do
             qsub \
-                -v "PASSED_DIM=${DIM},PASSED_BETA=${BETA}" \
+                -v "DIM=${DIM},BETA=${BETA},ITER=${ITER}" \
                 "${WORKER_SCRIPT_PATH_SCL}"
         done
     done
