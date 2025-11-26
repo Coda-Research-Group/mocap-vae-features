@@ -6,29 +6,20 @@ import re
 import csv
 from glob import glob
 
-BASE_DIR = "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/multi-overlay/cv/"
-OUTPUT_CSV = "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/multi-overlay/cv/experiment_results_summary.csv"
+BASE_DIR = "/storage/brno12-cerit/home/drking/experiments/results/scl/pku-mmd/cv/"
+OUTPUT_CSV = "/storage/brno12-cerit/home/drking/experiments/results/scl/pku-mmd/cv/experiment_results_summary.csv"
 
-# Regex to capture Model, Lat, Beta from path AND D/K values from filename
+# Pattern: captures only lat_dim and beta
 PATH_PARAM_PATTERN = re.compile(
     r"""
-    model=(?P<model>[^/_]+)           # Capture model (e.g., pku-mmd)
-    .* # loose match for separators
-    lat[_-]?dim=?(?P<lat>\d+)         # Capture lat dimension
-    [_-]?beta=?(?P<beta>[\d.eE+\-]+)  # Capture beta
-    /                                 # Path separator
-    (?P<k_dir>\d+)                    # Capture the K-directory
-    /results.txt$                            # End of string
+    /lat[_-]?dim=?(?P<lat>\d+)              # lat dimension
+    [_-]?beta=?(?P<beta>[\d.eE+\-]+)        # beta
+    /results-(?P<iter>\d+)\.txt$            # iteration (ignored in grouping)
     """,
-    re.VERBOSE | re.IGNORECASE
+    re.VERBOSE
 )
 
 def parse_log_file(filepath):
-    """
-    Splits the file into experiment blocks.
-    - Run 1: Extracts Classification Precision.
-    - Run 2: Extracts kNN Precision.
-    """
     results = {"kNN_Precision": None, "Classification_Precision": None}
     try:
         with open(filepath, 'r') as f:
@@ -37,72 +28,62 @@ def parse_log_file(filepath):
         print(f"Error reading {filepath}: {e}")
         return results
 
-    # Split by the "NEW EXPERIMENT" header.
-    # content_blocks[0] is usually the first Global Params (ignore).
-    # content_blocks[1] is the FIRST Run.
-    # content_blocks[2] is the SECOND Run.
-    content_blocks = content.split("===== NEW EXPERIMENT")
-
-    # Need at least 2 blocks to have the 1st run (block 0 is pre-header)
-    if len(content_blocks) > 1:
-        # --- BLOCK 1 (First Run): Extract CLASSIFICATION Precision ---
-        run1_txt = content_blocks[1]
-        m_class = re.search(r"classification precision over objects and categories:\s*([\d.]+)", run1_txt, re.IGNORECASE)
-        if m_class:
-            results["Classification_Precision"] = float(m_class.group(1))
-
-    # Need at least 3 blocks to have the 2nd run
-    if len(content_blocks) > 2:
-        # --- BLOCK 2 (Second Run): Extract kNN Precision ---
-        run2_txt = content_blocks[2]
-        # kNN precision is "precision over objects..." NOT preceded by "classification"
-        m_knn = re.search(r"(?<!classification )precision over objects and categories:\s*([\d.]+)", run2_txt, re.IGNORECASE)
-        if m_knn:
-            results["kNN_Precision"] = float(m_knn.group(1))
-
+    runs = content.split("===== GLOBAL PARAMS =====")
+    if len(runs) >= 3:
+        m = re.search(r"classification precision over objects and categories:\s*([\d.]+)", runs[1], re.IGNORECASE)
+        if m:
+            results["Classification_Precision"] = float(m.group(1))
+        m = re.search(r"precision over objects and categories:\s*([\d.]+)", runs[2], re.IGNORECASE)
+        if m:
+            results["kNN_Precision"] = float(m.group(1))
+    else:
+        m = re.search(r"classification precision over objects and categories:\s*([\d.]+)", content, re.IGNORECASE)
+        if m:
+            results["Classification_Precision"] = float(m.group(1))
+        m = re.search(r"precision over objects and categories:\s*([\d.]+)", content, re.IGNORECASE)
+        if m:
+            results["kNN_Precision"] = float(m.group(1))
     return results
 
+
 def main():
-    search_pattern = os.path.join(os.path.expanduser(BASE_DIR), "**", "results.txt")
+    search_pattern = os.path.join(os.path.expanduser(BASE_DIR), "**", "results-*.txt")
     log_files = glob(search_pattern, recursive=True)
 
     print(f"Searching: {search_pattern}")
     print(f"Found {len(log_files)} result files.\n")
 
     if not log_files:
-        print("No results found.")
+        print("No results found. Check BASE_DIR or file names.")
         return
 
-    # Key: (model, lat, beta, k_dir, d_val, k_val)
     grouped = defaultdict(list)
 
     for filepath in log_files:
         abs_path = os.path.abspath(filepath)
         m = PATH_PARAM_PATTERN.search(abs_path)
-        
         if not m:
+            print(f"Skipping unmatched path: {filepath}")
             continue
-            
-        model = m.group("model")
+
         lat_dim = m.group("lat")
         beta = m.group("beta")
-        k_dir = m.group("k_dir")
-  
 
-        key = (model, lat_dim, beta, k_dir)
+        key = (lat_dim, beta)
         grouped[key].append(filepath)
 
-    print(f"Detected {len(grouped)} unique configurations (D/K variants).\n")
+    print(f"Detected {len(grouped)} groups (lat_dim, beta).\n")
 
     fieldnames = [
-        "MODEL", "LAT_DIM", "BETA", "K_DIR",
+        "LAT_DIM", "BETA",
         "Mean_kNN_Precision", "Mean_Classification_Precision",
         "Std_kNN_Precision", "Std_Classification_Precision",
         "Num_Files"
     ]
+
     all_data = []
 
-    for (model, lat_dim, beta, k_dir), files in sorted(grouped.items()):
+    for (lat_dim, beta), files in sorted(grouped.items()):
         knn_vals, class_vals = [], []
         for f in files:
             parsed = parse_log_file(f)
@@ -111,18 +92,16 @@ def main():
             if parsed["Classification_Precision"] is not None:
                 class_vals.append(parsed["Classification_Precision"])
 
-        mean_or_na = lambda vals: round(statistics.mean(vals), 4) if vals else "N/A"
-        std_or_na = lambda vals: round(statistics.stdev(vals), 4) if len(vals) > 1 else "N/A"
+        mean = lambda vals: round(statistics.mean(vals), 4) if vals else "N/A"
+        std = lambda vals: round(statistics.stdev(vals), 4) if len(vals) > 1 else "N/A"
 
         all_data.append({
-            "MODEL": model,
             "LAT_DIM": lat_dim,
             "BETA": beta,
-            "K_DIR": k_dir,
-            "Mean_kNN_Precision": mean_or_na(knn_vals),
-            "Mean_Classification_Precision": mean_or_na(class_vals),
-            "Std_kNN_Precision": std_or_na(knn_vals),
-            "Std_Classification_Precision": std_or_na(class_vals),
+            "Mean_kNN_Precision": mean(knn_vals),
+            "Mean_Classification_Precision": mean(class_vals),
+            "Std_kNN_Precision": std(knn_vals),
+            "Std_Classification_Precision": std(class_vals),
             "Num_Files": len(files),
         })
 
@@ -131,9 +110,11 @@ def main():
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerows(all_data)
-        print(f"✅ Saved summary CSV to: {OUTPUT_CSV}")
+        print(f"\n✅ Saved summary CSV to: {OUTPUT_CSV}")
+        print(f"→ Aggregated {len(all_data)} (lat_dim, beta) experiment groups across iterations.")
     except Exception as e:
         print(f"Error writing CSV: {e}")
+
 
 if __name__ == "__main__":
     main()
