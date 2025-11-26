@@ -96,6 +96,7 @@ def plot_distribution(distances, metric, save_path):
     plt.xlabel(f'{metric.capitalize()} Distance', fontsize=12)
     plt.ylabel('Density', fontsize=12)
     plt.grid(axis='y', alpha=0.6, linestyle='--')
+    plt.xlim(0, 2)
     plt.savefig(save_path, dpi=300, bbox_inches='tight')
     plt.close()
     print(f"Plot saved to {save_path}")
