@@ -22,6 +22,6 @@ for SETUP in "cv"; do
     for NORM in "parts"; do
         python3 /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/SCL-quality/dtw_thresholds.py \
             --input /storage/brno12-cerit/home/drking/data/hdm05/class130-actions-segment80_shift16-coords_normPOS-fps12.data \
-            --subset-size 2000 --subset-repeats 5 --n-jobs 16 --output /storage/brno12-cerit/home/drking/data/hdm05/2_40.json
+            --subset-size 3000 --subset-repeats 10 --n-jobs 16 --output /storage/brno12-cerit/home/drking/data/hdm05/2_40.json
     done
 done
