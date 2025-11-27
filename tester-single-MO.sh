@@ -65,7 +65,7 @@ K=${K}
     rm -f "/storage/brno12-cerit/home/drking/experiments/elki-results/hdm05/composite/dim=${DIM}_beta=${BETA}_${K}.txt"
 
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/experiments/elki-MWs/hdm05/all/grouped/group_lat-dim=${DIM}_beta=${BETA}_k=${K} \
+-fp /storage/brno12-cerit/home/drking/experiments/elki-MWs/hdm05/all/grouped/group_lat-dim=${DIM}_beta=${BETA}_k=${K}.composite \
 --nmatches 2 \
 -k 4 \
 -dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
@@ -76,7 +76,7 @@ K=${K}
 # recall
 #---------------------------------------------------
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/experiments/elki-MWs/hdm05/all/grouped/group_lat-dim=${DIM}_beta=${BETA}_k=${K} \
+-fp /storage/brno12-cerit/home/drking/experiments/elki-MWs/hdm05/all/grouped/group_lat-dim=${DIM}_beta=${BETA}_k=${K}.composite \
 --nmatches 2 \
 -dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
 "
@@ -88,7 +88,7 @@ K=${K}
     rm -f "/storage/brno12-cerit/home/drking/experiments/elki-results/hdm05/composite-non-norm/dim=${DIM}_beta=${BETA}_${K}.txt"
 
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/experiments/elki-MWs/hdm05/all/grouped/group_lat-dim=${DIM}_beta=${BETA}_k=${K} \
+-fp /storage/brno12-cerit/home/drking/experiments/elki-MWs-non-norm/hdm05/all/grouped/group_lat-dim=${DIM}_beta=${BETA}_k=${K}.composite \
 --nmatches 2 \
 -k 4 \
 -dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
@@ -99,7 +99,7 @@ K=${K}
 # recall
 #---------------------------------------------------
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/experiments/elki-MWs/hdm05/all/grouped/group_lat-dim=${DIM}_beta=${BETA}_k=${K} \
+-fp /storage/brno12-cerit/home/drking/experiments/elki-MWs-non-norm/hdm05/all/grouped/group_lat-dim=${DIM}_beta=${BETA}_k=${K}.composite \
 --nmatches 2 \
 -dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
 "
