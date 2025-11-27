@@ -16,8 +16,6 @@ for model_dir in "$BASE_DIR"/model=hdm05-*; do
     model_name=$(basename "$model_dir")
     dim=$(echo "$model_name" | sed -E 's/.*_lat-dim=([0-9]+).*/\1/')
     beta=$(echo "$model_name" | sed -E 's/.*_beta=([0-9.]+).*/\1/')
-    non_norm=""
-    [[ "$model_name" == *non-norm* ]] && non_norm="_non-norm"
 
     # Loop through KMeans subdirs (e.g. KMeansPivotChooser--kmeans.k_100)
     for kdir in "$model_dir"/KMeansPivotChooser--kmeans.k_*; do
@@ -27,7 +25,7 @@ for model_dir in "$BASE_DIR"/model=hdm05-*; do
         K=$(basename "$kdir" | sed -E 's/.*k_([0-9]+).*/\1/')
 
         # Create target folder for this (dim, beta, K, norm)
-        target_dir="$OUTPUT_DIR/group_lat-dim=${dim}_beta=${beta}_k=${K}${non_norm}"
+        target_dir="$OUTPUT_DIR/group_lat-dim=${dim}_beta=${beta}_k=${K}"
         mkdir -p "$target_dir"
 
         # Copy or link all files from this subdir into the target
