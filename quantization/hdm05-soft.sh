@@ -249,8 +249,8 @@ for PART in "hdm05"; do
     for ITER in 3; do
         BETA="1"
         for DIM in 256; do
-            for K in 1600 3200; do 
-                for PARAM in "D0.60K6"; do 
+            for K in 3200; do 
+                for PARAM in "D0.48K6"; do 
                     SOFTASSIGNPARAM="${PARAM}"
                     single
                 done
