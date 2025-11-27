@@ -1,41 +1,61 @@
 #!/bin/bash
-#PBS -l walltime=12:0:0
-#PBS -l select=1:ncpus=4:mem=8gb
+#PBS -l walltime=24:0:0
+#PBS -l select=1:ncpus=4:mem=16gb
 #PBS -o /dev/null
 #PBS -e /dev/null
 
 
 JDK_PATH='/storage/brno12-cerit/home/drking/jdk-21.0.7/bin/java'
+DIM=${DIM}
+BETA=${BETA}
+K=${K}
+SETUP=${SETUP}
 
-EXP=${PASSED_EXP}
 
-
-# for K in "50" "100" "150" "200" "250" "300" "350" "400" "500" "600" "750" "1000" "2000" "3000" "4000" "5000" "6000" "7000" "8000" "9000" "10000"; do
-
-for K in "500" "750" "1000"; do
-
-    COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/experiments/baseline-skeleton/pku-mmd/${EXP}/composites/KMeansPivotChooser--kmeans.k_${K}/1.D0K1 \
--${EXP} \
--k 4 \
--dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
-"
-    echo "${COMMAND}"
-    mkdir -p "/storage/brno12-cerit/home/drking/experiments/baseline-skeleton/pku-mmd/${EXP}/results"
-    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/baseline-skeleton/pku-mmd/${EXP}/results/results.txt"
-
-done
-
-# for K in "50" "100" "150" "200" "250" "300" "350" "400" "500" "600" "750" "1000" "2000" "3000" "4000" "5000" "6000" "7000" "8000" "9000" "10000"; do
-
-for K in  "500" "750" "1000"; do
+# Precision
+    rm -f "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/composite/${SETUP}/dim=${DIM}_beta=${BETA}_${K}.txt"
 
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/experiments/baseline-skeleton/pku-mmd/${EXP}/composites/KMeansPivotChooser--kmeans.k_${K}/1.D0K1 \
--${EXP} \
+-fp /storage/brno12-cerit/home/drking/experiments/elki-MWs/pku-mmd/${SETUP}/grouped/group_lat-dim=${DIM}_beta=${BETA}_k=${K}.composite \
+--nmatches 2 \
+-k 18 \
+-${SETUP} \
 -dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
 "
-    echo "${COMMAND}"
-    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/baseline-skeleton/pku-mmd/${EXP}/results/results.txt"
+    mkdir -p "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/composite/${SETUP}"
+    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/composite/${SETUP}/dim=${DIM}_beta=${BETA}_${K}.txt"
 
-done
+# recall
+#---------------------------------------------------
+    COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
+-fp /storage/brno12-cerit/home/drking/experiments/elki-MWs/pku-mmd/${SETUP}/grouped/group_lat-dim=${DIM}_beta=${BETA}_k=${K}.composite \
+--nmatches 2 \
+-${SETUP} \
+-dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
+"
+    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/composite/${SETUP}/dim=${DIM}_beta=${BETA}_${K}.txt"
+
+
+#=================================================================================
+
+    rm -f "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/composite-non-norm/${SETUP}/dim=${DIM}_beta=${BETA}_${K}.txt"
+
+    COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
+-fp /storage/brno12-cerit/home/drking/experiments/elki-MWs-non-norm/pku-mmd/${SETUP}/grouped/group_lat-dim=${DIM}_beta=${BETA}_k=${K}.composite \
+--nmatches 2 \
+-k 18 \
+-${SETUP} \
+-dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
+"
+    mkdir -p "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/composite-non-norm/${SETUP}"
+    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/composite-non-norm/${SETUP}/dim=${DIM}_beta=${BETA}_${K}.txt"
+
+# recall
+#---------------------------------------------------
+    COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
+-fp /storage/brno12-cerit/home/drking/experiments/elki-MWs-non-norm/pku-mmd/${SETUP}/grouped/group_lat-dim=${DIM}_beta=${BETA}_k=${K}.composite \
+--nmatches 2 \
+-${SETUP} \
+-dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
+"
+    eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/composite-non-norm/${SETUP}/dim=${DIM}_beta=${BETA}_${K}.txt"

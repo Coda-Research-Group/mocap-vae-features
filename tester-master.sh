@@ -111,12 +111,45 @@ WORKER_SCRIPT_PATH_BASE="/storage/brno12-cerit/home/drking/experiments/mocap-vae
 #     done
 # done
 
-for BETA in "0.1" "1"; do
-    for DIM in 256; do
-        for ITER in 1 2 3 4 5; do
+# for BETA in "0.1" "1"; do
+#     for DIM in 256; do
+#         for ITER in 1 2 3 4 5; do
+#             qsub \
+#                 -v "DIM=${DIM},BETA=${BETA},ITER=${ITER}" \
+#                 "${WORKER_SCRIPT_PATH_SCL}"
+#         done
+#     done
+# done
+
+for BETA in "0.1" "1"; do 
+    for DIM in 8 16 32 64; do 
+        for K in 10 25 50 100 200 400 800 1600 3200; do
+        
+            JOB_NAME="ev-hdm05_composite_${DIM}_${BETA}_${K}"
+
             qsub \
-                -v "DIM=${DIM},BETA=${BETA},ITER=${ITER}" \
-                "${WORKER_SCRIPT_PATH_SCL}"
+                -N "${JOB_NAME}" \
+                -v "DIM=${DIM},BETA=${BETA},K=${K}" \
+                "${WORKER_SCRIPT_PATH_MO}"
+
+
+        done
+    done
+done
+
+for SETUP in "cv" "cs"; do 
+    for BETA in "0.1" "1"; do
+        for DIM in 8 16 32 64; do
+            for K in 25 50 100 200 400 800 1600 3200 6400 ; do 
+
+            JOB_NAME="ev-pku-mmd_${SETUP}_composite_${DIM}_${BETA}_${K}"
+
+            qsub \
+                -N "${JOB_NAME}" \
+                -v "DIM=${DIM},BETA=${BETA},K=${K},SETUP=${SETUP}" \
+                "${WORKER_SCRIPT_PATH_MO_PKU}"
+
+            done
         done
     done
 done
