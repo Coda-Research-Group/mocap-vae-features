@@ -21,7 +21,7 @@ function single() {
     -dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
     --nmatches 2 \
     -k 18 \
-    ${SETUP} \
+    -${SETUP} \
     "
     mkdir -p "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/multi-overlay/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/"
     eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/multi-overlay/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results.txt"

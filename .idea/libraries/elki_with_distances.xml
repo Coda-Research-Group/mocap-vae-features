@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="elki-with-distances">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Implementation-Prochazka/code/clustering/jars/elki-with-distances.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
