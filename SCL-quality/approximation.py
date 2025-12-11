@@ -50,7 +50,7 @@ def aggregate_metrics_summary(base_path: Path, output_csv_path: str, target_metr
             # we only process it once per configuration.
             if config_key in processed_configs:
                 continue
-            
+
             # 2. Load JSON content
             with open(file_path, 'r') as f:
                 data = json.load(f)
@@ -61,7 +61,7 @@ def aggregate_metrics_summary(base_path: Path, output_csv_path: str, target_metr
                 'lat_dim': int(lat_dim),
                 'beta': float(beta_value),
             }
-            
+
             # Extract mean and std for the target metrics
             for metric in target_metrics:
                 if metric in data['aggregated']:

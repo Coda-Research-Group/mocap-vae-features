@@ -61,7 +61,7 @@ PART="hdm05"
 # done
 
 
-# PART="pku-mmd"
+PART="pku-mmd"
 # for SETUP in "cs" "cv"; do 
 #     for ITER in 1 2 3 4 5; do
 #         for BETA in "0.1" "1"; do
