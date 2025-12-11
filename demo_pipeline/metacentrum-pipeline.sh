@@ -38,7 +38,7 @@ conda activate "/storage/brno12-cerit/home/drking/.conda/envs/${ENV_NAME}" || {
 
 
 python ${REPO_DIR}/mocap-vae-features/train.py --multirun exp=hdm05/all \
-    latent_dim=${DIM} beta=${BETA} iteration=${ITER} body_model=${PART} > /dev/null 2>&1
+    latent_dim=${DIM} beta=${BETA} iteration=${ITER} body_model=${PART} #> /dev/null 2>&1
 
 wait
 
