@@ -255,12 +255,12 @@ class LitVAE(pl.LightningModule):
 
 @hydra.main(version_base=None, config_path='experiments', config_name='config')
 def main(args):
-    root_dir = Path.cwd()
+    root_dir = Path("/storage/brno12-cerit/home/drking/experiments/mocap-vae-features")
     log_dir = root_dir / 'lightning_logs' / 'version_0'
     predictions_file = log_dir / 'predictions.csv'
 
     DATA_PATHS={
-        "hdm05": root_dir + "demo_pipeline/data/class130-actions-segment80_shift16-coords_normPOS-fps12.npz",
+        "hdm05": root_dir / "demo_pipeline/data/class130-actions-segment80_shift16-coords_normPOS-fps12.npz",
     }
 
 
@@ -333,7 +333,7 @@ def main(args):
     #     folder_path = 'cv'
     #     dataset = "pku-mmd"
 
-    predictions_csv = Path('/storage/brno12-cerit/home/drking/experiments/SCL-non-norm')
+    predictions_csv = Path(root_dir / 'SCL')
     
     predictions_data_file_path = predictions_csv / dataset / folder_path / f'model={args.body_model}_lat-dim={args.latent_dim}_beta={args.beta}' / f'{args.iteration}'
     predictions_data_file_path.mkdir(parents=True, exist_ok=True)
