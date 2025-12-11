@@ -6,8 +6,8 @@ import re
 import csv
 from glob import glob
 
-BASE_DIR = Path.cwd()
-OUTPUT_CSV = BASE_DIR / "evaluation.csv"
+BASE_DIR = Path.cwd() / "elki-results/hdm05/all/"
+OUTPUT_CSV = Path.cwd() / "results.csv"
 
 # Flexible pattern:
 # - optional model prefix like "hdm05" or "pku-mmd-handR" (anything before "_lat_dim=")

@@ -210,7 +210,7 @@ function createCompositeMWClusteringELKI() {
 cd ${REPO_DIR}/mocap-vae-features/Implementation-Prochazka/code/motionvocabulary/dist/lib || exit
 
 CLS_OBJ="messif.objects.impl.ObjectFloatVectorCosine"
-SOFTASSIGNPARAM="D0K1"
+SOFTASSIGNPARAM="D0K1"  # set to make soft vocabulary
 TOSEQ="--tosequence"   # set if you need to convert the input file of segments to motion words _and_ merge the segments back to sequences/actions
 MEMORY="12g"
 VOCTYPE='-v'
@@ -264,7 +264,7 @@ rm -f "${REPO_DIR}/elki-results/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BE
 
 COMMAND="${JDK_PATH} -jar ${REPO_DIR}/mocap-vae-features/evaluator.jar \
 -fp ${REPO_DIR}/elki-MWs/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K} \
--dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
+-dd ${REPO_DIR}/mocap-vae-features/demo_pipeline/data/category_description.txt \
 -k 4 \
 "
 mkdir -p "${REPO_DIR}/elki-results/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/"
@@ -279,3 +279,5 @@ eval "${COMMAND}" >> "${REPO_DIR}/elki-results/hdm05/all/model=${PART}_lat-dim=$
 #export results
 
 python3 "${REPO_DIR}/to_csv.py"
+
+echo "We are done! Check results.csv"
