@@ -3,8 +3,7 @@
 #PBS -q gpu@pbs-m1.metacentrum.cz
 #PBS -l walltime=24:0:0
 #PBS -l select=1:ncpus=2:ngpus=1:mem=16gb:gpu_mem=8gb:scratch_local=50gb:cuda_version=13.0
-#PBS -o /dev/null
-#PBS -e /dev/null
+
 
 #This script uses conda eviroment available on metacentrum.cz
 #TODO: edit this path to the location of the repository
@@ -13,8 +12,8 @@ ENV_NAME='cuda4'
 
 #Select parameters
 DIM="256"
-BETA="0.1"
-ITER="1"
+BETA="2"
+ITER="0"
 K="800"
 PART="hdm05"
 
@@ -240,6 +239,16 @@ function convert() {
 
 
 ##########################################
+
+DATASET_PATH="${REPO_DIR}/SCL/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz"
+
+gunzip -k ${DATASET_PATH}
+
+perl ${REPO_DIR}/mocap-vae-features/Implementation-Prochazka/code/clustering/scripts/convert-from-messif.pl ${DATASET_PATH} > ${REPO_DIR}/SCL/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/elki-predictions_segmented.data
+
+#------------------------------------
+
+predictions_segmented.data.gz
 
 DATASET_PATH="${REPO_DIR}/SCL/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/elki-predictions_segmented.data"
 ROOT_FOLDER_FOR_RESULTS="${REPO_DIR}/elki-clusters/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}"
