@@ -45,14 +45,14 @@ eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/efficiency/r
 #---------------------------------------------------------------------------------------------
 
 COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /experiments/elki-MWs/hdm05/all/model=hdm05_lat-dim=256_beta=0.1/3/KMedoidsFastPAM--kmeans.k_1600/hdm05.D0K1 \
+-fp /storage/brno12-cerit/home/drking/experiments/elki-MWs/hdm05/all/model=hdm05_lat-dim=256_beta=0.1/3/KMedoidsFastPAM--kmeans.k_1600/hdm05.D0K1 \
 -dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
 -k 4 \
 "
 eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/efficiency/results-hard.txt"
 
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /experiments/elki-MWs/hdm05/all/model=hdm05_lat-dim=256_beta=0.1/3/KMedoidsFastPAM--kmeans.k_1600/hdm05.D0K1 \
+-fp /storage/brno12-cerit/home/drking/experiments/elki-MWs/hdm05/all/model=hdm05_lat-dim=256_beta=0.1/3/KMedoidsFastPAM--kmeans.k_1600/hdm05.D0K1 \
 -dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
 "
 eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/efficiency/results-hard.txt"
@@ -95,7 +95,7 @@ eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/efficiency/r
 #------------------------------------------------------------------------------------------------
 
 COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/experiments/elki-MWs-non-norm/hdm05/all/grouped/group_lat-dim=256_beta=0.1_k=1600.composite \
+-fp /storage/brno12-cerit/home/drking/experiments/elki-MWs-non-norm/hdm05/all/grouped/group_lat-dim=64_beta=0.1_k=1600.composite \
 --nmatches 2 \
 -k 4 \
 -dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
@@ -105,7 +105,7 @@ eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/efficiency/r
 # recall
 #---------------------------------------------------
     COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/experiments/elki-MWs-non-norm/hdm05/all/grouped/group_lat-dim=256_beta=0.1_k=1600.composite \
+-fp /storage/brno12-cerit/home/drking/experiments/elki-MWs-non-norm/hdm05/all/grouped/group_lat-dim=64_beta=0.1_k=1600.composite \
 --nmatches 2 \
 -dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
 "

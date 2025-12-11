@@ -1,5 +1,5 @@
 # @package _global_
-data_path: ${hydra:runtime.cwd}/home/drking/Documents/bakalarka/data/hdm05/class130-actions-segment80_shift16-coords_normPOS-fps12.data
+data_path: ${hydra:runtime.cwd}/demo_pipeline/data/class130-actions-segment80_shift16-coords_normPOS-fps12.data
 
 body_model: hdm05
 input_length: 8

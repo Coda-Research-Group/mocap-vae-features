@@ -260,19 +260,7 @@ def main(args):
     predictions_file = log_dir / 'predictions.csv'
 
     DATA_PATHS={
-        "hdm05-torso":"/storage/brno12-cerit/home/drking/data/hdm05/parts/motion_torso.npz",
-        "hdm05-handL":"/storage/brno12-cerit/home/drking/data/hdm05/parts/motion_hands_l.npz",
-        "hdm05-handR":"/storage/brno12-cerit/home/drking/data/hdm05/parts/motion_hands_r.npz",
-        "hdm05-legL":"/storage/brno12-cerit/home/drking/data/hdm05/parts/motion_legs_l.npz",
-        "hdm05-legR":"/storage/brno12-cerit/home/drking/data/hdm05/parts/motion_legs_r.npz",
-        "hdm05":"/storage/brno12-cerit/home/drking/data/hdm05/class130-actions-segment80_shift16-coords_normPOS-fps12.npz",
-        "pku-mmd-torso":"/storage/brno12-cerit/home/drking/data/pku-mmd/parts/motion_torso.npz",
-        "pku-mmd-handL":"/storage/brno12-cerit/home/drking/data/pku-mmd/parts/motion_hands_l.npz",
-        "pku-mmd-handR":"/storage/brno12-cerit/home/drking/data/pku-mmd/parts/motion_hands_r.npz",
-        "pku-mmd-legL":"/storage/brno12-cerit/home/drking/data/pku-mmd/parts/motion_legs_l.npz",
-        "pku-mmd-legR":"/storage/brno12-cerit/home/drking/data/pku-mmd/parts/motion_legs_r.npz",
-        "pku-mmd":"/storage/brno12-cerit/home/drking/data/pku-mmd/actions_singlesubject-segment24_shift4.8_initialshift0-coords_normPOS-fps10.npz",
-
+        "hdm05": root_dir + "demo_pipeline/data/class130-actions-segment80_shift16-coords_normPOS-fps12.npz",
     }
 
 
@@ -338,12 +326,12 @@ def main(args):
     # get fold folder
     folder_path = 'all'
     dataset = 'hdm05'
-    if args.train_split == '/storage/brno12-cerit/home/drking/data/pku-mmd/splits/CS_train_objects_messif-lines.txt':
-        folder_path = 'cs'
-        dataset = "pku-mmd"
-    if args.train_split == '/storage/brno12-cerit/home/drking/data/pku-mmd/splits/CV_train_objects_messif-lines.txt':
-        folder_path = 'cv'
-        dataset = "pku-mmd"
+    # if args.train_split == '/storage/brno12-cerit/home/drking/data/pku-mmd/splits/CS_train_objects_messif-lines.txt':
+    #     folder_path = 'cs'
+    #     dataset = "pku-mmd"
+    # if args.train_split == '/storage/brno12-cerit/home/drking/data/pku-mmd/splits/CV_train_objects_messif-lines.txt':
+    #     folder_path = 'cv'
+    #     dataset = "pku-mmd"
 
     predictions_csv = Path('/storage/brno12-cerit/home/drking/experiments/SCL-non-norm')
     
