@@ -11,11 +11,13 @@ REPO_DIR='/storage/brno12-cerit/home/drking/experiments'
 ENV_NAME='cuda4'
 
 #Select parameters
-DIM="256"
-BETA="2"
-ITER="0"
+DIM=256
+BETA=2
+ITER=0
 K="800"
 PART="hdm05"
+
+echo ${DIM}
 
 # to run the clustering, you also need to install java
 # JDK_PATH="/storage/brno12-cerit/home/user/jdk-21.0.7/bin/java"
