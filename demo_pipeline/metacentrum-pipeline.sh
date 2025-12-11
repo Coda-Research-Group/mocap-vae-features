@@ -8,7 +8,7 @@
 
 #This script uses conda eviroment available on metacentrum.cz
 #TODO: edit this path to the location of the repository
-REPO_DIR='/storage/brno12-cerit/home/user/path-to-repository'
+REPO_DIR='/storage/brno12-cerit/home/drking/experiments'
 ENV_NAME='cuda4'
 
 #Select parameters
