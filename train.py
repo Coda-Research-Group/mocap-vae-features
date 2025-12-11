@@ -313,7 +313,7 @@ def main(args):
         with open('terminated_by_error.txt', 'w') as f:
             f.write(str(e))
 
-    trainer.test(ckpt_path='best', datamodule=dm, weights_only=False)
+    trainer.test(ckpt_path='best', datamodule=dm)
 
     predictions = trainer.predict(ckpt_path='best', datamodule=dm)
     predictions = torch.concat(predictions, 0).numpy()
