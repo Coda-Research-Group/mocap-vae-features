@@ -5,6 +5,8 @@ import os
 import re
 import csv
 from glob import glob
+from pathlib import Path
+
 
 BASE_DIR = Path.cwd() / "elki-results/hdm05/all/"
 OUTPUT_CSV = Path.cwd() / "results.csv"

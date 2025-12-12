@@ -1,0 +1,5 @@
+- exp=hdm05/all
+- latent_dim=64
+- beta=1
+- iteration=0
+- body_model=hdm05

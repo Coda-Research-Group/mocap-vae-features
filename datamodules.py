@@ -193,7 +193,7 @@ class MoCapDataModule(pl.LightningDataModule):
 
 
 if __name__ == "__main__":
-    data_path = 'demo_pipeline/data/class130-actions-segment120_shift16-coords_normPOS-fps12.data'
+    data_path = 'mocap-vae-features/demo_pipeline/data/class130-actions-segment120_shift16-coords_normPOS-fps12.data'
     train_split = None
     test_split = None
     dm = MoCapDataModule(

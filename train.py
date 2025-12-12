@@ -2,6 +2,7 @@ import argparse
 import gzip
 import math
 from pathlib import Path
+import pathlib
 
 from joblib import delayed, Parallel
 import hydra
@@ -19,6 +20,7 @@ import body_models
 from datamodules import MoCapDataModule
 from reconstruct import create_tensor
 
+torch.serialization.add_safe_globals([pathlib.PosixPath])
 
 class ResBlock(nn.Module):
     def __init__(self, in_channels, out_channels, downsample=False):
@@ -255,12 +257,13 @@ class LitVAE(pl.LightningModule):
 
 @hydra.main(version_base=None, config_path='experiments', config_name='config')
 def main(args):
-    root_dir = Path("/storage/brno12-cerit/home/drking/experiments/mocap-vae-features")
+    #TODO: edit root dir
+    root_dir = Path("/storage/brno12-cerit/home/drking/experiments")
     log_dir = root_dir / 'lightning_logs' / 'version_0'
     predictions_file = log_dir / 'predictions.csv'
 
     DATA_PATHS={
-        "hdm05": root_dir / "demo_pipeline/data/class130-actions-segment80_shift16-coords_normPOS-fps12.npz",
+        "hdm05": root_dir / "mocap-vae-features/demo_pipeline/data/class130-actions-segment80_shift16-coords_normPOS-fps12.npz",
     }
 
 
@@ -291,12 +294,12 @@ def main(args):
         default_root_dir=root_dir,
         max_epochs=args.epochs,
         logger=logger,
-        accelerator='gpu',
+        accelerator='cpu', #If you have CUDA supported GPU change to gpu 
         devices=1,
         deterministic=True,
         num_sanity_val_steps=0,
         log_every_n_steps=5,
-        enable_progress_bar=False,
+        enable_progress_bar=True,
         callbacks=[
             EarlyStopping(monitor='val/l2_loss', patience=50),
             ModelCheckpoint(monitor='val/elbo', save_last=True),

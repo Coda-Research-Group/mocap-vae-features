@@ -204,53 +204,22 @@ function createCompositeMWClusteringELKI() {
       	extractClusterMedoids
 }
 
-###########################################
-#             Calling pipeline            #     
-###########################################
-
-cd ${REPO_DIR}/mocap-vae-features/Implementation-Prochazka/code/motionvocabulary/dist/lib || exit
-
-CLS_OBJ="messif.objects.impl.ObjectFloatVectorCosine"
-SOFTASSIGNPARAM="D0K1"  # set to make soft vocabulary
-TOSEQ="--tosequence"   # set if you need to convert the input file of segments to motion words _and_ merge the segments back to sequences/actions
-MEMORY="12g"
-VOCTYPE='-v'
-
-
-CLASSPATH=${CLASSPATH:-'MESSIF.jar:MESSIF-Utility.jar:MotionVocabulary.jar:commons-cli-1.4.jar:smf-core-1.0.jar:smf-impl-1.0.jar:MCDR.jar:m-index.jar:trove4j-3.0.3.jar'}
-
-function convert() {
-	CLUSTER_FOLDER_NAME=$(basename "${CLUSTER_FOLDER_PATH}")
-
-    mkdir -p "${OUTPUT_ROOT_PATH}"
-
-      COMMAND="\
-  ${JDK_PATH} \
-  -Xmx${MEMORY} \
-  -cp ${CLASSPATH} \
-  messif.motionvocabulary.MotionVocabulary \
-  -d ${DATAFILE} \
-  -c ${CLS_OBJ} \
-  --quantize ${TOSEQ} ${VOCTYPE} ${CLUSTER_FOLDER_PATH}/medoids.txt \
-  --soft-assign ${SOFTASSIGNPARAM} \
-  --output ${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM} \
-  "
-
-      eval "${COMMAND}" > /dev/null 2>&1
-}
-
-
 ##########################################
+#      Preparing data for clustering     #
+##########################################
+
 
 DATASET_PATH="${REPO_DIR}/SCL/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz"
 
-gunzip -k ${DATASET_PATH}
+gunzip -kf ${DATASET_PATH}
 
-perl ${REPO_DIR}/mocap-vae-features/Implementation-Prochazka/code/clustering/scripts/convert-from-messif.pl ${DATASET_PATH} > ${REPO_DIR}/SCL/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/elki-predictions_segmented.data
+perl ${REPO_DIR}/mocap-vae-features/Implementation-Prochazka/code/clustering/scripts/convert-from-messif.pl "${REPO_DIR}/SCL/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data" > ${REPO_DIR}/SCL/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/elki-predictions_segmented.data
 
 #------------------------------------
 
-predictions_segmented.data.gz
+##########################################
+#          K-Medoid clustering           #
+##########################################
 
 DATASET_PATH="${REPO_DIR}/SCL/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/elki-predictions_segmented.data"
 ROOT_FOLDER_FOR_RESULTS="${REPO_DIR}/elki-clusters/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}"
@@ -258,7 +227,9 @@ ALGORITHM_PARAMS="-kmeans.k ${K}"
 
 createCompositeMWClusteringELKI
 
-#######################################
+##########################################
+#        Converting to MW vocabulary     #
+##########################################
 
 DATAFILE="${REPO_DIR}/SCL/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz"
 OUTPUT_ROOT_PATH="${REPO_DIR}/elki-MWs/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}"
@@ -270,9 +241,13 @@ fi
 convert
 
 ##########################################
+#               Evaluation               #
+##########################################
 
 rm -f "${REPO_DIR}/elki-results/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${ITER}.txt"
 
+# 4nn Classification
+ 
 COMMAND="${JDK_PATH} -jar ${REPO_DIR}/mocap-vae-features/evaluator.jar \
 -fp ${REPO_DIR}/elki-MWs/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K} \
 -dd ${REPO_DIR}/mocap-vae-features/demo_pipeline/data/category_description.txt \
@@ -281,14 +256,18 @@ COMMAND="${JDK_PATH} -jar ${REPO_DIR}/mocap-vae-features/evaluator.jar \
 mkdir -p "${REPO_DIR}/elki-results/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/"
 eval "${COMMAND}" >> "${REPO_DIR}/elki-results/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${ITER}.txt"
 
+# Search
+
 COMMAND="${JDK_PATH} -jar ${REPO_DIR}/mocap-vae-features/evaluator.jar \
 -fp ${REPO_DIR}/elki-MWs/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K} \
--dd /storage/brno12-cerit/home/drking/data/hdm05/category_description.txt \
+-dd ${REPO_DIR}/mocap-vae-features/demo_pipeline/data/category_description.txt \
 "
 eval "${COMMAND}" >> "${REPO_DIR}/elki-results/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${ITER}.txt"
 
 #export results
 
-python3 "${REPO_DIR}/to_csv.py"
+cd "${REPO_DIR}"
+
+python3 "${REPO_DIR}/mocap-vae-features/to_csv.py"
 
 echo "We are done! Check results.csv"

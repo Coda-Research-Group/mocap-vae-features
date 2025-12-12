@@ -1,0 +1,13 @@
+beta: 1
+latent_dim: 64
+body_model: hdm05
+iteration: 0
+resume: false
+data_path: ${hydra:runtime.cwd}/mocap-vae-features/demo_pipeline/data/class130-actions-segment80_shift16-coords_normPOS-fps12.data
+input_length: 8
+input_fps: 12
+batch_size: 512
+epochs: 10
+train_split: null
+valid_split: null
+test_split: null
