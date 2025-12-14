@@ -6,4 +6,4 @@ input_length: 8
 input_fps: 12
 
 batch_size: 512
-epochs: 10
+epochs: 1000

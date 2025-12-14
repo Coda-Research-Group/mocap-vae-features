@@ -6,10 +6,10 @@
 REPO_DIR='/home/drking/Documents/Bakalarka' # where /mocap-vae-features is located
 
 #Select parameters
-DIM=64
-BETA=1
+DIM=256
+BETA=0.5
 ITER=0
-K="200"
+K="1600"
 PART="hdm05"            # demo pipeline is set to work only on hdm05 full data
 SOFTASSIGNPARAM="D0K1"  # set to make soft vocabulary
 
@@ -261,7 +261,7 @@ rm -f "${REPO_DIR}/elki-results/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BE
 # 4nn Classification
  
 COMMAND="${JDK_PATH} -jar ${REPO_DIR}/mocap-vae-features/evaluator.jar \
--fp ${REPO_DIR}/elki-MWs/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K} \
+-fp ${REPO_DIR}/elki-MWs/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}/${PART}.${SOFTASSIGNPARAM} \
 -dd ${REPO_DIR}/mocap-vae-features/demo_pipeline/data/category_description.txt \
 -k 4 \
 "
@@ -271,7 +271,7 @@ eval "${COMMAND}" >> "${REPO_DIR}/elki-results/hdm05/all/model=${PART}_lat-dim=$
 # Search
 
 COMMAND="${JDK_PATH} -jar ${REPO_DIR}/mocap-vae-features/evaluator.jar \
--fp ${REPO_DIR}/elki-MWs/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K} \
+-fp ${REPO_DIR}/elki-MWs/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}/${PART}.${SOFTASSIGNPARAM} \
 -dd ${REPO_DIR}/mocap-vae-features/demo_pipeline/data/category_description.txt \
 "
 eval "${COMMAND}" >> "${REPO_DIR}/elki-results/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${ITER}.txt"

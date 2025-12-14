@@ -12,16 +12,16 @@ ENV_NAME='cuda4'
 
 #Select parameters
 DIM=256
-BETA=2
+BETA=1
 ITER=0
-K="800"
+K="1600"
 PART="hdm05"
+SOFTASSIGNPARAM="D0K1"
 
-echo ${DIM}
 
 # to run the clustering, you also need to install java
 # JDK_PATH="/storage/brno12-cerit/home/user/jdk-21.0.7/bin/java"
-JDK_PATH="..."
+JDK_PATH="/storage/brno12-cerit/home/drking/jdk-21.0.7/bin/java"
 
 module add conda-modules
 module add mambaforge
@@ -40,14 +40,13 @@ conda activate "/storage/brno12-cerit/home/drking/.conda/envs/${ENV_NAME}" || {
 
 
 python ${REPO_DIR}/mocap-vae-features/train.py --multirun exp=hdm05/all \
-    latent_dim=${DIM} beta=${BETA} iteration=${ITER} body_model=${PART} #> /dev/null 2>&1
+    latent_dim=${DIM} beta=${BETA} iteration=${ITER} body_model=${PART} > /dev/null 2>&1
 
 wait
 
 conda deactivate
 
 # function definitions for clustering
-
 
 
 DISTANCE_FUNCTION='de.lmu.ifi.dbs.elki.distance.distancefunction.CosineDistanceFunction'
@@ -98,7 +97,7 @@ ${ALGORITHM_PARAMS} \
 "
 
 
-    eval "${COMMAND}" > /dev/null 2>&1
+    eval "${COMMAND}"
 
     # Stores the run command alongside the results.
     echo "${COMMAND}" >"${RESULT_FOLDER_NAME}/${CLUSTER_SUBFOLDER}/clustering-command.txt"
@@ -170,7 +169,7 @@ ${DISTANCE_FUNCTION_PARAMS} \
             eval "${COMMAND}" > /dev/null 2>&1
 
             # Stores the run command alongside the results.
-            echo "${COMMAND}" >"${RESULT_FOLDER_NAME}/${KMEDOIDS_CLUSTER_SUBFOLDER}/${CLUSTER_FILENAME}/clustering-command.txt"
+            echo "${COMMAND}" > "${RESULT_FOLDER_NAME}/${KMEDOIDS_CLUSTER_SUBFOLDER}/${CLUSTER_FILENAME}/clustering-command.txt"
         fi
     done
 
@@ -203,6 +202,41 @@ function createCompositeMWClusteringELKI() {
       	runKMedoidsClusteringOnEveryCluster
       	extractClusterMedoids
 }
+
+###########################################
+#          Clustering pipeline            #     
+###########################################
+
+cd ${REPO_DIR}/mocap-vae-features/Implementation-Prochazka/code/motionvocabulary/dist/lib || exit
+
+CLS_OBJ="messif.objects.impl.ObjectFloatVectorCosine"
+TOSEQ="--tosequence"   # set if you need to convert the input file of segments to motion words _and_ merge the segments back to sequences/actions
+MEMORY="12g"
+VOCTYPE='-v'
+
+
+CLASSPATH=${CLASSPATH:-'MESSIF.jar:MESSIF-Utility.jar:MotionVocabulary.jar:commons-cli-1.4.jar:smf-core-1.0.jar:smf-impl-1.0.jar:MCDR.jar:m-index.jar:trove4j-3.0.3.jar'}
+
+function convert() {
+	CLUSTER_FOLDER_NAME=$(basename "${CLUSTER_FOLDER_PATH}")
+
+    mkdir -p "${OUTPUT_ROOT_PATH}"
+
+      COMMAND="\
+  ${JDK_PATH} \
+  -Xmx${MEMORY} \
+  -cp ${CLASSPATH} \
+  messif.motionvocabulary.MotionVocabulary \
+  -d ${DATAFILE} \
+  -c ${CLS_OBJ} \
+  --quantize ${TOSEQ} ${VOCTYPE} ${CLUSTER_FOLDER_PATH}/medoids.txt \
+  --soft-assign ${SOFTASSIGNPARAM} \
+  --output ${OUTPUT_ROOT_PATH}/${PART}.${SOFTASSIGNPARAM} \
+  "
+
+      eval "${COMMAND}" > /dev/null 2>&1
+}
+
 
 ##########################################
 #      Preparing data for clustering     #
@@ -249,7 +283,7 @@ rm -f "${REPO_DIR}/elki-results/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BE
 # 4nn Classification
  
 COMMAND="${JDK_PATH} -jar ${REPO_DIR}/mocap-vae-features/evaluator.jar \
--fp ${REPO_DIR}/elki-MWs/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K} \
+-fp ${REPO_DIR}/elki-MWs/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}/${PART}.${SOFTASSIGNPARAM} \
 -dd ${REPO_DIR}/mocap-vae-features/demo_pipeline/data/category_description.txt \
 -k 4 \
 "
@@ -259,7 +293,7 @@ eval "${COMMAND}" >> "${REPO_DIR}/elki-results/hdm05/all/model=${PART}_lat-dim=$
 # Search
 
 COMMAND="${JDK_PATH} -jar ${REPO_DIR}/mocap-vae-features/evaluator.jar \
--fp ${REPO_DIR}/elki-MWs/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K} \
+-fp ${REPO_DIR}/elki-MWs/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}/${PART}.${SOFTASSIGNPARAM} \
 -dd ${REPO_DIR}/mocap-vae-features/demo_pipeline/data/category_description.txt \
 "
 eval "${COMMAND}" >> "${REPO_DIR}/elki-results/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${ITER}.txt"

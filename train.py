@@ -294,7 +294,7 @@ def main(args):
         default_root_dir=root_dir,
         max_epochs=args.epochs,
         logger=logger,
-        accelerator='cpu', #If you have CUDA supported GPU change to gpu 
+        accelerator='gpu', #TODO If you have CUDA supported GPU change this to gpu 
         devices=1,
         deterministic=True,
         num_sanity_val_steps=0,

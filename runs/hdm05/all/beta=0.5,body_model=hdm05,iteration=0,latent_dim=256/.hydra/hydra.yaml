@@ -121,8 +121,8 @@ hydra:
     name: train
     chdir: true
     override_dirname: beta=0.5,body_model=hdm05,iteration=0,latent_dim=256
-    id: ???
-    num: ???
+    id: '0'
+    num: 0
     config_name: config
     env_set: {}
     env_copy: []
@@ -147,7 +147,7 @@ hydra:
     - path: ''
       schema: structured
       provider: schema
-    output_dir: ???
+    output_dir: /home/drking/Documents/Bakalarka/mocap-vae-features/runs/hdm05/all/beta=0.5,body_model=hdm05,iteration=0,latent_dim=256
     choices:
       exp: hdm05/all
       hydra/env: default
@@ -160,16 +160,3 @@ hydra:
       hydra/launcher: basic
       hydra/output: default
   verbose: false
-beta: 0.5
-latent_dim: 256
-body_model: hdm05
-iteration: 0
-resume: false
-data_path: ${hydra:runtime.cwd}/mocap-vae-features/demo_pipeline/data/class130-actions-segment80_shift16-coords_normPOS-fps12.data
-input_length: 8
-input_fps: 12
-batch_size: 512
-epochs: 1000
-train_split: null
-valid_split: null
-test_split: null
