@@ -47,7 +47,7 @@ This section details the purpose of the primary folders in the repository:
 | `data-splitting-scripts` | Includes scripts for **decomposition of human body into body parts** and for performing the standard **train/test splitting** of the dataset. |
 | `demo_pipeline` | Contains a small dataset and two `.sh` scripts (`local-pipeline.sh`, `metacentrum-pipeline.sh`) serving as **test pipelines**. |
 | `experiments` | Stores **Hydra parallelization files** used for managing and running large batches of experiments efficiently. |
-| `Implementation-Prochazka` | Contains three **Java repositories** that have been adapted from the original work by Procházka et al. |
+| `Implementation-Prochazka` | Contains three **Java repositories** that have been adapted from the original diploma thesis by Procházka. |
 | `quantization` | Holds the core **run scripts for clustering, MW vocabulary transition, and evaluation** of the quantized features. |
 | `SCL-quality` | Includes scripts dedicated to calculating **Geometric Similarity Preserving measures** used to assess the quality of the quantized space. |
 | `vae-scripts` | Scripts used for **parallel training** of the VAE models, primarily configured for the **Metacentrum** environment. |
@@ -60,4 +60,4 @@ This section details the purpose of the primary folders in the repository:
 * **`requirements.txt`**: Lists all required Python packages for the project.
 * **`evaluator.jar`**: The compiled Java evaluation utility.
 * **Other Add-on Scripts**: The repository contains various supplementary scripts (`*.sh`, `*.py`, `*.ipynb`) for specific tasks like data conversion, plotting, and reproducibility.
-* **VAE Original Repository**: This work builds upon an original Variational Autoencoder (VAE) implementation. The contributions of this thesis (the MW repository) can be observed by comparing the code difference (diff) between the original VAE repository (URL: **<<I fill>>**) and this repository, which is also available on GitHub (URL: **<<I fill>>**).
+* **VAE Original Repository**: This work builds upon an original Variational Autoencoder (VAE) implementation. The contributions of this thesis (the MW repository) can be observed by comparing the code difference (diff) between the original VAE repository (URL: **<https://github.com/fabiocarrara/mocap-vae-features>**), Procházka's diploma thesis repository (URL: **<https://is.muni.cz/auth/th/sojsh/>**) and this repository, which is also available on GitHub (URL: **<https://github.com/Coda-Research-Group/mocap-vae-features>**).
