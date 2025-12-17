@@ -55,9 +55,7 @@ This section details the purpose of the primary folders in the repository:
 | :--- | :--- |
 | `clustering` | Contains the **run scripts for clustering** the learned latent features to generate the Motion Word (MW) vocabulary. |
 | `data-splitting-scripts` | Includes scripts for **decomposition of human body into body parts** and for performing the standard **train/test splitting** of the dataset. |
-| `demo_pipeline` | Contains a small dataset and two `.sh` scripts (`local-pipeline.sh`, `metacentrum-pipeline.sh`) serving as **test pipelines**. **Note:** The dataset `demo_pipeline/data/class130-actions-segment80_shift16-coords_normPOS-fps12.npz` is too large for this repository. It is available for download in the [Thesis Attachments](**Will be adjusted later**).
-|
-**Note:** The dataset `demo_pipeline/data/class130-actions-segment80_shift16-coords_normPOS-fps12.npz` is too large for this repository. It is available for download in the [Thesis Attachments](**Will be adjusted later**).
+| `demo_pipeline` | Contains a small dataset and two `.sh` scripts (`local-pipeline.sh`, `metacentrum-pipeline.sh`) serving as **test pipelines**. **Note:** The dataset `demo_pipeline/data/class130-actions-segment80_shift16-coords_normPOS-fps12.npz` is too large for this repository. It is available for download in the [Thesis Attachments](**Will be adjusted later**). |
 | `experiments` | Stores **Hydra parallelization files** used for managing and running large batches of experiments efficiently. |
 | `Implementation-Prochazka` | Contains three **Java repositories** that have been adapted from the original diploma thesis by Procházka. |
 | `quantization` | Holds the core **run scripts for clustering, MW vocabulary transition, and evaluation** of the quantized features. |
