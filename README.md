@@ -6,6 +6,16 @@ The project extends an existing Variational Autoencoder (VAE) architecture for h
 
 ---
 
+## 🌳 Repository Branches
+
+This repository is organized into three distinct branches to separate the development stages:
+
+* **`main`**: The full development branch. This contains the complete source code, all features, and the final implementation of the project.
+* **`demo-pipeline`**: A specialized branch containing the `demo_pipeline` folder and associated scripts.
+* **`original-repository`**: The state of the connected repository before any new coding for this thesis began. This serves as a clean baseline.
+
+---
+
 ## 🚀 Setup and Running the Demo Pipeline
 
 To run the provided demo pipeline, please follow these steps:
