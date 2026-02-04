@@ -258,7 +258,7 @@ class LitVAE(pl.LightningModule):
 @hydra.main(version_base=None, config_path='experiments', config_name='config')
 def main(args):
     #TODO: edit root dir
-    root_dir = Path("/storage/brno12-cerit/home/drking/experiments")
+    root_dir = Path("/home/drking/Documents/Bakalarka")
     log_dir = root_dir / 'lightning_logs' / 'version_0'
     predictions_file = log_dir / 'predictions.csv'
 
@@ -294,12 +294,12 @@ def main(args):
         default_root_dir=root_dir,
         max_epochs=args.epochs,
         logger=logger,
-        accelerator='gpu', #TODO If you have CUDA supported GPU change this to gpu 
+        accelerator='cpu', #TODO If you have CUDA supported GPU change this to gpu 
         devices=1,
         deterministic=True,
         num_sanity_val_steps=0,
         log_every_n_steps=5,
-        enable_progress_bar=False, #TODO If done locally, set this to True to visualize progress
+        enable_progress_bar=True, #TODO If done locally, set this to True to visualize progress
         callbacks=[
             EarlyStopping(monitor='val/l2_loss', patience=50),
             ModelCheckpoint(monitor='val/elbo', save_last=True),
