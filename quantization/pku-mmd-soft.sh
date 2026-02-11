@@ -251,17 +251,17 @@ COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-va
 -dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
 -${SETUP} \
 --soft \
--k 18 \
+-k 20 \
 "
 mkdir -p "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/soft/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/"
 eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/soft/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${ASSIGN}.txt"
 
-COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/experiments/elki-MWs/pku-mmd/soft/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}/${PART}.${SOFTASSIGNPARAM} \
--dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
---soft \
--${SETUP} \
-"
-eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/soft/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${ASSIGN}.txt"
+# COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
+# -fp /storage/brno12-cerit/home/drking/experiments/elki-MWs/pku-mmd/soft/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}/${PART}.${SOFTASSIGNPARAM} \
+# -dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
+# --soft \
+# -${SETUP} \
+# "
+# eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/soft/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${ASSIGN}.txt"
 
 

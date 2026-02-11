@@ -250,16 +250,16 @@ COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-va
 -fp /storage/brno12-cerit/home/drking/experiments/elki-MWs-non-norm/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K} \
 -dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
 -${SETUP} \
--k 18 \
+-k 20 \
 "
 mkdir -p "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/non-norm/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/"
 eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/non-norm/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${ITER}.txt"
 
-COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
--fp /storage/brno12-cerit/home/drking/experiments/elki-MWs-non-norm/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K} \
--dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
--${SETUP} \
-"
-eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/non-norm/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${ITER}.txt"
+# COMMAND="${JDK_PATH} -jar /storage/brno12-cerit/home/drking/experiments/mocap-vae-features/evaluator.jar \
+# -fp /storage/brno12-cerit/home/drking/experiments/elki-MWs-non-norm/pku-mmd/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K} \
+# -dd /storage/brno12-cerit/home/drking/data/pku-mmd/category_description.txt \
+# -${SETUP} \
+# "
+# eval "${COMMAND}" >> "/storage/brno12-cerit/home/drking/experiments/elki-results/pku-mmd/non-norm/${SETUP}/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${ITER}.txt"
 
 
