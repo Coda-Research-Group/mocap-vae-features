@@ -7,7 +7,7 @@
 
 #This script uses conda eviroment available on metacentrum.cz
 #TODO: edit this path to the location of the repository
-REPO_DIR='/storage/brno12-cerit/home/drking/experiments'
+REPO_DIR='/storage/brno12-cerit/home/prochazka/temp'
 ENV_NAME='cuda4'
 
 #Select parameters
@@ -207,6 +207,8 @@ function createCompositeMWClusteringELKI() {
 #          Clustering pipeline            #     
 ###########################################
 
+echo "Starting clustering pipeline"
+
 cd ${REPO_DIR}/mocap-vae-features/Implementation-Prochazka/code/motionvocabulary/dist/lib || exit
 
 CLS_OBJ="messif.objects.impl.ObjectFloatVectorCosine"
@@ -242,6 +244,7 @@ function convert() {
 #      Preparing data for clustering     #
 ##########################################
 
+echo "Preparing data for clustering"
 
 DATASET_PATH="${REPO_DIR}/SCL/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz"
 
@@ -255,6 +258,8 @@ perl ${REPO_DIR}/mocap-vae-features/Implementation-Prochazka/code/clustering/scr
 #          K-Medoid clustering           #
 ##########################################
 
+echo "Starting K-Medoid clustering"
+
 DATASET_PATH="${REPO_DIR}/SCL/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/elki-predictions_segmented.data"
 ROOT_FOLDER_FOR_RESULTS="${REPO_DIR}/elki-clusters/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}"
 ALGORITHM_PARAMS="-kmeans.k ${K}"
@@ -264,6 +269,8 @@ createCompositeMWClusteringELKI
 ##########################################
 #        Converting to MW vocabulary     #
 ##########################################
+
+echo "Converting to MW vocabulary"
 
 DATAFILE="${REPO_DIR}/SCL/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/predictions_segmented.data.gz"
 OUTPUT_ROOT_PATH="${REPO_DIR}/elki-MWs/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}"
@@ -278,10 +285,14 @@ convert
 #               Evaluation               #
 ##########################################
 
+echo "Starting evaluation"
+
 rm -f "${REPO_DIR}/elki-results/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${ITER}.txt"
 
 # 4nn Classification
  
+echo "Starting 4nn Classification"
+
 COMMAND="${JDK_PATH} -jar ${REPO_DIR}/mocap-vae-features/evaluator.jar \
 -fp ${REPO_DIR}/elki-MWs/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}/${PART}.${SOFTASSIGNPARAM} \
 -dd ${REPO_DIR}/mocap-vae-features/demo_pipeline/data/category_description.txt \
@@ -292,6 +303,8 @@ eval "${COMMAND}" >> "${REPO_DIR}/elki-results/hdm05/all/model=${PART}_lat-dim=$
 
 # Search
 
+echo "Starting Search"
+
 COMMAND="${JDK_PATH} -jar ${REPO_DIR}/mocap-vae-features/evaluator.jar \
 -fp ${REPO_DIR}/elki-MWs/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${ITER}/KMedoidsFastPAM--kmeans.k_${K}/${PART}.${SOFTASSIGNPARAM} \
 -dd ${REPO_DIR}/mocap-vae-features/demo_pipeline/data/category_description.txt \
@@ -299,6 +312,8 @@ COMMAND="${JDK_PATH} -jar ${REPO_DIR}/mocap-vae-features/evaluator.jar \
 eval "${COMMAND}" >> "${REPO_DIR}/elki-results/hdm05/all/model=${PART}_lat-dim=${DIM}_beta=${BETA}/${K}/results-${ITER}.txt"
 
 #export results
+
+echo "Exporting results"
 
 cd "${REPO_DIR}"
 

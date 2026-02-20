@@ -258,7 +258,7 @@ class LitVAE(pl.LightningModule):
 @hydra.main(version_base=None, config_path='experiments', config_name='config')
 def main(args):
     #TODO: edit root dir
-    root_dir = Path("/home/drking/Documents/Bakalarka")
+    root_dir = Path("/storage/brno12-cerit/home/prochazka/temp")
     log_dir = root_dir / 'lightning_logs' / 'version_0'
     predictions_file = log_dir / 'predictions.csv'
 

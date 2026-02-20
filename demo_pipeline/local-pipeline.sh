@@ -3,7 +3,7 @@
 
 #This script uses conda eviroment available on metacentrum.cz
 #TODO: edit this path to the location of the repository
-REPO_DIR='/home/drking/Documents/Bakalarka' # where /mocap-vae-features is located
+REPO_DIR='/storage/brno12-cerit/home/prochazka/temp/' # where /mocap-vae-features is located
 
 #Select parameters
 DIM=256
@@ -12,15 +12,25 @@ ITER=0
 K="1600"
 PART="hdm05"            # demo pipeline is set to work only on hdm05 full data
 SOFTASSIGNPARAM="D0K1"  # set to make soft vocabulary
-
+ENV_NAME='cuda4'
 
 # to run the clustering, you also need to install java
 #TODO: Add path to your java, on linux default is:
-JDK_PATH="/usr/bin/java"
+module add conda-modules
 
+cd "${REPO_DIR}" || {
+    echo >&2 "Repository directory ${REPO_DIR} does not exist!"
+    exit 1
+}
 
-python3.12 ${REPO_DIR}/mocap-vae-features/train.py --multirun exp=hdm05/all \
-    latent_dim=${DIM} beta=${BETA} iteration=${ITER} body_model=${PART} #> /dev/null 2>&1
+# every user on metacentrum should have access to this env
+conda activate "/storage/brno12-cerit/home/drking/.conda/envs/${ENV_NAME}" || {
+    echo >&2 "Conda environment does not exist!"
+    exit 2
+}
+
+python ${REPO_DIR}/mocap-vae-features/train.py --multirun exp=hdm05/all \
+    latent_dim=${DIM} beta=${BETA} iteration=${ITER} body_model=${PART}
 
 wait
 
